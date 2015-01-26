@@ -1,0 +1,31 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+//
+buildscript {
+    repositories {
+//        jcenter()
+        jcenter {
+            name = 'Local Jcenter'
+            artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.13.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+//        jcenter()
+//        maven {
+//            url 'http://localhost:8081/nexus/content/repositories/jcenter/'
+//        }
+        jcenter {
+            name = 'Local Jcenter'
+            artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
+        }
+    }
+
+}

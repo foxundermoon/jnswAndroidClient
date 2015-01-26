@@ -1,0 +1,78 @@
+buildscript {
+    repositories {
+//        jcenter()
+        jcenter {
+            name = 'Local Jcenter'
+            artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.13.0'
+    }
+}
+apply plugin: 'com.android.library'
+
+repositories {
+//        jcenter()
+    jcenter {
+        name = 'Local Jcenter'
+        artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
+    }
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.jnsw.core"
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+//        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+//        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+//        exclude 'META-INF/dependencies.txt'
+//        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+dependencies {
+    //    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //    compile(name:'httpclient-android-4.3.5', ext:'aar')
+    //    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5'
+    //    compile fileTree(dir: 'libs', include: ['*.aar'])
+    //    compile 'org.igniterealtime.smack:smack-android:4.1.0-alpha5'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'org.apache.httpcomponents:httpmime:4.3.5'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
+
+}
+task releaseJar(type: Copy) {
+    from( 'build/bundles/release')
+    into( 'build/libs')
+    include('classes.jar')
+    rename('calsses.jar', 'core' + '0.0.1' + '.jar')
+}
+
+task releaseLib(type: Copy, dependsOn: releaseJar) {
+    into "../../release"
+    from 'libs'
+    from 'build/libs'
+}
+
