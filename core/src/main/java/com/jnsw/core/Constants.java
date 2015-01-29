@@ -17,7 +17,7 @@ package com.jnsw.core;
 
 /**
  * Static constants for this package.
- * 
+ *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
 public class Constants {
@@ -41,6 +41,10 @@ public class Constants {
     public static final String XMPP_USERNAME = "XMPP_USERNAME";
 
     public static final String XMPP_PASSWORD = "XMPP_PASSWORD";
+    public static final String HTTP_HOST = "HTTP_HOST";
+    public static final String HTTP_PORT = "HTTP_PORT";
+    public static final String HTTP_USER_NAME = "HTTP_USER_NAME";
+    public static final String HTTP_PASSWORD = "HTTP_PASSWORD";
 
     // public static final String USER_KEY = "USER_KEY";
 
@@ -69,9 +73,7 @@ public class Constants {
     public static final String NOTIFICATION_MESSAGE = "NOTIFICATION_MESSAGE";
 
     public static final String NOTIFICATION_URI = "NOTIFICATION_URI";
-
     // INTENT ACTIONS
-
     public static final String ACTION_SHOW_NOTIFICATION = "org.androidpn.client.SHOW_NOTIFICATION";
 
     public static final String ACTION_NOTIFICATION_CLICKED = "org.androidpn.client.NOTIFICATION_CLICKED";
@@ -81,13 +83,14 @@ public class Constants {
 
     //share map key or intent action
     public static final String SEND_MESSAGE = "com.swgis.xmpp.SEND_MESSAGE";
-    public  static  final String SEND_PACKET = "com.swgis.xmpp.SEND_PACKET";
-    public static  final String RECEIVER_MESSAGE = "com.swgis.xmpp.RECEIVER_MESSAGE";
+    public static final String SEND_PACKET = "com.swgis.xmpp.SEND_PACKET";
+    public static final String RECEIVER_MESSAGE = "com.swgis.xmpp.RECEIVER_MESSAGE";
     public static final String XMPP_STATUS = "com.swgis.xmpp.XMPP_STATUS";
 
     public static final String XMPP_STATUS_DETAIL = "com.swgis.xmpp.XMPP_STATUS_DETAIL";
     public static final String SUBSCRIBED = "com.swgis.xmpp.SUBSCRIBED";
     public static final String SUBSCRIB = "com.swgis.xmpp.SUBSCRIB";
-    public static final String UNSUBSCRID ="com.swgis.xmpp.UNSUBSCRIB" ;
+    public static final String UNSUBSCRID = "com.swgis.xmpp.UNSUBSCRIB";
     public static final String IS_LOGIN = "com.swgis.xmpp.IS_LOGIN";
+    public static final String XMPP_RESOURCE = "XMPP_RESOURCE";
 }

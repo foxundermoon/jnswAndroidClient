@@ -3,7 +3,7 @@ package com.jnsw.core.xmpp.daemon;
 import android.util.Log;
 import com.jnsw.core.Constants;
 import com.jnsw.core.MyApplication;
-import com.jnsw.core.config.XmppConfig;
+import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.xmpp.XmppManager;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
@@ -62,8 +62,8 @@ public class HeartThreadRunnable implements Runnable {
     public HeartThreadRunnable(XmppManager xmppManager, int duration) {
         this.xmppManager = xmppManager;
         presence = new Presence(Presence.Type.available);
-        presence.setFrom(XmppConfig.getLocalJid());
-        presence.setTo(XmppConfig.getServerJid());
+        presence.setFrom(ClientConfig.getLocalJid());
+        presence.setTo(ClientConfig.getServerJid());
         presence.setStatus("ping");
         setDuration(duration);
 

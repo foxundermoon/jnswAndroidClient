@@ -1,31 +1,46 @@
-buildscript {
-    repositories {
-//        jcenter()
-        jcenter {
-            name = 'Local Jcenter'
-            artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.0'
-    }
-}
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'signing'
+group = 'com.jnsw.android'
+version = '0.1.6'
+//sourceCompatibility = 1.6
+//targetCompatibility = 1.6
+//buildscript {
+//    repositories {
+//        jcenter {
+//            name = 'Local Jcenter'
+////            artifactUrls = ['http://10.80.5.222:8081/nexus/content/groups/public/','http://222.vvfox.com:8081/nexus/content/repositories/releases/']
+//
+////            artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
+//            url = 'http://10.80.5.222:8081/nexus/content/repositories/jcenter/'
+//        }
+////        maven{
+////            url = 'http://10.80.5.222:8081/nexus/content/groups/public/'
+////        }
+//    }
+//    dependencies {
+//        classpath 'com.android.tools.build:gradle:0.13.0'
+//    }
+//}
 apply plugin: 'com.android.library'
 
-repositories {
-//        jcenter()
-    jcenter {
-        name = 'Local Jcenter'
-        artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
-    }
-}
+//repositories {
+//    jcenter {
+//        name = 'Local Jcenter'
+////        artifactUrls = ['http://10.80.5.222:8081/nexus/content/groups/public/','http://222.vvfox.com:8081/nexus/content/repositories/releases/']
+//        url = 'http://10.80.5.222:8081/nexus/content/repositories/jcenter/'
+//    }
+//    maven{
+//        url = 'http://10.80.5.222:8081/nexus/content/groups/public/'
+//    }
+//}
 
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.jnsw.core"
+        applicationId "com.jnsw.android.core"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
@@ -53,26 +68,94 @@ android {
 
 dependencies {
     //    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
     //    compile(name:'httpclient-android-4.3.5', ext:'aar')
     //    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5'
     //    compile fileTree(dir: 'libs', include: ['*.aar'])
     //    compile 'org.igniterealtime.smack:smack-android:4.1.0-alpha5'
-    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.jnsw.android:asmack:1.0.0'
+    compile 'com.android.support:appcompat-v7:21.+'
     compile 'org.apache.httpcomponents:httpmime:4.3.5'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
 
 }
-task releaseJar(type: Copy) {
-    from( 'build/bundles/release')
-    into( 'build/libs')
-    include('classes.jar')
-    rename('calsses.jar', 'core' + '0.0.1' + '.jar')
+sourceSets{
+    main{
+        resources{
+            srcDir 'src/main/java'
+        }
+    }
+    test{
+        resources{
+            srcDir 'src/androidTest/java'
+        }
+    }
 }
 
+uploadArchives{
+    repositories {
+        mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: 'http://222.vvfox.com/releases/') {
+                authentication(userName: 'admin', password: 'admin123')
+            }
+            pom.project {
+//                name project.name
+                name 'core'
+                packaging 'jar'
+                description 'the android library of company'
+                url 'https://github.com/foxundermoon/jnswAndroidClient'
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }
+    }
+
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+task releaseJar(type: Copy) {
+    from('build/intermediates/bundles/release')
+    into('build/output/jar')
+    include('classes.jar')
+    rename('calsses.jar', 'core.jar')
+}
 task releaseLib(type: Copy, dependsOn: releaseJar) {
     into "../../release"
     from 'libs'
     from 'build/libs'
 }
+File releaseJarFile(){
+//    def _version = version.replace('.','_')
+    copy {
+        from('build/intermediates/bundles/release')
+        into('build/outputs')
+        include('classes.jar')
+        rename('classes.jar', 'core.jar')
+    }
+    file("build/outputs/core.jar")
+}
 
+artifacts {
+//    def myreleasejar = file 'build/output/jar/core0.0.1.jar'
+//    def myreleaseJar = file("build/output/jar/core_${version}.jar"){
+//        builtBy releaseJar
+//    }
+//    archives file("build/output/jar/core_${version}.jar")
+//    archives javadocJar
+    archives releaseJarFile()
+    archives sourcesJar
+//    exclude '*.aar'
+}
+
+
+//signing {
+//    sign configurations.archives
+//}

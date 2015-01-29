@@ -23,7 +23,7 @@ import android.os.Handler;
 import android.util.Log;
 import com.jnsw.core.Constants;
 import com.jnsw.core.MyApplication;
-import com.jnsw.core.config.XmppConfig;
+import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.xmpp.daemon.ReconnectionThread;
 import com.jnsw.core.xmpp.listener.*;
 import com.jnsw.core.xmpp.provider.NotificationIQProvider;
@@ -524,8 +524,8 @@ public class XmppManager {
         private void subScribe() {
 Presence subscrib = new Presence(Presence.Type.subscribe);
             subscrib.setStatus("online");
-            subscrib.setTo(XmppConfig.getServerJid());
-            subscrib.setFrom(XmppConfig.getLocalJid());
+            subscrib.setTo(ClientConfig.getServerJid());
+            subscrib.setFrom(ClientConfig.getLocalJid());
             subscrib.setPacketID(newRandomUUID());
             MyApplication.getInstance().sendPacketByXmpp(subscrib);
         }
