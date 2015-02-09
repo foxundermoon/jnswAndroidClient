@@ -32,7 +32,7 @@ import java.util.UUID;
  * Created by foxundermoon on 2015/1/19.
  */
 public class HttpClientDemo {
-    public  static void  Demo(){
+    private static void  Demo(){
         SSLContext sslContext = SSLContexts.createSystemDefault();
         SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
                 sslContext,

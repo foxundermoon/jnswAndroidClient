@@ -93,4 +93,7 @@ public class Constants {
     public static final String UNSUBSCRID = "com.swgis.xmpp.UNSUBSCRIB";
     public static final String IS_LOGIN = "com.swgis.xmpp.IS_LOGIN";
     public static final String XMPP_RESOURCE = "XMPP_RESOURCE";
+    public static final String SEND_STRING = "com.jnsw.core.SEND_STRING";
+    public static final String CUSTOM_EVENT_BUS = "com.jnsw.core.CUSTOM_EVENT_BUS";
+    public static final String ENABLE_BROADCAST = "ENABLE_BROADCAST";
 }

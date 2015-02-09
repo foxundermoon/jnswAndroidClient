@@ -15,7 +15,7 @@
  */
 package com.jnsw.core.xmpp.provider;
 
-import com.jnsw.core.xmpp.NotificationIQ;
+import com.jnsw.core.xmpp.packet.NotificationIQ;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.provider.IQProvider;
 import org.xmlpull.v1.XmlPullParser;

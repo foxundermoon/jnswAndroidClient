@@ -22,8 +22,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 import com.jnsw.core.Constants;
-
-import java.util.Properties;
+import com.jnsw.core.service.XmppService;
 
 /** 
  * This class is to manage the notificatin service and to load the configuration.
@@ -40,7 +39,7 @@ public final class ServiceManager {
 
     private SharedPreferences sharedPrefs;
 
-    private Properties props;
+//    private Properties props;
 
     private String version = "0.5.0";
 
@@ -71,26 +70,27 @@ public final class ServiceManager {
         //        //            throw new RuntimeException();
         //        //        }
 
-        props = loadProperties();
-        apiKey = props.getProperty("apiKey", "");
-        xmppHost = props.getProperty("xmppHost", "10.80.5.222");
-        xmppPort = props.getProperty("xmppPort", "5222");
-        Log.i(LOGTAG, "apiKey=" + apiKey);
-        Log.i(LOGTAG, "xmppHost=" + xmppHost);
-        Log.i(LOGTAG, "xmppPort=" + xmppPort);
+//        props = loadProperties();
+//        apiKey = props.getProperty("apiKey", "");
+//        apiKey = sharedPrefs
+//        xmppHost = props.getProperty("xmppHost", "10.80.5.222");
+//        xmppPort = props.getProperty("xmppPort", "5222");
+//        Log.i(LOGTAG, "apiKey=" + apiKey);
+//        Log.i(LOGTAG, "xmppHost=" + xmppHost);
+//        Log.i(LOGTAG, "xmppPort=" + xmppPort);
 
-        sharedPrefs = context.getSharedPreferences(
-                Constants.SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        Editor editor = sharedPrefs.edit();
-        editor.putString(Constants.API_KEY, apiKey);
-        editor.putString(Constants.VERSION, version);
-        editor.putString(Constants.XMPP_HOST, xmppHost);
-        editor.putInt(Constants.XMPP_PORT, Integer.parseInt(xmppPort));
-        editor.putString(Constants.CALLBACK_ACTIVITY_PACKAGE_NAME,
-                callbackActivityPackageName);
-        editor.putString(Constants.CALLBACK_ACTIVITY_CLASS_NAME,
-                callbackActivityClassName);
-        editor.commit();
+//        sharedPrefs = context.getSharedPreferences(
+//                Constants.SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+//        Editor editor = sharedPrefs.edit();
+//        editor.putString(Constants.API_KEY, apiKey);
+//        editor.putString(Constants.VERSION, version);
+//        editor.putString(Constants.XMPP_HOST, xmppHost);
+//        editor.putInt(Constants.XMPP_PORT, Integer.parseInt(xmppPort));
+//        editor.putString(Constants.CALLBACK_ACTIVITY_PACKAGE_NAME,
+//                callbackActivityPackageName);
+//        editor.putString(Constants.CALLBACK_ACTIVITY_CLASS_NAME,
+//                callbackActivityClassName);
+//        editor.commit();
         // Log.i(LOGTAG, "sharedPrefs=" + sharedPrefs.toString());
     }
     public static ServiceManager getInstance(Context context){
@@ -105,7 +105,7 @@ public final class ServiceManager {
         Thread serviceThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Intent intent = NotificationService.getIntent();
+                Intent intent = XmppService.getIntent();
                 context.startService(intent);
             }
         });
@@ -113,7 +113,7 @@ public final class ServiceManager {
     }
 
     public void stopService() {
-        Intent intent = NotificationService.getIntent();
+        Intent intent = XmppService.getIntent();
         context.stopService(intent);
     }
 
@@ -142,8 +142,8 @@ public final class ServiceManager {
     //        }
     //        return value.toString();
     //    }
-
-    private Properties loadProperties() {
+//@Deprecated
+//    private Properties _loadProperties() {
         //        InputStream in = null;
         //        Properties props = null;
         //        try {
@@ -166,17 +166,17 @@ public final class ServiceManager {
         //        }
         //        return props;
 
-        Properties props = new Properties();
-        try {
-            int id = context.getResources().getIdentifier("androidpn", "raw",
-                    context.getPackageName());
-            props.load(context.getResources().openRawResource(id));
-        } catch (Exception e) {
-            Log.e(LOGTAG, "Could not find the properties file.", e);
-            // e.printStackTrace();
-        }
-        return props;
-    }
+//        Properties props = new Properties();
+//        try {
+//            int id = context.getResources().getIdentifier("androidpn", "raw",
+//                    context.getPackageName());
+//            props.load(context.getResources().openRawResource(id));
+//        } catch (Exception e) {
+//            Log.e(LOGTAG, "Could not find the properties file.", e);
+//            e.printStackTrace();
+//        }
+//        return props;
+//    }
 
     //    public String getVersion() {
     //        return version;
@@ -186,6 +186,7 @@ public final class ServiceManager {
     //        return apiKey;
     //    }
 
+@Deprecated
     public void setNotificationIcon(int iconId) {
         Editor editor = sharedPrefs.edit();
         editor.putInt(Constants.NOTIFICATION_ICON, iconId);

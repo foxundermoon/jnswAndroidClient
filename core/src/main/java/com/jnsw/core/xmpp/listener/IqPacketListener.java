@@ -1,5 +1,7 @@
 package com.jnsw.core.xmpp.listener;
 
+import com.jnsw.core.CustomApplication;
+import com.jnsw.core.event.ReceivedIQEvent;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Packet;
@@ -37,6 +39,9 @@ public class IqPacketListener implements PacketListener{
     public void processPacket(Packet packet) {
         if(packet instanceof IQ){
             IQ iq = (IQ)packet;
+            ReceivedIQEvent<IQ> event = new ReceivedIQEvent<IQ>();
+            event.setEventData(iq);
+            CustomApplication.getInstance().eventBus.post(event);
         }
     }
     public interface IqHandler{

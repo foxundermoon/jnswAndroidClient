@@ -1,5 +1,6 @@
 package com.jnsw.ui.activity;
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -15,15 +16,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.jnsw.core.Constants;
-import com.jnsw.core.MyApplication;
-import com.jnsw.core.config.XmppConfig;
+import com.jnsw.core.CustomApplication;
+import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.http.MyHttpClient;
-import com.jnsw.core.xmpp.NotificationIQ;
-import com.jnsw.core.xmpp.NotificationService;
+import com.jnsw.core.xmpp.packet.NotificationIQ;
+import com.jnsw.core.service.XmppService;
 import com.jnsw.core.xmpp.ServiceManager;
 import com.jnsw.core.xmpp.listener.MessagePacketListener;
 import com.jnsw.core.xmpp.listener.PresencePacketListener;
-import com.jnsw.core.xmpp.receiver.ReceivePacketReceiver;
 import com.jnsw.core.xmpp.receiver.XmppStatusReceiver;
 import com.jnsw.ui.R;
 import org.apache.http.client.methods.HttpPostHC4;
@@ -43,14 +43,14 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
     Holder holder;
     View.OnClickListener listener;
     private ServiceManager serviceManager;
-    NotificationService notificationService;
+    XmppService xmppService;
     XmppStatusReceiver xmppStatusReceiver;
     //    MyHttpClient httpClient;
     String uploadUrl = "http://10.80.5.222:2222/Upload";
     Handler handler;
     XmppStatusReceiver.StatusHandler statusHandler;
-    private ReceivePacketReceiver receiverMessageReceiver;
     private MyHttpClient httpClient;
+    private BroadcastReceiver receiveMessageReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,7 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
         setContentView(R.layout.activity_main);
         holder = new Holder();
         handler = new Handler() ;
+        receiveMessageReceiver = new ReceiveMessageReceiver();
 //        {
 //            @Override
 //            public void handleMessage(android.os.Message msg) {
@@ -92,8 +93,14 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
         }
     }
 
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+    }
+
     private boolean checkIsLogin() {
-        MyApplication myApplication = MyApplication.getInstance();
+        CustomApplication myApplication = CustomApplication.getInstance();
         if (myApplication.isLogin)
             return true;
         else
@@ -124,7 +131,7 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
     }
 
     private void unregisterMessageReceiver() {
-        unregisterReceiver(receiverMessageReceiver);
+        unregisterReceiver(receiveMessageReceiver);
     }
 
     private void registerBtnListener() {
@@ -159,10 +166,10 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
                         serviceState.isStart = true;
                         holder.txtView.setText("started!");
                         Message message = new Message();
-                        message.setTo(XmppConfig.getServerJid());
-                        message.setFrom(XmppConfig.getLocalJid());
+                        message.setTo(ClientConfig.getServerJid(MainActivity.this));
+                        message.setFrom(ClientConfig.getLocalJid(MainActivity.this));
                         message.setBody("connected!");
-                        MyApplication.getInstance().sendPacketByXmpp(message);
+                        CustomApplication.getInstance().sendPacketByXmppAsync(message);
                     }
 
                 }
@@ -253,7 +260,7 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
         noti.setId(UUID.randomUUID().toString());
         noti.setTitle("c 2 s");
         try {
-            ((MyApplication) getApplication()).sendPacketByXmpp(noti);
+            ((CustomApplication) getApplication()).sendPacketByXmppAsync(noti);
             Log.d("notification", noti.toString());
         } catch (Exception e) {
             holder.txtView.append(e.getMessage() + e.toString());
@@ -272,7 +279,7 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
         message.setTo(to + "@10.80.5.222");
         message.setFrom("1@10.80.5.222");
         message.setBody(s);
-        MyApplication.getInstance().sendPacketByXmpp(message);
+        CustomApplication.getInstance().sendPacketByXmppAsync(message);
     }
 
 
@@ -368,6 +375,13 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
             sb.append("txtView:").append(txtView == null ? "null" : txtView.toString());
             sb.append("etxt:").append(etxt == null ? "null" : etxt.toString());
             return sb.toString();
+        }
+    }
+
+    private class ReceiveMessageReceiver  extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
         }
     }
 }

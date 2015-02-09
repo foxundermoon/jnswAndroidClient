@@ -22,10 +22,12 @@ import android.content.SharedPreferences.Editor;
 import android.os.Handler;
 import android.util.Log;
 import com.jnsw.core.Constants;
-import com.jnsw.core.MyApplication;
+import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
+import com.jnsw.core.service.XmppService;
 import com.jnsw.core.xmpp.daemon.ReconnectionThread;
 import com.jnsw.core.xmpp.listener.*;
+import com.jnsw.core.xmpp.packet.NotificationIQ;
 import com.jnsw.core.xmpp.provider.NotificationIQProvider;
 import com.jnsw.core.xmpp.receiver.XmppStatusCode;
 import org.jivesoftware.smack.*;
@@ -51,13 +53,15 @@ public class XmppManager {
 
     private static final String LOGTAG = LogUtil.makeLogTag(XmppManager.class);
 
-    private static final String XMPP_RESOURCE_NAME = "AndroidpnClient";
+    private   String XmppResourceName;
+    private final String password;
+    private final int username;
 
     private Context context;
 
-    private NotificationService.TaskSubmitter taskSubmitter;
+    private XmppService.TaskSubmitter taskSubmitter;
 
-    private NotificationService.TaskTracker taskTracker;
+    private XmppService.TaskTracker taskTracker;
 
     private SharedPreferences sharedPrefs;
 
@@ -76,14 +80,17 @@ public class XmppManager {
     private MessagePacketListener messagePacketListener;
     private PresencePacketListener presenceListener;
 
-    public XmppManager(NotificationService notificationService) {
-        context = notificationService;
-        taskSubmitter = notificationService.getTaskSubmitter();
-        taskTracker = notificationService.getTaskTracker();
-        sharedPrefs = notificationService.getSharedPreferences();
+    public XmppManager(XmppService xmppService) {
+        context = xmppService;
+        taskSubmitter = xmppService.getTaskSubmitter();
+        taskTracker = xmppService.getTaskTracker();
+        sharedPrefs = xmppService.getSharedPreferences();
 
         xmppHost = sharedPrefs.getString(Constants.XMPP_HOST, "localhost");
         xmppPort = sharedPrefs.getInt(Constants.XMPP_PORT, 5222);
+        username = sharedPrefs.getInt(Constants.XMPP_USERNAME, -1);
+        password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
+        XmppResourceName = sharedPrefs.getString(Constants.XMPP_RESOURCE,"android");
 //        username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
 //        password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
 
@@ -98,7 +105,7 @@ public class XmppManager {
     }
 
     public void connect() {
-        Log.d(LOGTAG, "connect()...");
+//        Log.d(LOGTAG, "connect()...");
         submitLoginTask();
     }
 
@@ -212,22 +219,19 @@ public class XmppManager {
                 && sharedPrefs.contains(Constants.XMPP_PASSWORD);
     }
 
-    private void submitConnectTask() {
-        Log.d(LOGTAG, "submitConnectTask()...");
-        addTask(new ConnectTask());
-    }
-
     private void submitRegisterTask(String username,String passwd) {
         Log.d(LOGTAG, "submitRegisterTask()...");
-        submitConnectTask();
+        addTask(new ConnectTask());
         addTask(new RegisterTask(username,passwd));
+        runTask();
     }
 
     private void submitLoginTask() {
         Log.d(LOGTAG, "submitLoginTask()...");
 //        submitRegisterTask();
-        submitConnectTask();
+        addTask(new ConnectTask());
         addTask(new LoginTask());
+        runTask();
     }
 
     private void addTask(Runnable runnable) {
@@ -308,8 +312,8 @@ public class XmppManager {
 //                connConfig.setSecurityMode(SecurityMode.required);
                 connConfig.setSASLAuthenticationEnabled(false);
                 connConfig.setCompressionEnabled(false);
-                String name = sharedPrefs.getString(Constants.XMPP_USERNAME,"");
-                String psswd = sharedPrefs.getString(Constants.XMPP_PASSWORD,"");
+//                String name = sharedPrefs.getString(Constants.XMPP_USERNAME,"");
+//                String psswd = sharedPrefs.getString(Constants.XMPP_PASSWORD,"");
                 XMPPConnection connection = new XMPPConnection(connConfig);
                 xmppManager.setConnection(connection);
                 try {
@@ -445,41 +449,40 @@ public class XmppManager {
 
         public void run() {
             Log.i(LOGTAG, "LoginTask.run()...");
-            SharedPreferences preference = sharedPrefs;// xmppManager.getContext().getSharedPreferences(Constants.SHARED_PREFERENCE_NAME,Context.MODE_PRIVATE);
-            String username = preference.getString(Constants.XMPP_USERNAME, "");
-            String password = preference.getString(Constants.XMPP_PASSWORD, "");
-            try {
-                if (username == "" ||null==username) {
-                    broadcastXmppStatus(XmppStatusCode.NoUserNumber);
-                } else if (password == "" || null==password) {
-                    broadcastXmppStatus(XmppStatusCode.NoPassword);
-                } else {
-                    Integer un = Integer.parseInt(
-                            username);
-                    if (un < 1) {
-                        broadcastXmppStatus(XmppStatusCode.ErrorUserNumber);
-                    } else {
-                        login(username, password);
-                    }
-                }
 
-
-            } catch (Exception e) {
-                broadcastXmppStatus(XmppStatusCode.ErrorUserNumber);
-            }
+            login(username, password);
+//            try {
+//                if (username == "" ||null==username) {
+//                    broadcastXmppStatus(XmppStatusCode.NoUserNumber);
+//                } else if (password == "" || null==password) {
+//                    broadcastXmppStatus(XmppStatusCode.NoPassword);
+//                } else {
+//                    Integer un = Integer.parseInt(
+//                            username);
+//                    if (un < 1) {
+//                        broadcastXmppStatus(XmppStatusCode.ErrorUserNumber);
+//                    } else {
+//                        login(username, password);
+//                    }
+//                }
+//
+//
+//            } catch (Exception e) {
+//                broadcastXmppStatus(XmppStatusCode.ErrorUserNumber);
+//            }
         }
 
-        private void login(String username, String password) {
+        private void login(int username, String password) {
+            Log.d(LOGTAG,"start login()->user:"+username +"   passwd:"+password);
             if (!xmppManager.isAuthenticated()) {
                 Log.d(LOGTAG, "username=" + username);
                 Log.d(LOGTAG, "password=" + password);
-
                 try {
                     // packet listener
 //                    registerPacketListener();
                     xmppManager.getConnection().login(
-                            username,
-                            password, XMPP_RESOURCE_NAME);
+                            String.valueOf(username),
+                            password, XmppResourceName);
                     Log.d(LOGTAG, "Loggedn in successfully");
                     broadcastXmppStatus(XmppStatusCode.LoginedSuccess);
                     subScribe();
@@ -524,10 +527,10 @@ public class XmppManager {
         private void subScribe() {
 Presence subscrib = new Presence(Presence.Type.subscribe);
             subscrib.setStatus("online");
-            subscrib.setTo(ClientConfig.getServerJid());
-            subscrib.setFrom(ClientConfig.getLocalJid());
+            subscrib.setTo(ClientConfig.getServerJid(context));
+            subscrib.setFrom(ClientConfig.getLocalJid(context));
             subscrib.setPacketID(newRandomUUID());
-            MyApplication.getInstance().sendPacketByXmpp(subscrib);
+            CustomApplication.getInstance().sendPacketByXmppAsync(subscrib);
         }
     }
 

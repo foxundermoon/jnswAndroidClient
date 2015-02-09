@@ -1,7 +1,8 @@
 package com.jnsw.core.xmpp.listener;
 
 import android.util.Log;
-import com.jnsw.core.MyApplication;
+import com.jnsw.core.CustomApplication;
+import com.jnsw.core.event.ReceivedPresenceEvent;
 import com.jnsw.core.xmpp.LogUtil;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;
@@ -27,16 +28,18 @@ public class PresencePacketListener implements PacketListener {
     public static void setInstance(PresencePacketListener instance) {
         PresencePacketListener.instance = instance;
     }
-
     private PresenceHandler presenceHandler;
     private static PresencePacketListener instance;
     String TAG = LogUtil.makeLogTag(PresencePacketListener.class);
-    MyApplication myApplication = MyApplication.getInstance();
+    CustomApplication customApplication = CustomApplication.getInstance();
     public void processPacket(Packet packet) {
         if(packet instanceof Presence){
             Presence presence = (Presence)packet;
             if(presenceHandler!=null)
                 presenceHandler.onPresence(presence);
+            ReceivedPresenceEvent<Presence> event = new ReceivedPresenceEvent<Presence>();
+            event.setEventData(presence);
+            CustomApplication.getInstance().eventBus.post(event);
             Log.d(TAG,"Presence receive packet ...:"+packet.toXML() );
             //登录响应
 //            if(presence.getType()==Presence.Type.subscribed){

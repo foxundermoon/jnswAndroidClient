@@ -163,6 +163,7 @@ public class MyHttpClient {
     }
 
     //	上传流文件
+    @Deprecated
     public String upload(String url, InputStream is) throws ParseException, ClientProtocolException, IOException, ErrorResponseException {
 
         MultipartEntityBuilder multipartEntityBuilder = getDefaultmultipartEntityBuilder();

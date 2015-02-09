@@ -22,7 +22,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import com.jnsw.core.xmpp.LogUtil;
-import com.jnsw.core.xmpp.NotificationService;
+import com.jnsw.core.service.XmppService;
 
 /** 
  * A broadcast receiver to handle the changes in network connectiion states.
@@ -34,10 +34,10 @@ public class ConnectivityReceiver extends BroadcastReceiver {
     private static final String LOGTAG = LogUtil
             .makeLogTag(ConnectivityReceiver.class);
 
-    private NotificationService notificationService;
+    private XmppService xmppService;
 
-    public ConnectivityReceiver(NotificationService notificationService) {
-        this.notificationService = notificationService;
+    public ConnectivityReceiver(XmppService xmppService) {
+        this.xmppService = xmppService;
     }
 
     @Override
@@ -56,11 +56,11 @@ public class ConnectivityReceiver extends BroadcastReceiver {
             Log.d(LOGTAG, "Network State = " + networkInfo.getState());
             if (networkInfo.isConnected()) {
                 Log.i(LOGTAG, "Network connected");
-                notificationService.connect();
+                xmppService.connect();
             }
         } else {
             Log.e(LOGTAG, "Network unavailable");
-            notificationService.disconnect();
+            xmppService.disconnect();
         }
     }
 

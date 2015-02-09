@@ -2,7 +2,7 @@ package com.jnsw.core.xmpp.daemon;
 
 import android.util.Log;
 import com.jnsw.core.Constants;
-import com.jnsw.core.MyApplication;
+import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.xmpp.XmppManager;
 import org.jivesoftware.smack.XMPPConnection;
@@ -19,7 +19,7 @@ public class HeartThreadRunnable implements Runnable {
     private static int defaultDuration = 30 * 1000;
     private XmppManager xmppManager;
     private Presence presence;
-    static MyApplication myApplication;
+    static CustomApplication customApplication;
     static Map<String, Object> xmppstatus;
 
 
@@ -27,8 +27,8 @@ public class HeartThreadRunnable implements Runnable {
         synchronized (HeartThreadRunnable.class) {
             if (instance == null) {
                 instance = new HeartThreadRunnable(xmppManager, defaultDuration);
-                myApplication = MyApplication.getInstance();
-                xmppstatus = (Map) myApplication.shareMap.get(Constants.XMPP_STATUS);
+                customApplication = CustomApplication.getInstance();
+                xmppstatus = (Map) customApplication.shareMap.get(Constants.XMPP_STATUS);
             }
         }
         return instance;
@@ -62,8 +62,8 @@ public class HeartThreadRunnable implements Runnable {
     public HeartThreadRunnable(XmppManager xmppManager, int duration) {
         this.xmppManager = xmppManager;
         presence = new Presence(Presence.Type.available);
-        presence.setFrom(ClientConfig.getLocalJid());
-        presence.setTo(ClientConfig.getServerJid());
+        presence.setFrom(ClientConfig.getLocalJid(xmppManager.getContext()));
+        presence.setTo(ClientConfig.getServerJid(xmppManager.getContext()));
         presence.setStatus("ping");
         setDuration(duration);
 

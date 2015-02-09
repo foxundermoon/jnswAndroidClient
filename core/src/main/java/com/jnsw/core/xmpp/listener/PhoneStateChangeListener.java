@@ -19,7 +19,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.jnsw.core.xmpp.LogUtil;
-import com.jnsw.core.xmpp.NotificationService;
+import com.jnsw.core.service.XmppService;
 
 /** 
  * A listener class for monitoring changes in phone connection states. 
@@ -31,10 +31,10 @@ public class PhoneStateChangeListener extends PhoneStateListener {
     private static final String LOGTAG = LogUtil
             .makeLogTag(PhoneStateChangeListener.class);
 
-    private final NotificationService notificationService;
+    private final XmppService xmppService;
 
-    public PhoneStateChangeListener(NotificationService notificationService) {
-        this.notificationService = notificationService;
+    public PhoneStateChangeListener(XmppService xmppService) {
+        this.xmppService = xmppService;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class PhoneStateChangeListener extends PhoneStateListener {
         Log.d(LOGTAG, "Data Connection State = " + getState(state));
         
         if (state == TelephonyManager.DATA_CONNECTED) {
-            notificationService.connect();
+            xmppService.connect();
         }
     }
 

@@ -1,5 +1,4 @@
 package com.jnsw.ui.activity;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.jnsw.core.Constants;
-import com.jnsw.core.MyApplication;
+import com.jnsw.core.CustomApplication;
 import com.jnsw.core.xmpp.ServiceManager;
 import com.jnsw.core.xmpp.receiver.XmppStatusReceiver;
 import com.jnsw.ui.R;
@@ -97,7 +96,7 @@ public class LoginActivity extends ActionBarActivity implements XmppStatusReceiv
     @Override
     public void onLogin(boolean success) {
         if (success) {
-            MyApplication.getInstance().isLogin = true;
+            CustomApplication.getInstance().isLogin = true;
             handler.post(new Runnable() {
                 @Override
                 public void run() {

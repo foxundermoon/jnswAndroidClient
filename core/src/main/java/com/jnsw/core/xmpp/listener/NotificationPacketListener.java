@@ -17,7 +17,7 @@ package com.jnsw.core.xmpp.listener;
 
 import android.util.Log;
 import com.jnsw.core.xmpp.LogUtil;
-import com.jnsw.core.xmpp.NotificationIQ;
+import com.jnsw.core.xmpp.packet.NotificationIQ;
 import com.jnsw.core.xmpp.XmppManager;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;

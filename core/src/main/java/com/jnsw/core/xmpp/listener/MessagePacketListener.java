@@ -1,10 +1,13 @@
 package com.jnsw.core.xmpp.listener;
 
 import android.util.Log;
+import com.google.common.base.Strings;
 import com.jnsw.core.Constants;
-import com.jnsw.core.MyApplication;
+import com.jnsw.core.CustomApplication;
+import com.jnsw.core.event.ReceivedMessageEvent;
+import com.jnsw.core.event.ReceivedStringEvent;
+import com.jnsw.core.util.EncryptUtil;
 import org.jivesoftware.smack.PacketListener;
-import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
@@ -12,7 +15,7 @@ import org.jivesoftware.smack.packet.Packet;
  * Created by foxundermoon on 2014/11/13.
  */
 public class MessagePacketListener implements PacketListener {
-    private MyApplication myApplication;
+    private CustomApplication customApplication;
 
     public synchronized static MessagePacketListener getInstance() {
         if (instance == null) {
@@ -37,9 +40,8 @@ public class MessagePacketListener implements PacketListener {
 
     private MessageHandler messageHandler;
 
-
     private MessagePacketListener() {
-        this.myApplication = MyApplication.getInstance();
+        this.customApplication = CustomApplication.getInstance();
     }
 
     @Override
@@ -47,19 +49,27 @@ public class MessagePacketListener implements PacketListener {
         Log.d(Constants.RECEIVER_MESSAGE, "MessagePacketListener.processPacket()...");
         Log.d(Constants.RECEIVER_MESSAGE, "packet.toXML()=" + packet.toXML());
         if (packet instanceof Message) {
-            if (messageHandler != null)
+            Message message = (Message)packet;
+            ReceivedMessageEvent<Message> event = new ReceivedMessageEvent<Message>();
+            event.setEventData(message);
+            CustomApplication.getInstance().eventBus.post(event);
+            if (!Strings.isNullOrEmpty(message.getLanguage())) {
+                if (message.getLanguage().toUpperCase().contains("BASE64")) {
+                    if (!Strings.isNullOrEmpty(message.getBody())) {
+                        ReceivedStringEvent receivedStringEvent = new ReceivedStringEvent();
+                        receivedStringEvent.setEventData(EncryptUtil.decryptBASE64ByGzip(message.getBody()));
+                        CustomApplication.getInstance()
+                                .eventBus
+                                .post(receivedStringEvent);
+                    }
+                }
+            }
+            if (messageHandler != null) {
                 messageHandler.onMessage((Message) packet);
-//            String uuid = UUID.randomUUID().toString();
-//            myApplication.shareMap.put(uuid, packet);
-//            Intent intent = new Intent();
-//            intent.setAction(Constants.RECEIVER_MESSAGE);
-//            intent.putExtra(Constants.RECEIVER_MESSAGE,uuid);
-//            myApplication.sendBroadcast(Constants.RECEIVER_MESSAGE, uuid);
+            }
         } else {
             Log.d(Constants.RECEIVER_MESSAGE, "packet is not message...");
         }
-
-
     }
 
     public interface MessageHandler {

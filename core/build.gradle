@@ -2,7 +2,7 @@ apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'signing'
 group = 'com.jnsw.android'
-version = '0.1.6'
+version = '0.1.7'
 //sourceCompatibility = 1.6
 //targetCompatibility = 1.6
 //buildscript {
@@ -53,16 +53,17 @@ android {
         }
     }
     packagingOptions {
-//        exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
-//        exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/license.txt'
 //        exclude 'META-INF/dependencies.txt'
 //        exclude 'META-INF/LGPL2.1'
+        //        exclude 'META-INF/DEPENDENCIES'
+//        exclude 'META-INF/DEPENDENCIES.txt'
+
     }
 }
 
@@ -73,26 +74,36 @@ dependencies {
     //    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5'
     //    compile fileTree(dir: 'libs', include: ['*.aar'])
     //    compile 'org.igniterealtime.smack:smack-android:4.1.0-alpha5'
-    compile 'com.jnsw.android:asmack:1.0.0'
-    compile 'com.android.support:appcompat-v7:21.+'
-    compile 'org.apache.httpcomponents:httpmime:4.3.5'
-    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
 
+//    compile 'com.jnsw.android:asmack:1.0.0'
+//    compile 'com.android.support:support-v4:21.0.3'
+//    compile 'com.android.support:appcompat-v7:21.0.3'
+//    compile 'org.apache.httpcomponents:httpmime:4.3.5'
+//    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
+//    compile 'com.google.guava:guava:18.0'
+    compile(
+            'com.jnsw.android:asmack:1.0.0',
+            'com.android.support:support-v4:21.0.3',
+            'com.android.support:appcompat-v7:21.0.3',
+            'org.apache.httpcomponents:httpmime:4.3.5',
+            'org.apache.httpcomponents:httpclient-android:4.3.5',
+            'com.google.guava:guava:18.0',
+    )
 }
-sourceSets{
-    main{
-        resources{
+sourceSets {
+    main {
+        resources {
             srcDir 'src/main/java'
         }
     }
-    test{
-        resources{
+    test {
+        resources {
             srcDir 'src/androidTest/java'
         }
     }
 }
 
-uploadArchives{
+uploadArchives {
     repositories {
         mavenDeployer {
 //            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
@@ -132,7 +143,8 @@ task releaseLib(type: Copy, dependsOn: releaseJar) {
     from 'libs'
     from 'build/libs'
 }
-File releaseJarFile(){
+
+File releaseJarFile() {
 //    def _version = version.replace('.','_')
     copy {
         from('build/intermediates/bundles/release')
@@ -154,7 +166,6 @@ artifacts {
     archives sourcesJar
 //    exclude '*.aar'
 }
-
 
 //signing {
 //    sign configurations.archives
