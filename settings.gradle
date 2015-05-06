@@ -1,1 +1,1 @@
-include ':core', ':UI', ':CoreUI'
+include ':core', ':UI', ':CoreUI', ':Mykotlin'

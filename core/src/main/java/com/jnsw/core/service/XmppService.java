@@ -26,7 +26,8 @@ import com.google.common.eventbus.Subscribe;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
-import com.jnsw.core.event.SendPacketEvent;
+import com.jnsw.core.event.SendMessageEvent;
+import com.jnsw.core.event.SendXmppPacketEvent;
 import com.jnsw.core.event.SendStringEvent;
 import com.jnsw.core.util.EncryptUtil;
 import com.jnsw.core.xmpp.LogUtil;
@@ -163,7 +164,9 @@ public class XmppService extends Service {
     }
 
     public static Intent getIntent() {
-        return new Intent(SERVICE_NAME);
+        Intent intent = new Intent(CustomApplication.getInstance().getApplicationContext(),XmppService.class);
+//        intent.setPackage("com.jnsw.service");
+        return intent;
     }
 
     public ExecutorService getExecutorService() {
@@ -285,12 +288,23 @@ public class XmppService extends Service {
 
 
     @Subscribe
-    public void sendPacketByEventBus(SendPacketEvent<Packet> event) {
+    public void sendXmppPacketByEventBus(SendXmppPacketEvent event) {
         Packet packet = event.getEventData();
         xmppManager.sendPacketAsync(packet);
-
     }
 
+    @Subscribe
+    public void sendMessageEvent(SendMessageEvent event) {
+        com.jnsw.core.data.Message message = event.getEventData();
+        if (message != null) {
+            Message xmppMessage = new Message();
+//            xmppMessage.setPacketID(message.getId());
+            xmppMessage.setLanguage("BASE64");
+            xmppMessage.setSubject(message.getJsonCommand());
+            xmppMessage.setBody(EncryptUtil.encrBASE64ByGzip(message.toJson()));
+            CustomApplication.getInstance().eventBus.post(new SendXmppPacketEvent(xmppMessage));
+        }
+    }
     @Subscribe
     public void sendStringByEventBus(SendStringEvent event) {
         String msg = event.getEventData();

@@ -62,8 +62,8 @@ public class HeartThreadRunnable implements Runnable {
     public HeartThreadRunnable(XmppManager xmppManager, int duration) {
         this.xmppManager = xmppManager;
         presence = new Presence(Presence.Type.available);
-        presence.setFrom(ClientConfig.getLocalJid(xmppManager.getContext()));
-        presence.setTo(ClientConfig.getServerJid(xmppManager.getContext()));
+        presence.setFrom(ClientConfig.getLocalJid());
+        presence.setTo(ClientConfig.getServerJid());
         presence.setStatus("ping");
         setDuration(duration);
 

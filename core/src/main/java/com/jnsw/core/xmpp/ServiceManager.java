@@ -106,6 +106,7 @@ public final class ServiceManager {
             @Override
             public void run() {
                 Intent intent = XmppService.getIntent();
+//                context.bindService(intent,this,Context.BIND_AUTO_CREATE);
                 context.startService(intent);
             }
         });

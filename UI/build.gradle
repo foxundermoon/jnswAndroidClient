@@ -1,44 +1,39 @@
-//buildscript {
-//    repositories {
-////        jcenter()
-//        jcenter {
-//            name = 'Local Jcenter'
-//            artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
-//            setUrl ('http://10.80.5.222:8081/nexus/content/repositories/jcenter/')
-//        }
-//    }
-//    dependencies {
-//        classpath 'com.android.tools.build:gradle:0.13.0'
-//    }
-//}
+buildscript {
+    repositories {
+        jcenter {
+            url= 'http://10.80.5.222:8081/nexus/content/repositories/jcenter/'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.1.1'
+    }
+}
 apply plugin: 'com.android.application'
 
-//repositories {
-////        jcenter()
-//    jcenter {
-//        name = 'Local Jcenter'
-////        artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
-//        url= 'http://10.80.5.222:8081/nexus/content/repositories/jcenter/'
-//    }
-//    maven{
-//        url = 'http://10.80.5.222:8081/nexus/content/groups/public/'
-//    }
-//}
+repositories {
+    jcenter {
+        name = 'Local Jcenter'
+        url= 'http://10.80.5.222:8081/nexus/content/repositories/jcenter/'
+    }
+    maven{
+        url = 'http://10.80.5.222:8081/nexus/content/groups/public/'
+    }
+}
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.jnsw.ui"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -58,7 +53,7 @@ android {
 
 dependencies {
 //    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:appcompat-v7:22.1.1'
     compile project(':core')
 //    compile ('com.jnsw.android:core:0.1.7'){
 //        exclude group: 'com.android.support', module: 'appcompat-v7'

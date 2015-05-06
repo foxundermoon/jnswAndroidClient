@@ -1,8 +1,11 @@
 package com.jnsw.ui.activity;
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -39,7 +42,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 
-public class MainActivity extends ActionBarActivity implements MessagePacketListener.MessageHandler,PresencePacketListener.PresenceHandler {
+public class MainActivity extends ActionBarActivity  {
     Holder holder;
     View.OnClickListener listener;
     private ServiceManager serviceManager;
@@ -84,8 +87,8 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
         holder.startHcActivity = (Button) findViewById(R.id.startHcActivity);
 //        httpClient = MyHttpClient.getInstance();
         statusHandler = new MainXmppStatusHandler();
-        MessagePacketListener.getInstance().setMessageHandler(this);
-        PresencePacketListener.getInstance().setPresenceHandler(this);
+//        MessagePacketListener.getInstance().setMessageHandler(this);
+//        PresencePacketListener.getInstance().setPresenceHandler(this);
         registerBtnListener();
         registerXmppStatusReceiver();
         if (!checkIsLogin()) {
@@ -143,6 +146,7 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
 
             ServiceState serviceState = new ServiceState();
 
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
 //                httpClient = MyHttpClient.getInstance();
@@ -166,8 +170,8 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
                         serviceState.isStart = true;
                         holder.txtView.setText("started!");
                         Message message = new Message();
-                        message.setTo(ClientConfig.getServerJid(MainActivity.this));
-                        message.setFrom(ClientConfig.getLocalJid(MainActivity.this));
+//                        message.setTo(ClientConfig.getServerJid(MainActivity.this));
+//                        message.setFrom(ClientConfig.getLocalJid(MainActivity.this));
                         message.setBody("connected!");
                         CustomApplication.getInstance().sendPacketByXmppAsync(message);
                     }
@@ -180,6 +184,8 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
                 }
                 if (v == holder.sendImage) {
                     sendImage(holder.etxt.getText().toString());
+                    Drawable w = getDrawable(R.id.imageView);
+                    holder.txtView.append(w.toString() + w.getBounds());
                 }
                 if (v == holder.sendBtn) {
                     sendMessage(holder.etxt.getText().toString());
@@ -302,20 +308,9 @@ public class MainActivity extends ActionBarActivity implements MessagePacketList
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onMessage(final Message message) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                holder.txtView.append(message.getFrom()+"\n"+message.getBody()+"\n\n");
-            }
-        });
-    }
 
-    @Override
-    public void onPresence(Presence presence) {
 
-    }
+
 
     private class MainXmppStatusHandler implements XmppStatusReceiver.StatusHandler {
         @Override

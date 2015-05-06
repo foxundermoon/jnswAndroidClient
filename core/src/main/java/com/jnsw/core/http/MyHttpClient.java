@@ -11,10 +11,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntityHC4;
 import org.apache.http.client.methods.*;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.*;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.util.EntityUtilsHC4;
@@ -29,9 +27,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class MyHttpClient {
-    public static final boolean DEBUG = LibConfig.HTTP_DEBUG;
     public static final String TAG = "MyHttpClient";
-    public static final String HTTP_ENCODE = LibConfig.DEFAULT_HTTP_ENCODE;
+    static final String HTTP_ENCODE = "utf-8";
     private CloseableHttpClient hc;
     public static MyHttpClient mhc;
     private static final String PREFIX = "--";
@@ -47,7 +44,6 @@ public class MyHttpClient {
         getConfigBuilder = RequestConfig.custom().setConnectionRequestTimeout(30*1000).setMaxRedirects(10).setRedirectsEnabled(true).setSocketTimeout(60*1000);
         postConfigBuilder = RequestConfig.custom().setCircularRedirectsAllowed(false).setConnectionRequestTimeout(30*1000).setConnectTimeout(30 * 1000).setMaxRedirects(10).setSocketTimeout(60 * 1000);
         hc = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(getConfigBuilder.build()).build();
-//		hc=HttpClients.createDefault();
 //		hc = HttpClients.custom().setDefaultCookieStore(new BasicCookieStoreHC4()).setMaxConnTotal(100).build(); //new DefaultHttpClient(tcc,params);
 //		CookieStore cookieStore = new BasicCookieStore();
 //		((DefaultHttpClient) hc).setCookieStore(cookieStore);
@@ -117,7 +113,7 @@ public class MyHttpClient {
         hp.setEntity(entity);
         hp.setConfig(getConfigBuilder.build());
         CloseableHttpResponse response = hc.execute(hp);
-        HttpEntity he = getHttpEntity(response);
+        HttpEntity he = getHttpEntity (response);
         return getText(he);
     }
 

@@ -55,7 +55,7 @@ public class XmppManager {
 
     private   String XmppResourceName;
     private final String password;
-    private final int username;
+    private final String username;
 
     private Context context;
 
@@ -88,7 +88,7 @@ public class XmppManager {
 
         xmppHost = sharedPrefs.getString(Constants.XMPP_HOST, "localhost");
         xmppPort = sharedPrefs.getInt(Constants.XMPP_PORT, 5222);
-        username = sharedPrefs.getInt(Constants.XMPP_USERNAME, -1);
+        username = sharedPrefs.getString(Constants.XMPP_USERNAME, "-1");
         password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
         XmppResourceName = sharedPrefs.getString(Constants.XMPP_RESOURCE,"android");
 //        username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
@@ -266,7 +266,7 @@ public class XmppManager {
                     NotificationIQ.class);
             notificationPacketListener = NotificationPacketListener.getInstance(this);
             getConnection().addPacketListener(notificationPacketListener, notificationFilter);
-            getConnection().addPacketListener(MessagePacketListener.getInstance(),  new PacketTypeFilter(Message.class));
+            getConnection().addPacketListener( new MessagePacketListener(),  new PacketTypeFilter(Message.class));
             getConnection().addPacketListener(PresencePacketListener.getInstance(),new PacketTypeFilter(Presence.class));
             getConnection().addPacketListener(IqPacketListener.getInstance(),new PacketTypeFilter(IQ.class));
         }
@@ -472,7 +472,7 @@ public class XmppManager {
 //            }
         }
 
-        private void login(int username, String password) {
+        private void login(String username, String password) {
             Log.d(LOGTAG,"start login()->user:"+username +"   passwd:"+password);
             if (!xmppManager.isAuthenticated()) {
                 Log.d(LOGTAG, "username=" + username);
@@ -527,8 +527,8 @@ public class XmppManager {
         private void subScribe() {
 Presence subscrib = new Presence(Presence.Type.subscribe);
             subscrib.setStatus("online");
-            subscrib.setTo(ClientConfig.getServerJid(context));
-            subscrib.setFrom(ClientConfig.getLocalJid(context));
+            subscrib.setTo(ClientConfig.getServerJid());
+            subscrib.setFrom(ClientConfig.getLocalJid());
             subscrib.setPacketID(newRandomUUID());
             CustomApplication.getInstance().sendPacketByXmppAsync(subscrib);
         }

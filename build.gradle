@@ -1,49 +1,49 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-//
-buildscript {
-    repositories {
-        jcenter {
-            name = 'Local Jcenter'
-            artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
-            url= 'http://10.80.5.222:8081/nexus/content/repositories/jcenter/'
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.0'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-allprojects {
-//    buildscript {
-//        repositories {
-//            jcenter {
-//                name = 'Local Jcenter'
-////                    artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
-////                url= 'http://222.vvfox.com/jcenter/'
-//                url = JCENTER_URL
-//            }
-//        }
-//        dependencies {
-//            classpath 'com.android.tools.build:gradle:0.13.0'
-//
-//            // NOTE: Do not place your application dependencies here; they belong
-//            // in the individual module build.gradle files
+//// Top-level build file where you can add configuration options common to all sub-projects/modules.
+//////
+//buildscript {
+//    ext.JcenterUrl = 'http://222.vvfox.com/jcenter/'
+//    ext.MavenPublic = "http://222.vvfox.com/public/"
+//}
+//    repositories {
+//        jcenter {
+//            name = 'Local Jcenter'
+//            url = 'http://222.vvfox.com/jcenter/'
 //        }
 //    }
-
-    repositories {
-        jcenter {
-            name = 'Local Jcenter'
-//            artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
-            url = JCENTER_URL
-
-        }
-        maven {
-            url = PUBLIC_URL
-        }
-
-    }
-
-}
+//    dependencies {
+//        classpath 'com.android.tools.build:gradle:1.1.1'
+//        // NOTE: Do not place your application dependencies here; they belong
+//        // in the individual module build.gradle files
+//    }
+//}
+//allprojects {
+//    repositories {
+//        jcenter {
+//            name = 'Local Jcenter'
+////            artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
+//            url = JCENTER_URL
+//        }
+//        maven {
+//            url = PUBLIC_URL
+//        }
+//    }
+////    buildscript {
+////        repositories {
+////            jcenter {
+////                name = 'Local Jcenter'
+//////                    artifactUrls = ['http://10.80.5.222:8081/nexus/content/repositories/jcenter/']
+//////                url= 'http://222.vvfox.com/jcenter/'
+////                url = JCENTER_URL
+////            }
+////        }
+////        dependencies {
+////            classpath 'com.android.tools.build:gradle:0.13.0'
+////
+////            // NOTE: Do not place your application dependencies here; they belong
+////            // in the individual module build.gradle files
+////        }
+////    }
+//
+//
+//
+//}
