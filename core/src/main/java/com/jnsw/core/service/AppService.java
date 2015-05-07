@@ -25,13 +25,13 @@ import android.util.Log;
 import com.google.common.eventbus.Subscribe;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
+import com.jnsw.core.appmanager.task.DownloadTask;
+import com.jnsw.core.appmanager.task.UploadTask;
 import com.jnsw.core.config.ClientConfig;
-import com.jnsw.core.event.SendMessageEvent;
-import com.jnsw.core.event.SendXmppPacketEvent;
-import com.jnsw.core.event.SendStringEvent;
+import com.jnsw.core.event.*;
 import com.jnsw.core.util.EncryptUtil;
 import com.jnsw.core.xmpp.LogUtil;
-import com.jnsw.core.xmpp.XmppManager;
+import com.jnsw.core.appmanager.AppManager;
 import com.jnsw.core.xmpp.daemon.HeartThreadRunnable;
 import com.jnsw.core.xmpp.listener.PhoneStateChangeListener;
 import com.jnsw.core.xmpp.receiver.ConnectivityReceiver;
@@ -52,10 +52,10 @@ import java.util.concurrent.Future;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
-public class XmppService extends Service {
+public class AppService extends Service {
 
     private static final String LOGTAG = LogUtil
-            .makeLogTag(XmppService.class);
+            .makeLogTag(AppService.class);
 
     public static final String SERVICE_NAME = "com.jnsw.core.service.NotificationService";
     private TelephonyManager telephonyManager;
@@ -77,13 +77,13 @@ public class XmppService extends Service {
 
     private TaskTracker taskTracker;
 
-    private XmppManager xmppManager;
+    private AppManager appManager;
 
     private SharedPreferences sharedPrefs;
 
     private String deviceId;
 
-    public XmppService() {
+    public AppService() {
         notificationReceiver = new NotificationReceiver();
         connectivityReceiver = new ConnectivityReceiver(this);
         phoneStateListener = new PhoneStateChangeListener(this);
@@ -126,11 +126,11 @@ public class XmppService extends Service {
             }
         }
         Log.d(LOGTAG, "deviceId=" + deviceId);
-        xmppManager = new XmppManager(this);
+        appManager = new AppManager(this);
         ((CustomApplication) getApplication()).eventBus.register(this);
         taskSubmitter.submit(new Runnable() {
             public void run() {
-                XmppService.this.start();
+                AppService.this.start();
             }
         });
     }
@@ -164,7 +164,7 @@ public class XmppService extends Service {
     }
 
     public static Intent getIntent() {
-        Intent intent = new Intent(CustomApplication.getInstance().getApplicationContext(),XmppService.class);
+        Intent intent = new Intent(CustomApplication.getInstance().getApplicationContext(), AppService.class);
 //        intent.setPackage("com.jnsw.service");
         return intent;
     }
@@ -181,8 +181,8 @@ public class XmppService extends Service {
         return taskTracker;
     }
 
-    public XmppManager getXmppManager() {
-        return xmppManager;
+    public AppManager getAppManager() {
+        return appManager;
     }
 
     public SharedPreferences getSharedPreferences() {
@@ -197,7 +197,7 @@ public class XmppService extends Service {
         Log.d(LOGTAG, "connect()...");
         taskSubmitter.submit(new Runnable() {
             public void run() {
-                XmppService.this.getXmppManager().connect();
+                AppService.this.getAppManager().connect();
             }
         });
     }
@@ -206,7 +206,7 @@ public class XmppService extends Service {
         Log.d(LOGTAG, "disconnect()...");
         taskSubmitter.submit(new Runnable() {
             public void run() {
-                XmppService.this.getXmppManager().disconnect();
+                AppService.this.getAppManager().disconnect();
             }
         });
     }
@@ -261,10 +261,10 @@ public class XmppService extends Service {
         }
         // Intent intent = getIntent();
         // startService(intent);
-        xmppManager.connect();
-//        HeartThreadRunnable.setup(xmppManager);
-//        if(xmppManager.getConnection().isConnected()){
-//            xmppManager.getConnection().addPacketListener(new MessagePacketListener((MyApplication)getApplication()),new PacketFilter(){
+        appManager.connect();
+//        HeartThreadRunnable.setup(appManager);
+//        if(appManager.getConnection().isConnected()){
+//            appManager.getConnection().addPacketListener(new MessagePacketListener((MyApplication)getApplication()),new PacketFilter(){
 //                @Override
 //                public boolean accept(Packet packet) {
 //                    return packet instanceof Message;
@@ -282,7 +282,7 @@ public class XmppService extends Service {
             unRegisterSendPacketReceiver();
         }
         HeartThreadRunnable.shutDown();
-        xmppManager.disconnect();
+        appManager.disconnect();
         executorService.shutdown();
     }
 
@@ -290,7 +290,7 @@ public class XmppService extends Service {
     @Subscribe
     public void sendXmppPacketByEventBus(SendXmppPacketEvent event) {
         Packet packet = event.getEventData();
-        xmppManager.sendPacketAsync(packet);
+        appManager.sendPacketAsync(packet);
     }
 
     @Subscribe
@@ -306,6 +306,16 @@ public class XmppService extends Service {
         }
     }
     @Subscribe
+    public void downloadEvent(DownloadEvent event) {
+        appManager.submitTask(new DownloadTask(event.getEventData()));
+    }
+
+    @Subscribe
+    public void uploadEvent(UploadEvent event) {
+        appManager.submitTask(new UploadTask(event.getEventData()));
+    }
+
+    @Subscribe
     public void sendStringByEventBus(SendStringEvent event) {
         String msg = event.getEventData();
         String base64msg = EncryptUtil.encrBASE64ByGzip(msg);
@@ -315,7 +325,7 @@ public class XmppService extends Service {
         message.setType(Message.Type.normal);
         message.setTo(ClientConfig.getLocalJid());
         message.setBody(base64msg);
-        xmppManager.sendPacketAsync(message);
+        appManager.sendPacketAsync(message);
     }
 
     /**
@@ -323,19 +333,19 @@ public class XmppService extends Service {
      */
     public class TaskSubmitter {
 
-        final XmppService xmppService;
+        final AppService appService;
 
-        public TaskSubmitter(XmppService xmppService) {
-            this.xmppService = xmppService;
+        public TaskSubmitter(AppService appService) {
+            this.appService = appService;
         }
 
         @SuppressWarnings("unchecked")
         public Future submit(Runnable task) {
             Future result = null;
-            if (!xmppService.getExecutorService().isTerminated()
-                    && !xmppService.getExecutorService().isShutdown()
+            if (!appService.getExecutorService().isTerminated()
+                    && !appService.getExecutorService().isShutdown()
                     && task != null) {
-                result = xmppService.getExecutorService().submit(task);
+                result = appService.getExecutorService().submit(task);
             }
             return result;
         }
@@ -346,30 +356,26 @@ public class XmppService extends Service {
      * Class for monitoring the running task count.
      */
     public class TaskTracker {
-
-        final XmppService xmppService;
-
+        final AppService appService;
         public int count;
 
-        public TaskTracker(XmppService xmppService) {
-            this.xmppService = xmppService;
+        public TaskTracker(AppService appService) {
+            this.appService = appService;
             this.count = 0;
         }
 
         public void increase() {
-            synchronized (xmppService.getTaskTracker()) {
-                xmppService.getTaskTracker().count++;
+            synchronized (appService.getTaskTracker()) {
+                appService.getTaskTracker().count++;
                 Log.d(LOGTAG, "Incremented task count to " + count);
             }
         }
 
         public void decrease() {
-            synchronized (xmppService.getTaskTracker()) {
-                xmppService.getTaskTracker().count--;
+            synchronized (appService.getTaskTracker()) {
+                appService.getTaskTracker().count--;
                 Log.d(LOGTAG, "Decremented task count to " + count);
             }
         }
-
     }
-
 }

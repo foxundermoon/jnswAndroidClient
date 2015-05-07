@@ -145,7 +145,7 @@ public final class Message {
     public void send() throws JSONException {
         CustomApplication application = CustomApplication.getInstance();
         if (Strings.isNullOrEmpty(getId())) {
-            setId(UUID.randomUUID().toString());
+            setId(UUID.randomUUID().toString().replace("-",""));
         }
         application.eventBus.register(this);
         application.eventBus.post(new SendMessageEvent(this));

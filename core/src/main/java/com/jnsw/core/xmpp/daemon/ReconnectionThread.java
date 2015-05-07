@@ -17,24 +17,25 @@ package com.jnsw.core.xmpp.daemon;
 
 import android.util.Log;
 import com.jnsw.core.xmpp.LogUtil;
-import com.jnsw.core.xmpp.XmppManager;
+import com.jnsw.core.appmanager.AppManager;
 
 /** 
  * A thread class for recennecting the server.
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
+@Deprecated
 public class ReconnectionThread extends Thread {
 
     private static final String LOGTAG = LogUtil
             .makeLogTag(ReconnectionThread.class);
 
-    private final XmppManager xmppManager;
+    private final AppManager appManager;
 
     private int waiting;
 
-    public ReconnectionThread(XmppManager xmppManager) {
-        this.xmppManager = xmppManager;
+    public ReconnectionThread(AppManager appManager) {
+        this.appManager = appManager;
         this.waiting = 0;
     }
 
@@ -44,13 +45,13 @@ public class ReconnectionThread extends Thread {
                 Log.d(LOGTAG, "Trying to reconnect in " + waiting()
                         + " seconds");
                 Thread.sleep((long) waiting() * 1000L);
-                xmppManager.connect();
+                appManager.connect();
                 waiting++;
             }
         } catch (final InterruptedException e) {
-            xmppManager.getHandler().post(new Runnable() {
+            appManager.getHandler().post(new Runnable() {
                 public void run() {
-                    xmppManager.getConnectionListener().reconnectionFailed(e);
+                    appManager.getConnectionListener().reconnectionFailed(e);
                 }
             });
         }

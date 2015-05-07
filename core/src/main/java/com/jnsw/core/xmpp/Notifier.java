@@ -32,6 +32,7 @@ import java.util.Random;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
+@Deprecated
 public class Notifier {
 
     private static final String LOGTAG = LogUtil.makeLogTag(Notifier.class);
@@ -173,5 +174,4 @@ public class Notifier {
     private boolean isNotificationToastEnabled() {
         return sharedPrefs.getBoolean(Constants.SETTINGS_TOAST_ENABLED, false);
     }
-
 }

@@ -13,7 +13,7 @@ buildscript {
         jcenter {
             url = jcenter_url
         }
-        maven{
+        maven {
             url = public_maven_url
         }
     }
@@ -27,7 +27,7 @@ repositories {
     jcenter {
         url = jcenter_url
     }
-    maven{
+    maven {
         url = public_maven_url
     }
 }
@@ -45,7 +45,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled  false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -83,7 +83,7 @@ dependencies {
             'com.android.support:support-v4:21.0.3',
             'com.android.support:appcompat-v7:21.0.3',
             'org.apache.httpcomponents:httpmime:4.3.5',
-            'org.apache.httpcomponents:httpclient-android:4.3.5',
+            'org.apache.httpcomponents:httpclient-android:4.3.5.1',
             'com.google.guava:guava:18.0',
             'com.google.code.gson:gson:2.2.4',
     )

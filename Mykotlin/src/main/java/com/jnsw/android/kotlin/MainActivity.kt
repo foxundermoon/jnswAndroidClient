@@ -14,11 +14,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.common.eventbus.Subscribe
 import com.jnsw.android.kotlin.R;
 import com.jnsw.core.CustomApplication
 import org.jetbrains.anko.*
 import com.jnsw.core.data;
 import com.jnsw.core.data.Message
+import com.jnsw.core.event.DownloadEvent
+import com.jnsw.core.event.FileMessage
+import com.jnsw.core.event.UploadEvent
 import org.apache.http.client.methods.HttpPutHC4
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.mime.Header
@@ -130,7 +134,22 @@ public class MainActivity : Activity() {
                     }
                 }
             })
+            var file = FileMessage()
+            file.setId(1)
+            button("download",{
+                onClick {
+                    app.eventBus.post(DownloadEvent(file))
+                }
+            })
             img = imageView()
         }/*.layoutParams { topMargin = dip(8) }*/
+    }
+    Subscribe public  fun onUpload (event:UploadEvent) {
+
+
+    }
+
+    Subscribe public  fun onDownload(e:DownloadEvent){
+
     }
 }

@@ -9,31 +9,8 @@ import org.jivesoftware.smack.packet.Packet;
 /**
  * Created by foxundermoon on 2015/1/15.
  */
+@Deprecated
 public class IqPacketListener implements PacketListener{
-    private IqHandler iqHandler;
-
-    public static synchronized IqPacketListener getInstance() {
-        if(instance==null)
-            instance = new IqPacketListener();
-        return instance;
-    }
-
-    public static  void setInstance(IqPacketListener instance) {
-        IqPacketListener.instance = instance;
-    }
-
-    public IqHandler getIqHandler() {
-        return iqHandler;
-    }
-
-    public void setIqHandler(IqHandler iqHandler) {
-        this.iqHandler = iqHandler;
-    }
-
-    private IqPacketListener() {
-    }
-
-    private static IqPacketListener instance;
     @Override
     public void processPacket(Packet packet) {
         if(packet instanceof IQ){
@@ -42,8 +19,5 @@ public class IqPacketListener implements PacketListener{
             event.setEventData(iq);
             CustomApplication.getInstance().eventBus.post(event);
         }
-    }
-    public interface IqHandler{
-        void onIQ(IQ iq);
     }
 }

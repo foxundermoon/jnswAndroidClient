@@ -4,7 +4,7 @@ import android.util.Log;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
-import com.jnsw.core.xmpp.XmppManager;
+import com.jnsw.core.appmanager.AppManager;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 
@@ -13,20 +13,21 @@ import java.util.Map;
 /**
  * Created by foxundermoon on 2014/11/28.
  */
+@Deprecated
 public class HeartThreadRunnable implements Runnable {
     private static String TAG = HeartThreadRunnable.class.getSimpleName();
     public static boolean interrupted = false;
     private static int defaultDuration = 30 * 1000;
-    private XmppManager xmppManager;
+    private AppManager appManager;
     private Presence presence;
     static CustomApplication customApplication;
     static Map<String, Object> xmppstatus;
 
 
-    public static HeartThreadRunnable getInstance(XmppManager xmppManager) {
+    public static HeartThreadRunnable getInstance(AppManager appManager) {
         synchronized (HeartThreadRunnable.class) {
             if (instance == null) {
-                instance = new HeartThreadRunnable(xmppManager, defaultDuration);
+                instance = new HeartThreadRunnable(appManager, defaultDuration);
                 customApplication = CustomApplication.getInstance();
                 xmppstatus = (Map) customApplication.shareMap.get(Constants.XMPP_STATUS);
             }
@@ -59,8 +60,8 @@ public class HeartThreadRunnable implements Runnable {
 
     private int duration;
 
-    public HeartThreadRunnable(XmppManager xmppManager, int duration) {
-        this.xmppManager = xmppManager;
+    public HeartThreadRunnable(AppManager appManager, int duration) {
+        this.appManager = appManager;
         presence = new Presence(Presence.Type.available);
         presence.setFrom(ClientConfig.getLocalJid());
         presence.setTo(ClientConfig.getServerJid());
@@ -82,7 +83,7 @@ public class HeartThreadRunnable implements Runnable {
     }
 
     private void heartBeat() {
-        XMPPConnection xmppConnection = xmppManager.getConnection();
+        XMPPConnection xmppConnection = appManager.getConnection();
         if (xmppConnection != null && xmppConnection.isConnected()) {
             if (xmppstatus.containsKey("online")) {
 
@@ -101,8 +102,8 @@ public class HeartThreadRunnable implements Runnable {
         }
     }
 
-    public static void setup(XmppManager xmppManager) {
-        HeartThreadRunnable runnable = HeartThreadRunnable.getInstance(xmppManager);
+    public static void setup(AppManager appManager) {
+        HeartThreadRunnable runnable = HeartThreadRunnable.getInstance(appManager);
         runnable.setInterrupt(false);
         new Thread(runnable).start();
     }

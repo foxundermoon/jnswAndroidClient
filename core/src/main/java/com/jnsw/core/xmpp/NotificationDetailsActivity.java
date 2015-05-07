@@ -35,6 +35,7 @@ import com.jnsw.core.Constants;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
+@Deprecated
 public class NotificationDetailsActivity extends Activity {
 
     private static final String LOGTAG = LogUtil

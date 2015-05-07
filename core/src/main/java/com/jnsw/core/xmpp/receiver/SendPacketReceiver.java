@@ -7,15 +7,16 @@ import android.util.Log;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.util.EncryptUtil;
-import com.jnsw.core.service.XmppService;
+import com.jnsw.core.service.AppService;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
+@Deprecated
 public class SendPacketReceiver extends BroadcastReceiver {
-    private XmppService xmppService;
+    private AppService appService;
     private CustomApplication customApplication;
-    public SendPacketReceiver(XmppService xmppService) {
-        this.xmppService = xmppService;
+    public SendPacketReceiver(AppService appService) {
+        this.appService = appService;
         customApplication = CustomApplication.getInstance();
     }
 
@@ -24,7 +25,7 @@ public class SendPacketReceiver extends BroadcastReceiver {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         if (customApplication == null)
-            customApplication = (CustomApplication) xmppService.getApplication();
+            customApplication = (CustomApplication) appService.getApplication();
         String uuid = intent.getStringExtra(Constants.SEND_PACKET);
         if (uuid != null) {
             Packet packet = (Packet) customApplication.shareMap.get(uuid);
@@ -34,9 +35,9 @@ public class SendPacketReceiver extends BroadcastReceiver {
                     String tmpBase64=EncryptUtil.encrBASE64ByGzip(message.getBody());
                     message.removeBody((String) null);
                     message.setBody(tmpBase64);
-                    xmppService.getXmppManager().sendPacketAsync(message);
+                    appService.getAppManager().sendPacketAsync(message);
                 }else {
-                    xmppService.getXmppManager().sendPacketAsync(packet);
+                    appService.getAppManager().sendPacketAsync(packet);
                 }
                 customApplication.shareMap.remove(uuid);
                 Log.d(Constants.SEND_PACKET, packet.toXML());

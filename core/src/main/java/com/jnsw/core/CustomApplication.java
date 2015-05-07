@@ -1,11 +1,13 @@
 package com.jnsw.core;
 
 import android.app.Application;
-import android.content.Intent;
 import com.google.common.eventbus.EventBus;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.jnsw.core.data.*;
 import com.jnsw.core.http.MyHttpClient;
-import org.jivesoftware.smack.packet.Packet;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -14,64 +16,44 @@ import java.util.UUID;
 /**
  * Created by foxundermoon on 2014/10/30.
  */
-public class CustomApplication extends Application implements ICustomApplication {
+public class CustomApplication extends Application {
     public Map<String, Object> shareMap;
-    public  boolean isLogin = false;
     public EventBus eventBus;
-    private static CustomApplication applicationInstance;
+    public static CustomApplication instance;
     public MyHttpClient httpClient;
-
-    @Deprecated
-    @Override
-    public void sendPacketByXmppAsync(Packet packet) {
-        String uuid = creatUUID();
-        shareMap.put(uuid, packet);
-        Intent intent = new Intent();
-        intent.setAction(Constants.SEND_PACKET);
-        intent.putExtra(Constants.SEND_PACKET,uuid);
-        sendBroadcast(intent);
+    public Gson gson;
+    public String creatUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
-    @Deprecated
-    @Override
-    public void sendStringByXmppAsync(String stringData) {
-        String uuid = creatUUID();
-        shareMap.put(uuid, stringData);
-        Intent intent = new Intent();
-        intent.setAction(Constants.SEND_STRING);
-        intent.putExtra(Constants.SEND_STRING, uuid);
-        sendBroadcast(intent);
-
+    public static CustomApplication getInstance() {
+        return instance;
     }
-
-    private String creatUUID() {
-        return UUID.randomUUID().toString().replace("-","");
-    }
-
-    public static CustomApplication getInstance(){
-        return applicationInstance;
-    }
-
-//    public void sendBroadcast(String action,String shareMapKey) {
-//        Intent intent = new Intent();
-//        intent.setAction(action);
-//        intent.putExtra(action,shareMapKey);
-//        sendBroadcast(intent);
-//    }
-
     @Override
     public void onCreate() {
         super.onCreate();
         shareMap = new HashMap<String, Object>();
-        Map<String,Objects> xmppStatus = new HashMap<String, Objects>();
-        shareMap.put(Constants.XMPP_STATUS,xmppStatus);
+        Map<String, Objects> xmppStatus = new HashMap<String, Objects>();
+        shareMap.put(Constants.XMPP_STATUS, xmppStatus);
         eventBus = new EventBus(Constants.CUSTOM_EVENT_BUS);
-        applicationInstance = this;
+        instance = this;
         httpClient = MyHttpClient.getInstance();
+        gson = new GsonBuilder().setPrettyPrinting()
+                .registerTypeAdapter(Column.class, new ColumnSerilizer())
+                .registerTypeAdapter(Table.class, new TableSerializer())
+                .registerTypeAdapter(Command.class, new CommandSerilizer())
+                .registerTypeAdapter(Message.class, new MessageSerializer())
+                .registerTypeAdapter(Row.class, new RowSerializer()).create();
     }
 
     @Override
     public void onTerminate() {
+        eventBus=null;
+        try {
+            httpClient.getHttpClient().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         super.onTerminate();
     }
 

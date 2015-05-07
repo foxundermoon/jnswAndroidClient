@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import com.jnsw.core.Constants;
 
+@Deprecated
 public class XmppStatusReceiver extends BroadcastReceiver {
     StatusHandler statusHandler;
 

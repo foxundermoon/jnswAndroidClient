@@ -96,4 +96,5 @@ public class Constants {
     public static final String SEND_STRING = "com.jnsw.core.SEND_STRING";
     public static final String CUSTOM_EVENT_BUS = "com.jnsw.core.CUSTOM_EVENT_BUS";
     public static final String ENABLE_BROADCAST = "ENABLE_BROADCAST";
+    public static final String FILE_SYS_URI = "FILE_SYS_URI";
 }

@@ -5,23 +5,29 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntityHC4;
 import org.apache.http.client.methods.*;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.*;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.util.EntityUtilsHC4;
 
 import javax.net.ssl.SSLContext;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import javax.net.ssl.SSLException;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.UUID;
@@ -41,13 +47,48 @@ public class MyHttpClient {
         SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
                 sslContext,
                 SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
-        getConfigBuilder = RequestConfig.custom().setConnectionRequestTimeout(30*1000).setMaxRedirects(10).setRedirectsEnabled(true).setSocketTimeout(60*1000);
-        postConfigBuilder = RequestConfig.custom().setCircularRedirectsAllowed(false).setConnectionRequestTimeout(30*1000).setConnectTimeout(30 * 1000).setMaxRedirects(10).setSocketTimeout(60 * 1000);
+        getConfigBuilder = RequestConfig.custom().setConnectionRequestTimeout(30 * 1000).setMaxRedirects(10).setRedirectsEnabled(true).setSocketTimeout(60 * 1000);
+        postConfigBuilder = RequestConfig.custom().setCircularRedirectsAllowed(false).setConnectionRequestTimeout(30 * 1000).setConnectTimeout(30 * 1000).setMaxRedirects(10).setSocketTimeout(60 * 1000);
         hc = HttpClients.custom().setSSLSocketFactory(sslsf).setDefaultRequestConfig(getConfigBuilder.build()).build();
 //		hc = HttpClients.custom().setDefaultCookieStore(new BasicCookieStoreHC4()).setMaxConnTotal(100).build(); //new DefaultHttpClient(tcc,params);
 //		CookieStore cookieStore = new BasicCookieStore();
 //		((DefaultHttpClient) hc).setCookieStore(cookieStore);
     }
+
+    HttpRequestRetryHandler myRetryHandler = new HttpRequestRetryHandler() {
+
+        public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
+            if (executionCount >= 5) {
+                // Do not retry if over max retry count
+                return false;
+            }
+            if (exception instanceof InterruptedIOException) {
+                // Timeout
+                return false;
+            }
+            if (exception instanceof UnknownHostException) {
+                // Unknown host
+                return false;
+            }
+            if (exception instanceof ConnectTimeoutException) {
+                // Connection refused
+                return false;
+            }
+            if (exception instanceof SSLException) {
+                // SSL handshake exception
+                return false;
+            }
+            HttpClientContext clientContext = HttpClientContext.adapt(context);
+            HttpRequest request = clientContext.getRequest();
+            boolean idempotent = !(request instanceof HttpEntityEnclosingRequest);
+            if (idempotent) {
+                // Retry if the request is considered idempotent
+                return true;
+            }
+            return false;
+        }
+
+    };
 
     // 封装url 参数  name1=value1&name2=value2
     public static String wrapUrlParam(List<NameValuePair> params)
@@ -113,8 +154,25 @@ public class MyHttpClient {
         hp.setEntity(entity);
         hp.setConfig(getConfigBuilder.build());
         CloseableHttpResponse response = hc.execute(hp);
-        HttpEntity he = getHttpEntity (response);
+        HttpEntity he = getHttpEntity(response);
         return getText(he);
+    }
+
+    public String uploadByPut(String url, byte[] data, String fileName) throws URISyntaxException, IOException {
+        HttpPutHC4 put = new HttpPutHC4(new URI(url));
+        MultipartEntityBuilder mb = getDefaultmultipartEntityBuilder();
+        mb.addBinaryBody("file", data, ContentType.DEFAULT_BINARY, fileName);
+        put.setEntity(mb.build());
+        CloseableHttpResponse rsp = null;
+        try {
+            rsp = hc.execute(put);
+            return EntityUtilsHC4.toString(rsp.getEntity());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            rsp.close();
+        }
     }
 
 
@@ -150,7 +208,7 @@ public class MyHttpClient {
     }
 
     //	上传字节文件
-    public String upload(String url, byte[] bytes) throws ParseException, ClientProtocolException, IOException, ErrorResponseException {
+    public String upload(String url, byte[] bytes) throws IOException, ErrorResponseException {
         MultipartEntityBuilder multipartEntityBuilder = getDefaultmultipartEntityBuilder();
         String boundary = creatBoundary();
         multipartEntityBuilder.addBinaryBody("no name file", bytes).setBoundary(boundary);
@@ -160,7 +218,7 @@ public class MyHttpClient {
 
     //	上传流文件
     @Deprecated
-    public String upload(String url, InputStream is) throws ParseException, ClientProtocolException, IOException, ErrorResponseException {
+    public String upload(String url, InputStream is) throws IOException {
 
         MultipartEntityBuilder multipartEntityBuilder = getDefaultmultipartEntityBuilder();
         String boundary = creatBoundary();
@@ -172,16 +230,16 @@ public class MyHttpClient {
 //            httpPostHC4.removeHeaders("Content-Length");
 //        }
 //        httpPostHC4.setHeader("Content-Length", is.available() + "");
-        httpPostHC4.setHeader("Content-type", "multipart/form-data; boundary="+boundary);
-        httpPostHC4.setHeader("IsStream","true");
+        httpPostHC4.setHeader("Content-type", "multipart/form-data; boundary=" + boundary);
+        httpPostHC4.setHeader("IsStream", "true");
 //        httpPostHC4.setConfig(postConfigBuilder.build());
-        String response =  EntityUtilsHC4.toString(hc.execute(httpPostHC4).getEntity());
+        String response = EntityUtilsHC4.toString(hc.execute(httpPostHC4).getEntity());
         return response;
 
 //        return upload(url, he, boundary);
     }
 
-    public String upload(String url, HttpEntity postHttpEntity, String boundary) throws ParseException, ClientProtocolException, IOException, ErrorResponseException {
+    public String upload(String url, HttpEntity postHttpEntity, String boundary) throws IOException, ErrorResponseException {
         HttpPostHC4 hp = new HttpPostHC4(url);
         hp.setHeader("Content-type", "multipart/form-data; boundary=" + boundary);
         hp.setEntity(postHttpEntity);
@@ -202,13 +260,13 @@ public class MyHttpClient {
     }
 
     private HttpEntity getHttpEntity(String url)
-            throws ClientProtocolException, IOException, ErrorResponseException {
+            throws IOException, ErrorResponseException {
         HttpResponse rsp = getResponse(url);
         return getHttpEntity(rsp);
     }
 
     private HttpEntity getHttpEntity(HttpResponse rsp)
-            throws ClientProtocolException, IOException, ErrorResponseException {
+            throws IOException, ErrorResponseException {
         StatusLine sl = rsp.getStatusLine();
         int statusCode = sl.getStatusCode();
         switch (statusCode) {

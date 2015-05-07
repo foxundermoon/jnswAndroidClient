@@ -89,9 +89,9 @@
     <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.3.5" level="project" />
     <orderEntry type="library" exported="" name="guava-18.0" level="project" />
-    <orderEntry type="library" exported="" name="asmack-1.0.0" level="project" />
-    <orderEntry type="library" exported="" name="httpclient-android-4.3.5" level="project" />
     <orderEntry type="library" exported="" name="kotlin-runtime-0.11.91.4" level="project" />
+    <orderEntry type="library" exported="" name="asmack-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="httpclient-android-4.3.5.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="kotlin-stdlib-0.11.91.4" level="project" />

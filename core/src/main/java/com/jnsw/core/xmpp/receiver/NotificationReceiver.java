@@ -29,6 +29,7 @@ import com.jnsw.core.xmpp.Notifier;
  * 
  * @author Sehwan Noh (devnoh@gmail.com)
  */
+@Deprecated
 public final class NotificationReceiver extends BroadcastReceiver {
 
     private static final String LOGTAG = LogUtil

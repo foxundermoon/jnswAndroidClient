@@ -9,13 +9,14 @@ import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.util.EncryptUtil;
-import com.jnsw.core.service.XmppService;
+import com.jnsw.core.service.AppService;
 import org.jivesoftware.smack.packet.Message;
 
+@Deprecated
 public class SendStringReceiver extends BroadcastReceiver {
-    XmppService xmppService;
-    public SendStringReceiver(XmppService xmppService) {
-        this.xmppService = xmppService;
+    AppService appService;
+    public SendStringReceiver(AppService appService) {
+        this.appService = appService;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class SendStringReceiver extends BroadcastReceiver {
                 message.setLanguage("BASE64");
                 message.setBody(EncryptUtil.encrBASE64ByGzip(data));
                 message.setPacketID(uuid);
-                xmppService.getXmppManager().sendPacketAsync(message);
+                appService.getAppManager().sendPacketAsync(message);
             }
         }
     }

@@ -22,6 +22,7 @@ import org.jivesoftware.smack.packet.IQ;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
+@Deprecated
 public class NotificationIQ extends IQ {
 
     private String id;

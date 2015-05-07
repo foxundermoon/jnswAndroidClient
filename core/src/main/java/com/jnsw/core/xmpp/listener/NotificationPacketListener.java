@@ -16,9 +16,9 @@
 package com.jnsw.core.xmpp.listener;
 
 import android.util.Log;
+import com.jnsw.core.appmanager.AppManager;
 import com.jnsw.core.xmpp.LogUtil;
 import com.jnsw.core.xmpp.packet.NotificationIQ;
-import com.jnsw.core.xmpp.XmppManager;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;
 
@@ -27,13 +27,14 @@ import org.jivesoftware.smack.packet.Packet;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
+@Deprecated
 public class NotificationPacketListener implements PacketListener {
     private static NotificationPacketListener instance;
     private NotificationIqHandler notificationIqHandler;
 
-    public synchronized static NotificationPacketListener getInstance(XmppManager xmppManager) {
+    public synchronized static NotificationPacketListener getInstance(AppManager appManager) {
         if(instance==null)
-            instance = new NotificationPacketListener(xmppManager);
+            instance = new NotificationPacketListener(appManager);
         return instance;
     }
 
@@ -52,10 +53,10 @@ public class NotificationPacketListener implements PacketListener {
     private static final String LOGTAG = LogUtil
             .makeLogTag(NotificationPacketListener.class);
 
-    private final XmppManager xmppManager;
+    private final AppManager appManager;
 
-    private NotificationPacketListener(XmppManager xmppManager) {
-        this.xmppManager = xmppManager;
+    private NotificationPacketListener(AppManager appManager) {
+        this.appManager = appManager;
     }
 
     @Override
@@ -92,7 +93,7 @@ public class NotificationPacketListener implements PacketListener {
 //                //                        notificationApiKey).append("/").append(
 //                //                        System.currentTimeMillis()).toString()));
 //
-//                xmppManager.getContext().sendBroadcast(intent);
+//                appManager.getContext().sendBroadcast(intent);
 //            }
         }
 

@@ -25,6 +25,7 @@ import org.xmlpull.v1.XmlPullParser;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
+@Deprecated
 public class NotificationIQProvider implements IQProvider {
 
     public NotificationIQProvider() {

@@ -27,7 +27,7 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <service android:name="com.jnsw.core.service.XmppService">
+        <service android:name="com.jnsw.core.service.AppService">
             <intent-filter>
                 <action android:name="com.jnsw.core.service.NotificationService"></action>
             </intent-filter>

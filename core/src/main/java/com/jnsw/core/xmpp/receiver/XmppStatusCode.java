@@ -3,6 +3,7 @@ package com.jnsw.core.xmpp.receiver;
 /**
  * Created by foxundermoon on 2015/1/13.
  */
+@Deprecated
 public class XmppStatusCode {
     public static final int IsLogin = 1;
     public static final int DisConnect =2;

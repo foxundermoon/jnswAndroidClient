@@ -16,8 +16,8 @@
 package com.jnsw.core.xmpp.listener;
 
 import android.util.Log;
+import com.jnsw.core.appmanager.AppManager;
 import com.jnsw.core.xmpp.LogUtil;
-import com.jnsw.core.xmpp.XmppManager;
 import org.jivesoftware.smack.ConnectionListener;
 
 /** 
@@ -31,10 +31,10 @@ public class PersistentConnectionListener implements ConnectionListener {
     private static final String LOGTAG = LogUtil
             .makeLogTag(PersistentConnectionListener.class);
 
-    private final XmppManager xmppManager;
+    private final AppManager appManager;
 
-    public PersistentConnectionListener(XmppManager xmppManager) {
-        this.xmppManager = xmppManager;
+    public PersistentConnectionListener(AppManager appManager) {
+        this.appManager = appManager;
     }
 
     @Override
@@ -45,11 +45,11 @@ public class PersistentConnectionListener implements ConnectionListener {
     @Override
     public void connectionClosedOnError(Exception e) {
         Log.d(LOGTAG, "connectionClosedOnError()...");
-        if (xmppManager.getConnection() != null
-                && xmppManager.getConnection().isConnected()) {
-            xmppManager.getConnection().disconnect();
+        if (appManager.getConnection() != null
+                && appManager.getConnection().isConnected()) {
+            appManager.getConnection().disconnect();
         }
-        xmppManager.startReconnectionThread();
+        appManager.startReconnectionThread();
     }
 
     @Override

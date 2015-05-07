@@ -26,7 +26,7 @@
         </activity>
         <activity android:name=".activity.RegisterActivity"/>
         <activity android:name="com.jnsw.core.xmpp.NotificationDetailsActivity"/>
-        <service android:name="com.jnsw.core.service.XmppService"/>
-        <service android:name="com.jnsw.core.service.XmppService"/>
+        <service android:name="com.jnsw.core.service.AppService"/>
+        <service android:name="com.jnsw.core.service.AppService"/>
     </application>
 </manifest>

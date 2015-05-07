@@ -20,13 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
-import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.http.MyHttpClient;
 import com.jnsw.core.xmpp.packet.NotificationIQ;
-import com.jnsw.core.service.XmppService;
+import com.jnsw.core.service.AppService;
 import com.jnsw.core.xmpp.ServiceManager;
-import com.jnsw.core.xmpp.listener.MessagePacketListener;
-import com.jnsw.core.xmpp.listener.PresencePacketListener;
 import com.jnsw.core.xmpp.receiver.XmppStatusReceiver;
 import com.jnsw.ui.R;
 import org.apache.http.client.methods.HttpPostHC4;
@@ -35,7 +32,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtilsHC4;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Presence;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -46,7 +42,7 @@ public class MainActivity extends ActionBarActivity  {
     Holder holder;
     View.OnClickListener listener;
     private ServiceManager serviceManager;
-    XmppService xmppService;
+    AppService appService;
     XmppStatusReceiver xmppStatusReceiver;
     //    MyHttpClient httpClient;
     String uploadUrl = "http://10.80.5.222:2222/Upload";
@@ -91,9 +87,9 @@ public class MainActivity extends ActionBarActivity  {
 //        PresencePacketListener.getInstance().setPresenceHandler(this);
         registerBtnListener();
         registerXmppStatusReceiver();
-        if (!checkIsLogin()) {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
+//        if (!checkIsLogin()) {
+//            startActivity(new Intent(this, LoginActivity.class));
+//        }
     }
 
     @Override
@@ -102,13 +98,13 @@ public class MainActivity extends ActionBarActivity  {
         super.onResume();
     }
 
-    private boolean checkIsLogin() {
+//    private boolean checkIsLogin() {
         CustomApplication myApplication = CustomApplication.getInstance();
-        if (myApplication.isLogin)
-            return true;
-        else
-            return false;
-    }
+//        if (myApplication.isLogin)
+//            return true;
+//        else
+//            return false;
+//    }
 
 
     private void registerXmppStatusReceiver() {
@@ -173,7 +169,7 @@ public class MainActivity extends ActionBarActivity  {
 //                        message.setTo(ClientConfig.getServerJid(MainActivity.this));
 //                        message.setFrom(ClientConfig.getLocalJid(MainActivity.this));
                         message.setBody("connected!");
-                        CustomApplication.getInstance().sendPacketByXmppAsync(message);
+//                        CustomApplication.getInstance().sendPacketByXmppAsync(message);
                     }
 
                 }
@@ -265,12 +261,12 @@ public class MainActivity extends ActionBarActivity  {
         noti.setMessage(s);
         noti.setId(UUID.randomUUID().toString());
         noti.setTitle("c 2 s");
-        try {
-            ((CustomApplication) getApplication()).sendPacketByXmppAsync(noti);
-            Log.d("notification", noti.toString());
-        } catch (Exception e) {
-            holder.txtView.append(e.getMessage() + e.toString());
-        }
+//        try {
+//            ((CustomApplication) getApplication()).sendPacketByXmppAsync(noti);
+//            Log.d("notification", noti.toString());
+//        } catch (Exception e) {
+//            holder.txtView.append(e.getMessage() + e.toString());
+//        }
 
     }
 
@@ -280,12 +276,12 @@ public class MainActivity extends ActionBarActivity  {
      * @param s
      */
     private void sendMessage(String s) {
-        Message message = new Message();
-        String to = ((TextView) findViewById(R.id.editText2)).getText().toString();
-        message.setTo(to + "@10.80.5.222");
-        message.setFrom("1@10.80.5.222");
-        message.setBody(s);
-        CustomApplication.getInstance().sendPacketByXmppAsync(message);
+//        Message message = new Message();
+//        String to = ((TextView) findViewById(R.id.editText2)).getText().toString();
+//        message.setTo(to + "@10.80.5.222");
+//        message.setFrom("1@10.80.5.222");
+//        message.setBody(s);
+//        CustomApplication.getInstance().sendPacketByXmppAsync(message);
     }
 
 

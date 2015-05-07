@@ -10,37 +10,16 @@ import org.jivesoftware.smack.packet.Presence;
 /**
  * Created by foxundermoon on 2014/12/8.
  */
+@Deprecated
 public class PresencePacketListener implements PacketListener {
-    public PresenceHandler getPresenceHandler() {
-        return presenceHandler;
-    }
 
-    public void setPresenceHandler(PresenceHandler presenceHandler) {
-        this.presenceHandler = presenceHandler;
-    }
-
-    public synchronized static PresencePacketListener getInstance() {
-        if(instance==null)
-            instance = new PresencePacketListener();
-        return instance;
-    }
-
-    public static void setInstance(PresencePacketListener instance) {
-        PresencePacketListener.instance = instance;
-    }
-    private PresenceHandler presenceHandler;
-    private static PresencePacketListener instance;
-    String TAG = LogUtil.makeLogTag(PresencePacketListener.class);
-    CustomApplication customApplication = CustomApplication.getInstance();
     public void processPacket(Packet packet) {
         if(packet instanceof Presence){
             Presence presence = (Presence)packet;
-            if(presenceHandler!=null)
-                presenceHandler.onPresence(presence);
             ReceivedXmppPresenceEvent<Presence> event = new ReceivedXmppPresenceEvent<Presence>();
             event.setEventData(presence);
             CustomApplication.getInstance().eventBus.post(event);
-            Log.d(TAG,"Presence receive packet ...:"+packet.toXML() );
+//            Log.d(TAG,"Presence receive packet ...:"+packet.toXML() );
             //登录响应
 //            if(presence.getType()==Presence.Type.subscribed){
 //                Intent intent = new Intent();
@@ -72,8 +51,5 @@ public class PresencePacketListener implements PacketListener {
 
         }
 
-    }
-    public  interface PresenceHandler{
-        void onPresence(Presence presence);
     }
 }

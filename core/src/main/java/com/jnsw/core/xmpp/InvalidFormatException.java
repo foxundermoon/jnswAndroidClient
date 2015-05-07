@@ -20,6 +20,7 @@ package com.jnsw.core.xmpp;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
+@Deprecated
 public class InvalidFormatException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

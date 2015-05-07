@@ -26,6 +26,7 @@ import com.jnsw.core.Constants;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
+@Deprecated
 public class NotificationSettingsActivity extends PreferenceActivity {
 
     private static final String LOGTAG = LogUtil
