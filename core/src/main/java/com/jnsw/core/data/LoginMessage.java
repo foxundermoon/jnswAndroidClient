@@ -1,4 +1,4 @@
-package com.jnsw.core.event;
+package com.jnsw.core.data;
 
 /**
  * Created by foxundermoon on 2015/5/6.

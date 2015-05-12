@@ -16,12 +16,8 @@ import com.google.common.base.Strings;
 import com.google.common.eventbus.Subscribe;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
-import com.jnsw.core.data.MessageCallback;
-import com.jnsw.core.data.Operation;
-import com.jnsw.core.data.Row;
-import com.jnsw.core.data.Table;
-import com.jnsw.core.event.ReceivedMessageEvent;
-import com.jnsw.core.event.ReceivedStringEvent;
+import com.jnsw.core.data.*;
+import com.jnsw.core.event.*;
 import com.jnsw.core.xmpp.ServiceManager;
 import org.jivesoftware.smack.packet.Message;
 import org.json.JSONException;
@@ -56,6 +52,7 @@ public class MainActivity extends Activity {
         sendTestBtn.setOnClickListener(clickListener);
         exitBtn.setOnClickListener(clickListener);
         handler = new Handler();
+        CustomApplication.getInstance().eventBus.register(this);
 //        ((CustomApplication)getApplication()).eventBus.register(this);
 //        CustomApplication.getInstance().eventBus.register(this);
     }
@@ -102,7 +99,8 @@ public class MainActivity extends Activity {
                 System.exit(0);
             }
             if (v == sendByEventBtn) {
-                sendQueryMessage();
+                upAndDownLoad();
+//                sendQueryMessage();
 //                sendByEventBtn.setEnabled(false);
 //                sendMessageByEventBus();
             }
@@ -110,30 +108,65 @@ public class MainActivity extends Activity {
     }
 
     private void sendQueryMessage() {
-        com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
+        com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();  //①:新建 Message
         message.creatCommand().setOperation(Operation.query)
                 //        .setSql("SELECT * FROM `foxdata`.`nj_专题_专业_图层类型划分`");
-                .setSql("SELECT * FROM `foxdata`.`线路信息1`");
+                .setSql("SELECT * FROM `foxdata`.`线路信息1`")
+        .setName("testname"); //②:设置message command
+//        message.setCallback(new MessageCallback() {
+//            @Override
+//            public void onCallback(com.jnsw.core.data.Message message) {
+//                final String callBackMsg = message.toJson();
+//                runAtUI(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        textView.setText(callBackMsg);
+//                    }
+//                });
+//            }
+//        });
+
         message.setCallback(new MessageCallback() {
             @Override
             public void onCallback(com.jnsw.core.data.Message message) {
-                final String callBackMsg = message.toJson();
-                runAtUI(new Runnable() {
-                    @Override
-                    public void run() {
-                        textView.setText(callBackMsg);
-                    }
-                });
+              Table tb=  message.getDataTable();
+                String p = (String) message.getProperty("key");
+
             }
-        });
+        });  //③:设置回调
 
         try {
-            message.send();
+            message.send();  //④发送
         } catch (JSONException e) {
         }
 
     }
 
+    public void upAndDownLoad(){
+        CustomApplication.getInstance() .eventBus.register(this);
+        FileMessage f = new FileMessage();
+        f.setId(1);
+        CustomApplication.getInstance().eventBus.post(new DownloadEvent(f));
+        p("download the file with id=1");
+        p("downloading.... ");
+    }
+
+    @Subscribe
+    public void onDownloaded(DownloadedEvent event){
+        FileMessage file = event.getEventData();
+        p("download success");
+        p("name:" + file.getFileName());
+        p("md5:" + file.getMd5());
+        file.setFileName(file.getFileName() + ".new");
+        CustomApplication.getInstance().eventBus.post(new UploadEvent(file));
+        p("uploadding.....");
+    }
+    @Subscribe
+    public void onUploaded(UploadedEvent event){
+        FileMessage f = event.getEventData();
+        p("upload success");
+        p("id:" + f.getId());
+    }
     private void sendCreateMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
         message.creatCommand().setOperation(Operation.runsql)
@@ -342,6 +375,14 @@ public class MainActivity extends Activity {
         runAtUI(new Runnable() {
             @Override
             public void run() {
+                com.jnsw.core.data.Message msg = event.getEventData();
+               Table tb= msg.getDataTable();
+                Command cmd= msg.getCommand();
+
+                if("获取最新任务".equals(cmd.getName() )){
+
+                }
+
                 textView.setText(event.getEventData().toJson());
             }
         });
@@ -351,7 +392,7 @@ public class MainActivity extends Activity {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
         message.creatCommand()
                 .setName("add")
-                .setOperation("insert");
+                .setOperation(Operation.insert);
         Table tb = message.createTable("用户", "日期", "档案号", "坐标串")
                 .setDatabase("foxdata")
                 .setName("nj_gps档案记录");
@@ -387,6 +428,7 @@ public class MainActivity extends Activity {
 
     }
 
+    @Deprecated
     private void sendMessageByEventBus() {
 //        SendXmppPacketEvent<Packet> event = new SendXmppPacketEvent<Packet>();
 //        Message message = new Message();
@@ -436,7 +478,6 @@ public class MainActivity extends Activity {
         handler.post(runnable);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -459,4 +500,12 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void p(final String s){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textView.append(s +"\n");
+            }
+        });
+    }
 }

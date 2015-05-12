@@ -21,8 +21,9 @@ import org.jetbrains.anko.*
 import com.jnsw.core.data;
 import com.jnsw.core.data.Message
 import com.jnsw.core.event.DownloadEvent
-import com.jnsw.core.event.FileMessage
+import com.jnsw.core.data.FileMessage
 import com.jnsw.core.event.UploadEvent
+import com.jnsw.core.util.L
 import org.apache.http.client.methods.HttpPutHC4
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.mime.Header
@@ -32,11 +33,14 @@ import java.io.OutputStream
 import java.lang.Throwable
 import java.net.URI
 import java.net.URL
+import java.util.Random
 
 public class MainActivity : Activity() {
     val MESSAGE = ""
-
+    val textViewTag = "information"
+    var textView:EditText? =null
     private var TAG: String = ""
+    var info:Int=-1
 
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +54,12 @@ public class MainActivity : Activity() {
             padding = dip(16)
             scrollY
             scrollX
-
-            val tex = editText("result :") {
+            val textView = editText("result :") {
                 textSize = 18f
+                setTag(textViewTag)
+                setId(Random().nextInt())
             }.layoutParams { verticalMargin = dip(4) }
+            info = textView.getId()
             val draw = getResources().getDrawable(R.drawable.ic_launcher)
             Thread(Runnable {
                 runOnUiThread {
@@ -64,25 +70,25 @@ public class MainActivity : Activity() {
             button("dowmload bytes", {
                 textSize = 20f
                 onClick {
-                    tex.append("clicked")
+                    textView.append("clicked")
 
                     Thread(Runnable({
                         try {
                             val result = app.httpClient.downloadBitmap("http://10.80.5.222/img/girl_2.jpg")
                             pic = app.httpClient.downloadBytes("http://10.80.5.222/img/girl_2.jpg")
                             runOnUiThread {
-                                tex.append("\n get result\n result: $result \n")
-                                tex.append("\n result length: ${result.getByteCount()} \n")
+                                textView.append("\n get result\n result: $result \n")
+                                textView.append("\n result length: ${result.getByteCount()} \n")
                             }
                             if (result != null) {
-                                runOnUiThread { tex.append("\n length :${result.getByteCount()}\n") }
+                                runOnUiThread { textView.append("\n length :${result.getByteCount()}\n") }
                                 runOnUiThread { img.setImageBitmap(result) }
                             } else {
-                                runOnUiThread { tex.setText("download faild") }
+                                runOnUiThread { textView.setText("download faild") }
                             }
                         } catch(e: Exception) {
                             runOnUiThread {
-                                tex.append(
+                                textView.append(
                                         "\n Exception: ${e.getMessage()} \n cause: ${e.getCause()} "
                                 )
                             }
@@ -119,10 +125,10 @@ public class MainActivity : Activity() {
                                 //                                    val result = app.httpClient.upload("http://10.80.5.222/", ops.toByteArray())
                                 msg += "\nresult:${EntityUtilsHC4.toString(rsp.getEntity())}"
                                 //                                }
-                                runOnUiThread { tex.append(msg) }
+                                runOnUiThread { textView.append(msg) }
                             } catch(e: kotlin.Throwable) {
                                 Log.e(TAG,TAG);
-//                                handler.post(Runnable { tex?.append(e?.getMessage()) })
+//                                handler.post(Runnable { textView?.append(e?.getMessage()) })
 //                                    Log.e(TAG,"exception is null")
 //                                    Log.e(TAG,e.getMessage())
 //                                    Log.e(TAG,msg)
@@ -130,7 +136,7 @@ public class MainActivity : Activity() {
                             }
                         }).start()
                     } catch(e: Exception) {
-                        handler.post(Runnable { tex.append("exception :${e.getMessage()}")  })
+                        handler.post(Runnable { textView.append("exception :${e.getMessage()}")  })
                     }
                 }
             })
@@ -139,17 +145,46 @@ public class MainActivity : Activity() {
             button("download",{
                 onClick {
                     app.eventBus.post(DownloadEvent(file))
+                    runOnUiThread {
+                        textView?.append("download.....")
+                    }
                 }
             })
             img = imageView()
         }/*.layoutParams { topMargin = dip(8) }*/
     }
     Subscribe public  fun onUpload (event:UploadEvent) {
+        var file = event.getEventData()
+        if(file.isUploaded()){
+            runOnUiThread {
+                L.e(TAG,"upload success,the file md5 is ${file.getMd5()}")
+                L.e(TAG,"textView ID :$info")
+                L.e( "findViewById(info):"+findViewById(info))
+                textView?.append("upload success,the file md5 is ${file.getMd5()}")
+            }
+        }else{
+            runOnUiThread {
+                textView?.append("upload failed:${file.getErrorMessage()}")
+            }
+        }
 
 
     }
 
     Subscribe public  fun onDownload(e:DownloadEvent){
+        var file = e.getEventData()
+        if(file.isDownloaded()){
+            runOnUiThread {
+                textView?.append("download success! name:${file.getFileName()} md5:${file.getMd5()}")
+            }
+            file.setFileName(file.getFileName() +".new")
+            CustomApplication.getInstance().eventBus.post(UploadEvent(file))
+
+        }else{
+            runOnUiThread {
+                textView?.append("download failed :${file.getErrorMessage()}")
+            }
+        }
 
     }
 }

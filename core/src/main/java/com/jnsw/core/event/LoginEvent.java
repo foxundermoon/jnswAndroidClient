@@ -1,5 +1,7 @@
 package com.jnsw.core.event;
 
+import com.jnsw.core.data.LoginMessage;
+
 /**
  * Created by foxundermoon on 2015/5/6.
  */

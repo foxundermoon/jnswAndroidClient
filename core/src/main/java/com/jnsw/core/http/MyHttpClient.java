@@ -3,10 +3,13 @@ package com.jnsw.core.http;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
+import com.jnsw.core.data.FileMessage;
+import com.jnsw.core.data.swRow;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntityHC4;
 import org.apache.http.client.methods.*;
@@ -21,6 +24,7 @@ import org.apache.http.impl.client.*;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.util.EntityUtilsHC4;
+import org.json.JSONObject;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
@@ -130,6 +134,35 @@ public class MyHttpClient {
         return EntityUtils.toByteArray(he);
     }
 
+    public FileMessage downloadFile(String uri) {
+        FileMessage fileMessage = new FileMessage();
+        CloseableHttpResponse rsp = null;
+        try {
+            rsp = getResponse(uri);
+            if ("false".equals(rsp.getFirstHeader("File-Exist").getValue())) {
+                String result = EntityUtilsHC4.toString(rsp.getEntity());
+                JSONObject jo = new JSONObject(result);
+                fileMessage.setErrorMessage(jo.getString("err"));
+            } else if ("true".equals(rsp.getFirstHeader("File-Exist").getValue())) {
+                fileMessage.setId(Integer.valueOf(rsp.getFirstHeader("File-Id").getValue()));
+                fileMessage.setMd5(rsp.getFirstHeader("File-Md5").getValue());
+                fileMessage.setFileName(rsp.getFirstHeader("File-Name").getValue());
+                fileMessage.setData(EntityUtilsHC4.toByteArray(rsp.getEntity()));
+                fileMessage.setDownloaded(true);
+            }
+        } catch (IOException e) {
+            fileMessage.setErrorMessage(e.getMessage());
+        } catch (Exception e) {
+            fileMessage.setErrorMessage(e.getMessage());
+        } finally {
+            try {
+                rsp.close();
+            } catch (IOException e) {
+            }
+            return fileMessage;
+        }
+    }
+
     // 通过 url地址下载文本文件
     public String downloadText(String url) throws
             IOException, ErrorResponseException {
@@ -157,6 +190,7 @@ public class MyHttpClient {
         HttpEntity he = getHttpEntity(response);
         return getText(he);
     }
+
 
     public String uploadByPut(String url, byte[] data, String fileName) throws URISyntaxException, IOException {
         HttpPutHC4 put = new HttpPutHC4(new URI(url));

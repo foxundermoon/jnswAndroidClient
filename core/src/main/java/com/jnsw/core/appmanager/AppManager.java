@@ -23,6 +23,8 @@ import android.os.Handler;
 import android.util.Log;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
+import com.jnsw.core.data.AppErrorMessage;
+import com.jnsw.core.event.AppErrorEvent;
 import com.jnsw.core.event.LoginEvent;
 import com.jnsw.core.service.AppService;
 import com.jnsw.core.xmpp.LogUtil;
@@ -326,9 +328,13 @@ public class AppManager {
                     connection.connect();
                     registerPacketListener();
 //                    broadcastXmppStatus(XmppStatusCode.ConectedSuccess);
-                } catch (XMPPException e) {
+                } catch (Exception e) {
                     Log.e(LOGTAG, "XMPP connection failed", e);
-//                    broadcastXmppStatus(XmppStatusCode.ConnectionFailed);
+                    AppErrorMessage errorMessage = new AppErrorMessage();
+                    errorMessage.errorType = AppErrorMessage.ErrorType.ConnectError;
+                    errorMessage.message = e.getMessage();
+                    errorMessage.cause = e.getCause().getMessage();
+                    CustomApplication.getInstance().eventBus.post(new AppErrorEvent(errorMessage));
                 }
 
                 appManager.runTask();

@@ -1,9 +1,17 @@
-package com.jnsw.core.event;
+package com.jnsw.core.data;
 
 /**
- * Created by foxundermoon on 2015/5/7.
+ * Created by foxundermoon on 2015/5/9.
  */
 public class FileMessage {
+    private boolean uploaded;
+    private String fileName;
+    private String md5;
+    private byte[] data;
+    private String errorMessage;
+    private  int id;
+    private boolean downloaded;
+
     public boolean isUploaded() {
         return uploaded;
     }
@@ -35,14 +43,6 @@ public class FileMessage {
     public void setData(byte[] data) {
         this.data = data;
     }
-
-    private boolean uploaded;
-    private String fileName;
-    private String md5;
-    private byte[] data;
-    private String errorMessage;
-    private  int id;
-    private boolean downloaded;
 
     public boolean isDownloaded() {
         return downloaded;

@@ -57,6 +57,15 @@ public final class Message {
     }
 
     private MessageCallback callback;
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
     private Command command;
 
     public int propertiesCount() {

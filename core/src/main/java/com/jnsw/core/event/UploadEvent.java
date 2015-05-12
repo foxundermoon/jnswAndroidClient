@@ -1,6 +1,6 @@
 package com.jnsw.core.event;
 
-import java.util.List;
+import com.jnsw.core.data.FileMessage;
 
 /**
  * Created by foxundermoon on 2015/5/7.
