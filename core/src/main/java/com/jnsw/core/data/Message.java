@@ -62,6 +62,13 @@ public final class Message {
         return command;
     }
 
+    public Message switchDirection(){
+        String toUser = getToUser();
+        String fromUser = getFromUser();
+        setFromUser(toUser);
+        setToUser(fromUser);
+        return  this;
+    }
     public void setCommand(Command command) {
         this.command = command;
     }
@@ -163,10 +170,12 @@ public final class Message {
     @Subscribe
     public void onCallback(final ReceivedMessageEvent receivedMessageEvent) {
         Message message = receivedMessageEvent.getEventData();
+
         if (message != null) {
 //        if ((message !=null )&&  ( getId().equals(message.getId())) && (callback != null)) {
 //            String sid = getId();
 //            String rid = message.getId();
+
             if ((getId().equals(message.getId()))) {
                 callback.onCallback(message);
                 CustomApplication.getInstance().eventBus.unregister(this);

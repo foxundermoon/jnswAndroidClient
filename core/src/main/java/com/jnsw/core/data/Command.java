@@ -4,6 +4,25 @@ package com.jnsw.core.data;
  * Created by foxundermoon on 2015/4/22.
  */
 public class Command {
+    public static String GetOnlineUsers = "GetOnlineUsers"; //向服务获取全部在线用户
+    public static String GetOnlineUsersResponse = "GetOnlineUsersResponse";  //接受全部在线任务
+    //public static String GetUserTask = "GetUserTask";
+    //public static String GetUserTaskResponse = "GetUserTaskResponse";
+    //public static String GetUpLine = "GetUpLine";
+    //public static String GetUpLineResponse = "GetUpLineResponse";
+    //public static String GetDownLine = "GetDownLine";
+    //public static String GetDownLineResponse = "GetDownLineResponse";
+    public static String UserLogin = "UserLogin";  //有新用户登录
+    public static String OnLineAtOtherPlace = "OnLineAtOtherPlace"; //用户被顶下线
+    public static String UserOffLine = "UserOffLine"; //用户离线
+    public static String ErrorMessage = "ErrorMessage";  //错误相关消息
+
+    public static String SendTask = "SendTask";   // 下发任务
+    public static String SendTaskResponse = "SendTaskResponse";  //收到下发任务
+    public static String DataTable = "DataTable";  //数据库/表相关操作
+    public static String Response = "Response";  //返回消息
+
+
     private String name;
     private String operation;
     private String condition;

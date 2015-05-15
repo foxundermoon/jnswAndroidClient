@@ -1,12 +1,13 @@
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'signing'
-group = 'com.jnsw.android'
-version = '0.2.0'
 //sourceCompatibility = 1.6
 //targetCompatibility = 1.6
-
+version = '0.2.1'
+group = 'com.jnsw.android'
 buildscript {
+//    ext.version = '0.2.1'
+//    ext.group = 'com.jnsw.android'
     ext.jcenter_url = 'http://222.vvfox.com/jcenter/'
     ext.public_maven_url = 'http://222.vvfox.com/public/'
     repositories {
@@ -112,7 +113,7 @@ uploadArchives {
 //                name project.name
                 name 'core'
                 packaging 'jar'
-                description 'the android library of company'
+                description 'the android library of company  version:'+version +"  group:"+group
                 url 'https://github.com/foxundermoon/jnswAndroidClient'
                 licenses {
                     license {
@@ -134,7 +135,7 @@ task releaseJar(type: Copy) {
     from('build/intermediates/bundles/release')
     into('build/output/jar')
     include('classes.jar')
-    rename('calsses.jar', 'core.jar')
+    rename('calsses.jar', "core.jar")
 }
 task releaseLib(type: Copy, dependsOn: releaseJar) {
     into "../../release"
@@ -148,7 +149,7 @@ File releaseJarFile() {
         from('build/intermediates/bundles/release')
         into('build/outputs')
         include('classes.jar')
-        rename('classes.jar', 'core.jar')
+        rename('classes.jar', "core.jar")
     }
     file("build/outputs/core.jar")
 }

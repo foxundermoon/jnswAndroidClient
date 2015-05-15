@@ -109,7 +109,8 @@ public class MainActivity extends Activity {
 
     private void sendQueryMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();  //①:新建 Message
-        message.creatCommand().setOperation(Operation.query)
+        message.creatCommand()
+                .setName(Command.DataTable).setOperation(Operation.query)
                 //        .setSql("SELECT * FROM `foxdata`.`nj_专题_专业_图层类型划分`");
                 .setSql("SELECT * FROM `foxdata`.`线路信息1`")
         .setName("testname"); //②:设置message command
@@ -129,7 +130,7 @@ public class MainActivity extends Activity {
         message.setCallback(new MessageCallback() {
             @Override
             public void onCallback(com.jnsw.core.data.Message message) {
-              Table tb=  message.getDataTable();
+                Table tb = message.getDataTable();
                 String p = (String) message.getProperty("key");
 
             }
@@ -169,7 +170,7 @@ public class MainActivity extends Activity {
     }
     private void sendCreateMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
-        message.creatCommand().setOperation(Operation.runsql)
+        message.creatCommand().setName(Command.DataTable).setOperation(Operation.runsql)
                 .setSql("CREATE TABLE IF NOT EXISTS `foxdata`.`test` (" +
                         "  `id` int(11) NOT NULL AUTO_INCREMENT," +
                         "  `c` varchar(20) NOT NULL," +
@@ -184,7 +185,7 @@ public class MainActivity extends Activity {
 
     private void sendUpdateMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
-        message.creatCommand().setOperation(Operation.update)
+        message.creatCommand().setName(Command.DataTable).setOperation(Operation.update)
                 .setCondition("ID=@ID AND 档案号=@档案号");
         Table tb = message.createTable("ID", "用户", "档案号")
                 .setDatabase("foxdata")
@@ -206,7 +207,7 @@ public class MainActivity extends Activity {
 
     private void sendDeleteMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
-        message.creatCommand().setOperation("delete")
+        message.creatCommand().setName(Command.DataTable).setOperation(Operation.delete)
                 .setCondition("ID=@ID AND `档案号`=@档案号");
         Table tb = message.createTable("ID", "档案号")
                 .setDatabase("foxdata")
@@ -226,6 +227,7 @@ public class MainActivity extends Activity {
 
     }
 
+    @Deprecated
     private void deserilizerJsonMessage() {
         String jmsg = "{\n" +
                 "  \"id\": \"b510f5e4-446c-4ab6-b54a-8b666379c333\",\n" +
@@ -376,14 +378,10 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 com.jnsw.core.data.Message msg = event.getEventData();
-               Table tb= msg.getDataTable();
                 Command cmd= msg.getCommand();
+                textView.append(msg.toJson());
+                textView.append(msg.getJsonCommand());
 
-                if("获取最新任务".equals(cmd.getName() )){
-
-                }
-
-                textView.setText(event.getEventData().toJson());
             }
         });
     }
@@ -391,7 +389,7 @@ public class MainActivity extends Activity {
     private void sendInsertMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
         message.creatCommand()
-                .setName("add")
+                .setName(Command.DataTable)
                 .setOperation(Operation.insert);
         Table tb = message.createTable("用户", "日期", "档案号", "坐标串")
                 .setDatabase("foxdata")
@@ -456,14 +454,13 @@ public class MainActivity extends Activity {
     private void login() {
         ClientConfig.Builder.getInstance()
                 .setXmppPasword("222")
-                .setXmppUser("admin")
+                .setXmppUser("user1")
                 .setXmppServerPort(5222)
                 .setXmppServerHost("10.80.5.222")
                 .commit().startXmppService();
 //                ((CustomApplication)getApplication()).eventBus.register(this);
-
     }
-
+    @Deprecated
     @Subscribe
     public void ReceivedStringByEventBus(final ReceivedStringEvent event) {
         runAtUI(new Runnable() {
@@ -478,27 +475,6 @@ public class MainActivity extends Activity {
         handler.post(runnable);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public void p(final String s){
         runOnUiThread(new Runnable() {
