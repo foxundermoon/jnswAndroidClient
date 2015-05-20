@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 public class CommandSerilizer implements JsonSerializer<Command>,JsonDeserializer<Command> {
     @Override
     public Command deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-       JsonObject jsonObject = json.getAsJsonObject();
+        JsonObject jsonObject = json.getAsJsonObject();
         Command cmd = new Command();
         if (jsonObject.has(MapKeys.name)) {
             cmd.setName(jsonObject.getAsJsonPrimitive(MapKeys.name).getAsString());

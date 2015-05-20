@@ -72,6 +72,9 @@ public class ClientConfig {
             return this;
         }
 
+        public Builder setFileServerUrl(String fileServerUrl){
+            return set(Constants.FILE_SYS_URI,fileServerUrl);
+        }
         public Builder setXmppServerHost(String host) {
             return set(Constants.XMPP_HOST, host);
         }
@@ -80,32 +83,12 @@ public class ClientConfig {
             return set(Constants.XMPP_PORT, port);
         }
 
-        public Builder setHttpHost(String host) {
-            return set(Constants.HTTP_HOST, host);
-        }
-
-        public Builder setHttpPort(int port) {
-            return set(Constants.HTTP_PORT, port);
-        }
-
         public Builder setXmppUser(String userName) {
             return set(Constants.XMPP_USERNAME, userName);
         }
 
         public Builder setXmppPasword(String passwd) {
             return set(Constants.XMPP_PASSWORD, passwd);
-        }
-
-        public Builder setHttpUser(int uid) {
-            return set(Constants.HTTP_USER_NAME, uid);
-        }
-
-        public Builder setHttpPassword(String password) {
-            return set(Constants.HTTP_PASSWORD, password);
-        }
-
-        public Builder setEnableBroadcastReceiver(boolean enableBroadcastReceiver) {
-            return set(Constants.ENABLE_BROADCAST, new Boolean(enableBroadcastReceiver));
         }
 
         public Builder commit(Context context) {

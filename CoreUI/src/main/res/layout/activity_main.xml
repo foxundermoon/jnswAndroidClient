@@ -29,14 +29,14 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sendTest"
-                        android:id="@+id/sendTestBtn"/>
+                        android:text="up&amp;Down"
+                        android:id="@+id/upAndDown"/>
                 <Button
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="byEvent"
-                        android:id="@+id/sendByEventBus"/>
+                        android:text="sendTest"
+                        android:id="@+id/sendTest"/>
                 <Button
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
@@ -49,11 +49,17 @@
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" android:weightSum="1">
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="362dp"
-                    android:text="New Text"
-                    android:id="@+id/textView"/>
+            <ScrollView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/scrollView" android:textAlignment="center">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="362dp"
+                        android:text="New Text"
+                        android:id="@+id/textView" android:autoText="false" android:editable="true"
+                        android:enabled="true" android:minHeight="200dp" android:minLines="100000"/>
+            </ScrollView>
             <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -29,12 +29,6 @@ import java.util.UUID;
  * Created by foxundermoon on 2015/4/23.
  */
 public final class Message {
-    static Gson gson = new GsonBuilder().setPrettyPrinting()
-            .registerTypeAdapter(Column.class, new ColumnSerilizer())
-            .registerTypeAdapter(Table.class, new TableSerializer())
-            .registerTypeAdapter(Command.class, new CommandSerilizer())
-            .registerTypeAdapter(Message.class, new MessageSerializer())
-            .registerTypeAdapter(Row.class, new RowSerializer()).create();
     private Table dataTable;
     public boolean hasError = false;
 
@@ -49,6 +43,8 @@ public final class Message {
     private Map<String, Object> properties;
 
     public Object getProperty(String key) {
+        if(properties==null)
+            return null;
         return properties.get(key);
     }
 
@@ -80,6 +76,8 @@ public final class Message {
     }
 
     public boolean hasProperty(String key) {
+        if(properties==null)
+            return false;
         return properties.containsKey(key);
     }
 
@@ -87,10 +85,13 @@ public final class Message {
         if (hasProperty(MapKeys.fromUser)) {
             return getProperty(MapKeys.fromUser).toString();
         }
-        return null;
+        return ClientConfig.getUsrName();
     }
 
     public Message addProperty(String key, Object value) {
+        if(properties ==null){
+            properties = new HashMap<String, Object>();
+        }
         properties.put(key, value);
         return this;
     }
@@ -104,7 +105,7 @@ public final class Message {
         if (hasProperty(MapKeys.toUser)) {
             return getProperty(MapKeys.toUser).toString();
         }
-        return null;
+        return "0";
     }
 
     public Message setToUser(String toUser) {
@@ -126,7 +127,9 @@ public final class Message {
         if (hasProperty(MapKeys.id)) {
             return (String) getProperty(MapKeys.id);
         } else {
-            return null;
+            String id = UUID.randomUUID().toString().replace("-","").substring(0,5);
+            setId(id);
+            return id;
         }
     }
 
@@ -160,17 +163,12 @@ public final class Message {
 
     public void send() throws JSONException {
         CustomApplication application = CustomApplication.getInstance();
-        if (Strings.isNullOrEmpty(getId())) {
-            setId(UUID.randomUUID().toString().replace("-",""));
-        }
         application.eventBus.register(this);
         application.eventBus.post(new SendMessageEvent(this));
     }
-
     @Subscribe
-    public void onCallback(final ReceivedMessageEvent receivedMessageEvent) {
+    public void onCallback( ReceivedMessageEvent receivedMessageEvent) {
         Message message = receivedMessageEvent.getEventData();
-
         if (message != null) {
 //        if ((message !=null )&&  ( getId().equals(message.getId())) && (callback != null)) {
 //            String sid = getId();
@@ -184,11 +182,11 @@ public final class Message {
     }
 
     public JsonObject toJsonObject() {
-        return gson.toJsonTree(this).getAsJsonObject();
+        return CustomApplication.getInstance().gson.toJsonTree(this).getAsJsonObject();
     }
 
     public static Message fromJson(String json) {
-        return gson.fromJson(json, Message.class);
+        return CustomApplication.getInstance().gson.fromJson(json, Message.class);
     }
 
     public Message setCallback(MessageCallback callback) {
@@ -206,7 +204,7 @@ public final class Message {
     }
 
     public String getJsonCommand() {
-        return gson.toJson(command);
+        return  CustomApplication.getInstance().gson.toJson(command);
     }
 
     public void setError(String message) {

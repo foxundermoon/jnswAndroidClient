@@ -30,6 +30,7 @@ import com.jnsw.core.appmanager.task.UploadTask;
 import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.event.*;
 import com.jnsw.core.util.EncryptUtil;
+import com.jnsw.core.util.L;
 import com.jnsw.core.xmpp.LogUtil;
 import com.jnsw.core.appmanager.AppManager;
 import com.jnsw.core.xmpp.daemon.HeartThreadRunnable;
@@ -247,10 +248,14 @@ public class AppService extends Service {
 
     private void unregisterConnectivityReceiver() {
         Log.d(LOGTAG, "unregisterConnectivityReceiver()...");
-        telephonyManager.listen(phoneStateListener,
-                PhoneStateListener.LISTEN_NONE);
-        unregisterReceiver(connectivityReceiver);
-    }
+            telephonyManager.listen(phoneStateListener,
+                    PhoneStateListener.LISTEN_NONE);
+        try{
+            unregisterReceiver(connectivityReceiver);
+        }catch(Exception ignore){
+            L.e(this.getClass(),"unregisterReceiver :"+connectivityReceiver);
+        }
+        }
 
     private void start() {
         Log.d(LOGTAG, "start()...");
@@ -259,19 +264,7 @@ public class AppService extends Service {
             registerSendPacketReceiver();
             registerNotificationReceiver();
         }
-        // Intent intent = getIntent();
-        // startService(intent);
         appManager.connect();
-//        HeartThreadRunnable.setup(appManager);
-//        if(appManager.getConnection().isConnected()){
-//            appManager.getConnection().addPacketListener(new MessagePacketListener((MyApplication)getApplication()),new PacketFilter(){
-//                @Override
-//                public boolean accept(Packet packet) {
-//                    return packet instanceof Message;
-//                }
-//            });
-//            Log.d(Constants.RECEIVER_MESSAGE,"run ataddPacketListener( MessagePacketListener) ");
-//        }
     }
 
     private void stop() {
@@ -281,7 +274,6 @@ public class AppService extends Service {
             unregisterNotificationReceiver();
             unRegisterSendPacketReceiver();
         }
-        HeartThreadRunnable.shutDown();
         appManager.disconnect();
         executorService.shutdown();
     }
@@ -302,9 +294,12 @@ public class AppService extends Service {
             xmppMessage.setLanguage("BASE64");
             xmppMessage.setSubject(message.getJsonCommand());
             xmppMessage.setBody(EncryptUtil.encrBASE64ByGzip(message.toJson()));
+            xmppMessage.setFrom(message.getFromUser() + "@" + ClientConfig.getXmppHost());
+            xmppMessage.setTo(message.getToUser() + "@" + ClientConfig.getXmppHost());
             CustomApplication.getInstance().eventBus.post(new SendXmppPacketEvent(xmppMessage));
         }
     }
+
     @Subscribe
     public void downloadEvent(DownloadEvent event) {
         appManager.submitTask(new DownloadTask(event.getEventData()));
@@ -315,17 +310,11 @@ public class AppService extends Service {
         appManager.submitTask(new UploadTask(event.getEventData()));
     }
 
+
     @Subscribe
-    public void sendStringByEventBus(SendStringEvent event) {
-        String msg = event.getEventData();
-        String base64msg = EncryptUtil.encrBASE64ByGzip(msg);
-        Message message = new Message();
-        message.setLanguage("BASE64");
-        message.setFrom(ClientConfig.getServerJid());
-        message.setType(Message.Type.normal);
-        message.setTo(ClientConfig.getLocalJid());
-        message.setBody(base64msg);
-        appManager.sendPacketAsync(message);
+    public void onReceiveShutdown(ShutdownEvent event) {
+        stop();
+        stopSelf();
     }
 
     /**

@@ -26,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-
 public class MainActivity extends Activity {
     private Button loginBtn;
     private Button sendTestBtn;
@@ -42,10 +41,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loginBtn = (Button) findViewById(R.id.loginBtn);
-        sendTestBtn = (Button) findViewById(R.id.sendTestBtn);
+        sendTestBtn = (Button) findViewById(R.id.sendTest);
         textView = (TextView) findViewById(R.id.textView);
         exitBtn = (Button) findViewById(R.id.exitBtn);
-        sendByEventBtn = (Button) findViewById(R.id.sendByEventBus);
+        sendByEventBtn = (Button) findViewById(R.id.upAndDown);
         clickListener = new ClickListener();
         sendByEventBtn.setOnClickListener(clickListener);
         loginBtn.setOnClickListener(clickListener);
@@ -53,8 +52,6 @@ public class MainActivity extends Activity {
         exitBtn.setOnClickListener(clickListener);
         handler = new Handler();
         CustomApplication.getInstance().eventBus.register(this);
-//        ((CustomApplication)getApplication()).eventBus.register(this);
-//        CustomApplication.getInstance().eventBus.register(this);
     }
 
     class ClickListener implements View.OnClickListener {
@@ -64,39 +61,12 @@ public class MainActivity extends Activity {
                 login();
             }
             if (v == sendTestBtn) {
-
-//                sendMessageTest();
-//                Drawable d = getResources().getDrawable(R.drawable.ic_launcher);
-//                textView.append( d.getBounds().toString());
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                          final  Bitmap pic = CustomApplication.getInstance().httpClient.downloadBitmap("http://10.80.5.222/img/girl_2.jpg");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ((ImageView) findViewById(R.id.imageView)).setImageBitmap(pic);
-                                }
-                            });
-                        } catch (final Throwable throwable) {
-                            throwable.printStackTrace();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    textView.append(throwable.getMessage());
-                                }
-                            });
-                        }
-                    }
-                }.start();
+                sendMutiQueryMessage();
             }
 
             if (v == exitBtn) {
-                if (serverceManager != null) {
-                    serverceManager.stopService();
-                }
-                System.exit(0);
+                    CustomApplication.getInstance().eventBus.post(new ShutdownEvent());
+                    textView.setText("shut down service");
             }
             if (v == sendByEventBtn) {
                 upAndDownLoad();
@@ -106,14 +76,49 @@ public class MainActivity extends Activity {
             }
         }
     }
+ private void  sendMutiQueryMessage(){
+     com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
+     message.creatCommand().setName(Command.DataTable)
+             .setOperation(Operation.mutiQuery)
+             .setSql("SELECT * FROM `foxdata`.`nj_专题_抢险_任务表单` WHERE ID=@ID AND 版本>@版本");
+     message.setCallback(new MessageCallback() {
+         @Override
+         public void onCallback(com.jnsw.core.data.Message message) {
+            p(message.toJson());
+         }
+     });
+     Table tb = message.createTable("ID","版本");
+     for(int i=0;i<20;i++){
+         try {
+             tb.createRow().put("ID",i).put("版本",1);
+         } catch (Exception e) {
+             e.printStackTrace();
+             p(e.getMessage());
+         }
+     }
+     try {
+         message.send();
+     } catch (JSONException e) {
+         e.printStackTrace();
+         p(e.getMessage());
+     }
 
+ }
     private void sendQueryMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();  //①:新建 Message
         message.creatCommand()
                 .setName(Command.DataTable).setOperation(Operation.query)
                 //        .setSql("SELECT * FROM `foxdata`.`nj_专题_专业_图层类型划分`");
-                .setSql("SELECT * FROM `foxdata`.`线路信息1`")
-        .setName("testname"); //②:设置message command
+                .setSql("SELECT * FROM `foxdata`.`nj_专题_抢险_任务表单` WHERE ID>5");
+        message.setCallback(new MessageCallback() {
+            @Override
+            public void onCallback(com.jnsw.core.data.Message message) {
+                p(message.toJson());
+            }
+        });
+
+
+
 //        message.setCallback(new MessageCallback() {
 //            @Override
 //            public void onCallback(com.jnsw.core.data.Message message) {
@@ -143,8 +148,8 @@ public class MainActivity extends Activity {
 
     }
 
-    public void upAndDownLoad(){
-        CustomApplication.getInstance() .eventBus.register(this);
+    public void upAndDownLoad() {
+        CustomApplication.getInstance().eventBus.register(this);
         FileMessage f = new FileMessage();
         f.setId(1);
         CustomApplication.getInstance().eventBus.post(new DownloadEvent(f));
@@ -153,7 +158,7 @@ public class MainActivity extends Activity {
     }
 
     @Subscribe
-    public void onDownloaded(DownloadedEvent event){
+    public void onDownloaded(DownloadedEvent event) {
         FileMessage file = event.getEventData();
         p("download success");
         p("name:" + file.getFileName());
@@ -162,12 +167,31 @@ public class MainActivity extends Activity {
         CustomApplication.getInstance().eventBus.post(new UploadEvent(file));
         p("uploadding.....");
     }
+
     @Subscribe
-    public void onUploaded(UploadedEvent event){
+    public void onUploaded(UploadedEvent event) {
         FileMessage f = event.getEventData();
         p("upload success");
         p("id:" + f.getId());
     }
+
+    @Subscribe
+    public void onLogin(LoginEvent event) {
+        if (event.getEventData().isSuccess()) {
+            p("恭喜你登录成功");
+        }
+    }
+
+    @Subscribe
+    public void onUserOnline(HasUserOnLineEvent event) {
+        p(event.getEventData() + " ：上线啦");
+    }
+
+    @Subscribe
+    public void onUserOffLine(HasUserOffLineEvent event) {
+        p(event.getEventData() + "：下线啦");
+    }
+
     private void sendCreateMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
         message.creatCommand().setName(Command.DataTable).setOperation(Operation.runsql)
@@ -227,6 +251,26 @@ public class MainActivity extends Activity {
 
     }
 
+    @Subscribe
+    public void onSendTaskMessage(SendTaskEvent event){
+        p("收到新任务啦");
+        com.jnsw.core.data.Message  queryTask = new com.jnsw.core.data.Message();
+        queryTask.creatCommand()
+                .setName(Command.DataTable)
+                .setOperation(Operation.query)
+                .setSql("SELECT a.* FROM `nj_专题_抢险_任务表单` a , `nj_用户表` b WHERE b.登录名 = '"+ClientConfig.getUsrName() +"' and b.名称 = a.接警人");
+        queryTask.setCallback(new MessageCallback() {
+            @Override
+            public void onCallback(com.jnsw.core.data.Message message) {
+            p("receive 任务： "+message.toJson());
+            }
+        });
+        try {
+            queryTask.send();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     @Deprecated
     private void deserilizerJsonMessage() {
         String jmsg = "{\n" +
@@ -373,17 +417,17 @@ public class MainActivity extends Activity {
     }
 
     @Subscribe
-    public void onReceive(final ReceivedMessageEvent event) {
-        runAtUI(new Runnable() {
-            @Override
-            public void run() {
-                com.jnsw.core.data.Message msg = event.getEventData();
-                Command cmd= msg.getCommand();
-                textView.append(msg.toJson());
-                textView.append(msg.getJsonCommand());
-
-            }
-        });
+    public void onReceive(ReceivedMessageEvent event) {
+        final com.jnsw.core.data.Message msg = event.getEventData();
+        p("receive a message  id:"+msg.getId());
+//        runAtUI(new Runnable() {
+//            @Override
+//            public void run() {
+//                textView.append(msg.toJson());
+//                textView.append(msg.getJsonCommand());
+//
+//            }
+//        });
     }
 
     private void sendInsertMessage() {
@@ -415,60 +459,16 @@ public class MainActivity extends Activity {
             e.printStackTrace();
             textView.setText(e.getMessage());
         }
-
-//        try {
-//            message.send();
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//
-//        }
-
-
-    }
-
-    @Deprecated
-    private void sendMessageByEventBus() {
-//        SendXmppPacketEvent<Packet> event = new SendXmppPacketEvent<Packet>();
-//        Message message = new Message();
-//        message.setBody(Strings.repeat("hello world!", 2));
-//        message.setFrom(ClientConfig.getLocalJid());
-//        message.setTo(ClientConfig.getServerJid());
-//        event.setEventData(message);
-//        CustomApplication.getInstance().eventBus.post(event);
-//        CustomApplication.getInstance().eventBus.post(new SendStringEvent(message.getBody()));
-    }
-
-    private void sendMessageTest() {
-//        Row row =
-    }
-
-    private void _sendMessageTest() {
-        Message message = new Message();
-        message.setBody(Strings.repeat("hello word!\n", 100));
-        message.setTo(ClientConfig.getServerJid());
-        message.setFrom(ClientConfig.getLocalJid());
-//        CustomApplication.getInstance().sendPacketByXmppAsync(message);
-//        CustomApplication.getInstance().sendStringByXmppAsync(Strings.repeat("hello world by String!\n",100));
     }
 
     private void login() {
         ClientConfig.Builder.getInstance()
                 .setXmppPasword("222")
-                .setXmppUser("user1")
+                .setXmppUser("user2")
                 .setXmppServerPort(5222)
                 .setXmppServerHost("10.80.5.222")
+                .setFileServerUrl("http://10.80.5.222:8080/")
                 .commit().startXmppService();
-//                ((CustomApplication)getApplication()).eventBus.register(this);
-    }
-    @Deprecated
-    @Subscribe
-    public void ReceivedStringByEventBus(final ReceivedStringEvent event) {
-        runAtUI(new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(event.getEventData());
-            }
-        });
     }
 
     private void runAtUI(Runnable runnable) {
@@ -476,11 +476,11 @@ public class MainActivity extends Activity {
     }
 
 
-    public void p(final String s){
+    public void p(final String s) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textView.append(s +"\n");
+                textView.append(s + "\n");
             }
         });
     }
