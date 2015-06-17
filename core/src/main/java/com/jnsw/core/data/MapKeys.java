@@ -23,4 +23,5 @@ public class MapKeys {
     public static String operation = "operation";
     public static String sql = "sql";
     public static String error = "error";
+    public static String errorMessage="errorMessage";
 }

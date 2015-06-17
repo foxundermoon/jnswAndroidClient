@@ -1,11 +1,13 @@
 package com.jnsw.core.appmanager.task;
 
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.data.FileMessage;
 import com.jnsw.core.event.UploadedEvent;
+import org.jivesoftware.smack.util.StringUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -37,6 +39,9 @@ public class UploadTask implements Runnable {
  *           "err"      : "the error reason"
  *        }
  ****************************************/
+        if(fileMessage.getFileName() ==null || fileMessage.getFileName().length()<1){
+            fileMessage.setFileName("null");
+        }
             String jsonrst = app.httpClient.uploadByPut(fileSysUri, fileMessage.getData(), fileMessage.getFileName());
             JsonObject result = app.gson.fromJson(jsonrst, JsonObject.class);
             if (result == null) {

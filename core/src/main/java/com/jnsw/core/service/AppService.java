@@ -25,6 +25,7 @@ import android.util.Log;
 import com.google.common.eventbus.Subscribe;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
+import com.jnsw.core.appmanager.task.MutiUploadTask;
 import com.jnsw.core.appmanager.task.DownloadTask;
 import com.jnsw.core.appmanager.task.UploadTask;
 import com.jnsw.core.config.ClientConfig;
@@ -33,7 +34,6 @@ import com.jnsw.core.util.EncryptUtil;
 import com.jnsw.core.util.L;
 import com.jnsw.core.xmpp.LogUtil;
 import com.jnsw.core.appmanager.AppManager;
-import com.jnsw.core.xmpp.daemon.HeartThreadRunnable;
 import com.jnsw.core.xmpp.listener.PhoneStateChangeListener;
 import com.jnsw.core.xmpp.receiver.ConnectivityReceiver;
 import com.jnsw.core.xmpp.receiver.NotificationReceiver;
@@ -53,7 +53,7 @@ import java.util.concurrent.Future;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
-public class AppService extends Service {
+public class /**/AppService extends Service {
 
     private static final String LOGTAG = LogUtil
             .makeLogTag(AppService.class);
@@ -303,6 +303,10 @@ public class AppService extends Service {
     @Subscribe
     public void downloadEvent(DownloadEvent event) {
         appManager.submitTask(new DownloadTask(event.getEventData()));
+    }
+    @Subscribe
+    public void mutiUpload(MutiUplouadEvent event){
+        appManager.submitTask( new MutiUploadTask(event.getEventData()));
     }
 
     @Subscribe

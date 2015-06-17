@@ -60,7 +60,7 @@ public class AppManager {
     private final String password;
     private final String username;
 
-    private Context context;
+    private Context context;/**/
 
     private AppService.TaskSubmitter taskSubmitter;
 

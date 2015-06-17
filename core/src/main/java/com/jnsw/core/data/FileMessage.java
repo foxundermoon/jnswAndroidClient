@@ -1,5 +1,7 @@
 package com.jnsw.core.data;
 
+import java.util.UUID;
+
 /**
  * Created by foxundermoon on 2015/5/9.
  */
@@ -11,6 +13,22 @@ public class FileMessage {
     private String errorMessage;
     private  int id;
     private boolean downloaded;
+    private int lid;
+
+    public int getLid() {
+        return lid;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    private String uuid;
+
+    public FileMessage() {
+        uuid = UUID.randomUUID().toString().replace("-","");
+    }
+
 
     public boolean isUploaded() {
         return uploaded;

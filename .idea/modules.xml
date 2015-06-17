@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CoreUI/CoreUI.iml" filepath="$PROJECT_DIR$/CoreUI/CoreUI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Mykotlin/Mykotlin.iml" filepath="$PROJECT_DIR$/Mykotlin/Mykotlin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/UI/UI.iml" filepath="$PROJECT_DIR$/UI/UI.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/jnswAndroidClient.iml" filepath="$PROJECT_DIR$/jnswAndroidClient.iml" />
     </modules>

@@ -1,16 +1,10 @@
 package com.jnsw.coreui;
 
 import android.app.Activity;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.common.base.Strings;
 import com.google.common.eventbus.Subscribe;
@@ -18,13 +12,12 @@ import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.data.*;
 import com.jnsw.core.event.*;
+import com.jnsw.core.util.L;
 import com.jnsw.core.xmpp.ServiceManager;
-import org.jivesoftware.smack.packet.Message;
+import com.jnsw.gas.services.swTable;
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 public class MainActivity extends Activity {
     private Button loginBtn;
@@ -61,12 +54,13 @@ public class MainActivity extends Activity {
                 login();
             }
             if (v == sendTestBtn) {
-                sendMutiQueryMessage();
+                mutiUpload();
+//                sendMutiQueryMessage();
             }
 
             if (v == exitBtn) {
-                    CustomApplication.getInstance().eventBus.post(new ShutdownEvent());
-                    textView.setText("shut down service");
+                CustomApplication.getInstance().eventBus.post(new ShutdownEvent());
+                textView.setText("shut down service");
             }
             if (v == sendByEventBtn) {
                 upAndDownLoad();
@@ -76,34 +70,36 @@ public class MainActivity extends Activity {
             }
         }
     }
- private void  sendMutiQueryMessage(){
-     com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
-     message.creatCommand().setName(Command.DataTable)
-             .setOperation(Operation.mutiQuery)
-             .setSql("SELECT * FROM `foxdata`.`nj_专题_抢险_任务表单` WHERE ID=@ID AND 版本>@版本");
-     message.setCallback(new MessageCallback() {
-         @Override
-         public void onCallback(com.jnsw.core.data.Message message) {
-            p(message.toJson());
-         }
-     });
-     Table tb = message.createTable("ID","版本");
-     for(int i=0;i<20;i++){
-         try {
-             tb.createRow().put("ID",i).put("版本",1);
-         } catch (Exception e) {
-             e.printStackTrace();
-             p(e.getMessage());
-         }
-     }
-     try {
-         message.send();
-     } catch (JSONException e) {
-         e.printStackTrace();
-         p(e.getMessage());
-     }
 
- }
+    private void sendMutiQueryMessage() {
+        com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
+        message.creatCommand().setName(Command.DataTable)
+                .setOperation(Operation.mutiQuery)
+                .setSql("SELECT * FROM `foxdata`.`nj_专题_抢险_任务表单` WHERE ID=@ID AND 版本>@版本");
+        message.setCallback(new MessageCallback() {
+            @Override
+            public void onCallback(com.jnsw.core.data.Message message) {
+                p(message.toJson());
+            }
+        });
+        Table tb = message.createTable("ID", "版本");
+        for (int i = 0; i < 20; i++) {
+            try {
+                tb.createRow().put("ID", i).put("版本", 1);
+            } catch (Exception e) {
+                e.printStackTrace();
+                p(e.getMessage());
+            }
+        }
+        try {
+            message.send();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            p(e.getMessage());
+        }
+
+    }
+
     private void sendQueryMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();  //①:新建 Message
         message.creatCommand()
@@ -118,8 +114,7 @@ public class MainActivity extends Activity {
         });
 
 
-
-//        message.setCallback(new MessageCallback() {
+//        message.set_callback(new MessageCallback() {
 //            @Override
 //            public void onCallback(com.jnsw.core.data.Message message) {
 //                final String callBackMsg = message.toJson();
@@ -163,7 +158,8 @@ public class MainActivity extends Activity {
         p("download success");
         p("name:" + file.getFileName());
         p("md5:" + file.getMd5());
-        file.setFileName(file.getFileName() + ".new");
+        p("isDownload:" + file.isDownloaded());
+        file.setFileName(null);
         CustomApplication.getInstance().eventBus.post(new UploadEvent(file));
         p("uploadding.....");
     }
@@ -252,17 +248,17 @@ public class MainActivity extends Activity {
     }
 
     @Subscribe
-    public void onSendTaskMessage(SendTaskEvent event){
+    public void onSendTaskMessage(SendTaskEvent event) {
         p("收到新任务啦");
-        com.jnsw.core.data.Message  queryTask = new com.jnsw.core.data.Message();
+        com.jnsw.core.data.Message queryTask = new com.jnsw.core.data.Message();
         queryTask.creatCommand()
                 .setName(Command.DataTable)
                 .setOperation(Operation.query)
-                .setSql("SELECT a.* FROM `nj_专题_抢险_任务表单` a , `nj_用户表` b WHERE b.登录名 = '"+ClientConfig.getUsrName() +"' and b.名称 = a.接警人");
+                .setSql("SELECT a.* FROM `nj_专题_抢险_任务表单` a , `nj_用户表` b WHERE b.登录名 = '" + ClientConfig.getUsrName() + "' and b.名称 = a.接警人");
         queryTask.setCallback(new MessageCallback() {
             @Override
             public void onCallback(com.jnsw.core.data.Message message) {
-            p("receive 任务： "+message.toJson());
+                p("receive 任务： " + message.toJson());
             }
         });
         try {
@@ -271,6 +267,7 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
     }
+
     @Deprecated
     private void deserilizerJsonMessage() {
         String jmsg = "{\n" +
@@ -419,7 +416,7 @@ public class MainActivity extends Activity {
     @Subscribe
     public void onReceive(ReceivedMessageEvent event) {
         final com.jnsw.core.data.Message msg = event.getEventData();
-        p("receive a message  id:"+msg.getId());
+        p("receive a message  id:" + msg.getId());
 //        runAtUI(new Runnable() {
 //            @Override
 //            public void run() {
@@ -435,30 +432,86 @@ public class MainActivity extends Activity {
         message.creatCommand()
                 .setName(Command.DataTable)
                 .setOperation(Operation.insert);
-        Table tb = message.createTable("用户", "日期", "档案号", "坐标串")
-                .setDatabase("foxdata")
-                .setName("nj_gps档案记录");
+        Table tb = message.createTable(new Column("停气时间"), new NowColumn("上报时间"), new Column("LID"));
+
+        tb.setDatabase("foxdata")
+                .setName("nj_now_test");
         message.addProperty("info", " the information of table");
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 5; i++) {
             Row row = tb.createRow();
             try {
-                row.put("用户", "随机生成的第" + i + "个用户")
-                        .put("日期", simpleDateFormat.format(Calendar.getInstance(TimeZone.getDefault()).getTime()))
-                        .put("档案号", i)
-                        .put("坐标串", "117.053038719529,36.6579218009726,117.05307051668,36.6579156466854,117.053104365259,36.6578571809573,117.05305923382,36.6578089723744,117.053012050952,36.6578130752325,117.052979228087,36.657866412388");
+                row.put("停气时间", "2018-12-21 12:21:12")
+                        .put("LID", i + 200);
+//                row.put("now","--");
+//                        .put("日期", simpleDateFormat.format(Calendar.getInstance(TimeZone.getDefault()).getTime()))
+//                        .put("档案号", i)
+//                        .put("坐标串", "117.053038719529,36.6579218009726,117.05307051668,36.6579156466854,117.053104365259,36.6578571809573,117.05305923382,36.6578089723744,117.053012050952,36.6578130752325,117.052979228087,36.657866412388");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        textView.setText(message.toJsonObject().toString());
+        p(message.toJsonObject().toString());
+        p(Strings.repeat("-", 100));
+        message.setCallback(new MessageCallback() {
+            @Override
+            public void onCallback(com.jnsw.core.data.Message message) {
+                p(message.toJson());
+            }
+        });
+
         try {
             message.send();
         } catch (JSONException e) {
             e.printStackTrace();
-            textView.setText(e.getMessage());
+            p(e.getMessage());
         }
+    }
+
+    public void castTable(){
+        Message msg = MessageFactory
+                .creatQueryMessage("SELECT * FROM `foxdata`.`nj_专题_巡检_old任务分配表` WHERE 1");
+        msg.setCallback(new Callback<Message>() {
+
+            public void onCallback(Message msg) {
+                L.d(this.getClass(), "receive task msg:" + msg.toJson());
+                swTable swtb = null;
+                try {
+                    swtb = com.jnsw.gas.services.TableCast
+                            .Table2swTable(msg.getDataTable());
+                } catch (Exception e3) {
+                    L.e(this.getClass(), "Table2swTable exception:" + e3.getMessage());
+                }
+
+                L.d(this.getClass(), "transfomat to swTable:");
+            }
+        });
+    }
+    public void mutiUpload() {
+        MutiFileMessage mutiFileMessage = new MutiFileMessage();
+        for (int i = 0; i < 10; i++) {
+            FileMessage fileMessage = new FileMessage();
+            fileMessage.setFileName("testfile." + i);
+            fileMessage.setData(Strings.repeat("hello world " + i, 100).getBytes());
+            mutiFileMessage.addFile(fileMessage);
+        }
+        mutiFileMessage.setCallback(new Callback<MutiFileMessage>() {
+            @Override
+            public void onCallback(MutiFileMessage mutiFileMessage) {
+                if (mutiFileMessage.isUploadSuccess()) {
+                    p("all uploaded success");
+                    for (FileMessage f : mutiFileMessage.getFiles()) {
+                        p("name:" + f.getFileName() + "   id:" + f.getId());
+                    }
+                } else {
+                    p("upload with error");
+                    for (String err : mutiFileMessage.getErrorMessage()) {
+                        p(err + "\n");
+                    }
+                }
+            }
+        }).sendToUpload();
     }
 
     private void login() {
@@ -466,8 +519,9 @@ public class MainActivity extends Activity {
                 .setXmppPasword("222")
                 .setXmppUser("user2")
                 .setXmppServerPort(5222)
-                .setXmppServerHost("10.80.5.222")
-                .setFileServerUrl("http://10.80.5.222:8080/")
+                .setXmppServerHost("10.80.5.199")
+                .setFileServerUrl("http://10.80.5.199:8080/")
+                .setXmppResource("XJAPP")
                 .commit().startXmppService();
     }
 

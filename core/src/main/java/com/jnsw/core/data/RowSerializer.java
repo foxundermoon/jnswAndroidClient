@@ -32,7 +32,10 @@ public class RowSerializer implements JsonSerializer<Row> {
         for (Column column : src.getColumns()) {
             if (src.hasColumn(column)) {
                 Object value = src.get(column.getName());
+                if(value!=null)
                 jsonArray.add(context.serialize(value));
+                else
+                    jsonArray.add(JsonNull.INSTANCE);
             } else {
                 jsonArray.add(JsonNull.INSTANCE);
             }

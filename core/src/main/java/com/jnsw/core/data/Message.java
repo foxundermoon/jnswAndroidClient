@@ -1,24 +1,12 @@
 package com.jnsw.core.data;
 
-import android.app.ActionBar;
-import android.app.Application;
-import android.content.Context;
-import com.google.common.base.Strings;
 import com.google.common.eventbus.Subscribe;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.event.ReceivedMessageEvent;
 import com.jnsw.core.event.SendMessageEvent;
-import com.jnsw.core.util.EncryptUtil;
-import com.jnsw.core.util.JSONHelper;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +19,10 @@ import java.util.UUID;
 public final class Message {
     private Table dataTable;
     public boolean hasError = false;
+    public boolean hasFile = false;
+    public String errorType;
+    public String errorMessage;
+    private Callback<Message> callback;
 
     public Map<String, Object> getProperties() {
         return properties;
@@ -43,7 +35,7 @@ public final class Message {
     private Map<String, Object> properties;
 
     public Object getProperty(String key) {
-        if(properties==null)
+        if (properties == null)
             return null;
         return properties.get(key);
     }
@@ -52,19 +44,20 @@ public final class Message {
         properties = new HashMap<String, Object>();
     }
 
-    private MessageCallback callback;
+    private MessageCallback _callback;
 
     public Command getCommand() {
         return command;
     }
 
-    public Message switchDirection(){
+    public Message switchDirection() {
         String toUser = getToUser();
         String fromUser = getFromUser();
         setFromUser(toUser);
         setToUser(fromUser);
-        return  this;
+        return this;
     }
+
     public void setCommand(Command command) {
         this.command = command;
     }
@@ -76,7 +69,7 @@ public final class Message {
     }
 
     public boolean hasProperty(String key) {
-        if(properties==null)
+        if (properties == null)
             return false;
         return properties.containsKey(key);
     }
@@ -89,7 +82,7 @@ public final class Message {
     }
 
     public Message addProperty(String key, Object value) {
-        if(properties ==null){
+        if (properties == null) {
             properties = new HashMap<String, Object>();
         }
         properties.put(key, value);
@@ -127,7 +120,7 @@ public final class Message {
         if (hasProperty(MapKeys.id)) {
             return (String) getProperty(MapKeys.id);
         } else {
-            String id = UUID.randomUUID().toString().replace("-","").substring(0,5);
+            String id = UUID.randomUUID().toString().replace("-", "").substring(0, 5);
             setId(id);
             return id;
         }
@@ -166,16 +159,19 @@ public final class Message {
         application.eventBus.register(this);
         application.eventBus.post(new SendMessageEvent(this));
     }
+
     @Subscribe
-    public void onCallback( ReceivedMessageEvent receivedMessageEvent) {
+    public void onCallback(ReceivedMessageEvent receivedMessageEvent) {
         Message message = receivedMessageEvent.getEventData();
         if (message != null) {
-//        if ((message !=null )&&  ( getId().equals(message.getId())) && (callback != null)) {
+//        if ((message !=null )&&  ( getId().equals(message.getId())) && (_callback != null)) {
 //            String sid = getId();
 //            String rid = message.getId();
-
             if ((getId().equals(message.getId()))) {
-                callback.onCallback(message);
+                if (_callback != null)
+                    _callback.onCallback(message);
+                if (callback != null)
+                    callback.onCallback(message);
                 CustomApplication.getInstance().eventBus.unregister(this);
             }
         }
@@ -189,7 +185,13 @@ public final class Message {
         return CustomApplication.getInstance().gson.fromJson(json, Message.class);
     }
 
-    public Message setCallback(MessageCallback callback) {
+    @Deprecated
+    public Message setCallback(MessageCallback _callback) {
+        this._callback = _callback;
+        return this;
+    }
+
+    public Message setCallback(Callback<Message> callback) {
         this.callback = callback;
         return this;
     }
@@ -204,7 +206,7 @@ public final class Message {
     }
 
     public String getJsonCommand() {
-        return  CustomApplication.getInstance().gson.toJson(command);
+        return CustomApplication.getInstance().gson.toJson(command);
     }
 
     public void setError(String message) {

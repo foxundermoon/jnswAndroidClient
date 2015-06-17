@@ -1,7 +1,6 @@
 package com.jnsw.core.event;
 
 import com.jnsw.core.data.FileMessage;
-import com.jnsw.core.data.swRow;
 
 /**
  * Created by foxundermoon on 2015/5/7.

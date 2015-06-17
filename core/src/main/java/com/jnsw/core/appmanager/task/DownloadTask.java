@@ -5,7 +5,6 @@ import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.data.FileMessage;
-import com.jnsw.core.data.swRow;
 import com.jnsw.core.event.DownloadEvent;
 import com.jnsw.core.event.DownloadedEvent;
 import com.jnsw.core.http.ErrorResponseException;

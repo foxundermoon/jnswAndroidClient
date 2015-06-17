@@ -17,16 +17,19 @@ public class ClientConfig {
         String host = getStringConfig(Constants.XMPP_HOST, "");
         String user = getStringConfig(Constants.XMPP_USERNAME, "-1");
         String resource = getStringConfig(Constants.XMPP_RESOURCE, "");
-        return user + "@" + host + (resource == "" ? "" : "/" + resource);
+        return user + "@" + host + (resource == "" ? "" : "/" +getXmppResource());
     }
 
     public static String getJidByUserName(String userName) {
         String host = getStringConfig(Constants.XMPP_HOST, "");
-        return userName + "@" + host;
+        return userName + "@" + host +"/"+getXmppResource();
     }
     public static String getServerJid() {
         String host = getStringConfig(Constants.XMPP_HOST, "");
-        return "0@" + host;
+        return "0@" + host +"/server";
+    }
+    public static String getServerDefaultDatabase(){
+        return getStringConfig(Constants.SERVER_DEFAULT_DATABASE,"");
     }
 
     public static int getIntConfig(Context context, String key, int defaultValue) {
@@ -49,6 +52,9 @@ public class ClientConfig {
         return getStringConfig(Constants.XMPP_USERNAME, "");
     }
 
+    public static  String getXmppResource(){
+        return  getStringConfig(Constants.XMPP_RESOURCE,"");
+    }
     public static class Builder {
         Context context;
         private Map<String, Object> configs;
@@ -90,7 +96,9 @@ public class ClientConfig {
         public Builder setXmppPasword(String passwd) {
             return set(Constants.XMPP_PASSWORD, passwd);
         }
-
+        public Builder setServerDefaultDatabase(String database){
+            return set(Constants.SERVER_DEFAULT_DATABASE,database);
+        }
         public Builder commit(Context context) {
             this.context = context;
             SharedPreferences.Editor editor = getBuildEditor(context);

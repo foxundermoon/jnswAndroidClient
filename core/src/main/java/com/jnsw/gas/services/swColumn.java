@@ -1,4 +1,4 @@
-package com.jnsw.core.data;
+package com.jnsw.gas.services;
 
 public class swColumn
 {

@@ -1,4 +1,4 @@
-package com.jnsw.core.data;
+package com.jnsw.gas.services;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +28,5 @@ public class swRow {
 
 		return lstFields.get(strColumnName);
 	}
-
 
 }

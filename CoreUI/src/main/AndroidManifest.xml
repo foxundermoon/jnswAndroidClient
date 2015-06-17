@@ -31,7 +31,7 @@
             <intent-filter>
                 <action android:name="com.jnsw.core.service.NotificationService"></action>
             </intent-filter>
-                </service>
+        </service>
         <activity android:name="com.jnsw.core.xmpp.NotificationDetailsActivity"/>
     </application>
 

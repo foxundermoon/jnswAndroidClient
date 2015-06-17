@@ -1,6 +1,7 @@
 package com.jnsw.core.data;
 
 import android.app.ActionBar;
+import com.google.common.base.Strings;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -16,6 +17,7 @@ public class Table implements Serializable, Iterable {
     private List<Column> columns;
     private String name;
     private String database;
+
     public Table(List<Column> columns) {
         this.columns = columns;
     }
@@ -44,6 +46,11 @@ public class Table implements Serializable, Iterable {
         add(row);
         return row;
     }
+    public int rowCount(){
+        if(rows!=null)
+            return rows.size();
+        return 0;
+    }
 
     public boolean add(Row row) {
         return rows.add(row);
@@ -59,7 +66,12 @@ public class Table implements Serializable, Iterable {
     public List<Column> getColumns() {
         return columns;
     }
-
+    public Object get(int row,int column){
+        return get(row).get(columns.get(column).getName());
+    }
+    public  Object get(int row,String column){
+        return get(row).get(column);
+    }
     public Table setColumns(List<Column> columns) {
         this.columns = columns;
         return this;

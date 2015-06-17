@@ -33,7 +33,7 @@ public class MessageSerializer implements JsonSerializer<Message>, JsonDeseriali
                         }
                     }
                     if ((jsonTable.has(MapKeys.rows)) && (columns != null)) {
-                        m.setDataTable( new Table(columns));
+                        m.setDataTable(new Table(columns));
                         JsonArray jsonRows = jsonTable.getAsJsonArray(MapKeys.rows);
                         if (jsonRows.size() > 0) {
                             for (int i = 0; i < jsonRows.size(); i++) {
@@ -52,7 +52,7 @@ public class MessageSerializer implements JsonSerializer<Message>, JsonDeseriali
                                                 row.put(columns.get(j).getName(), jp.getAsString());
                                             if (jp.isJsonNull())
                                                 row.put(columns.get(j).getName(), null);
-                                        }else if (jv.isJsonNull()) {
+                                        } else if (jv.isJsonNull()) {
                                             row.put(columns.get(j).getName(), null);
                                         }
                                     } catch (Exception e) {
@@ -62,6 +62,11 @@ public class MessageSerializer implements JsonSerializer<Message>, JsonDeseriali
                             }
                         }
                     }
+                } else if (MapKeys.error.equalsIgnoreCase(entry.getKey())) {
+                    m.hasError = true;
+                    m.errorType = entry.getValue().getAsString();
+                } else if (MapKeys.errorMessage.equalsIgnoreCase(entry.getKey())) {
+                    m.errorMessage = entry.getValue().getAsString();
                 } else {
 //                    String t = entry.getValue().getAsString();
 //                    String f = entry.getValue().toString();
@@ -72,6 +77,7 @@ public class MessageSerializer implements JsonSerializer<Message>, JsonDeseriali
         }
         return null;
     }
+
     /**
      * Gson invokes this call-back method during serialization when it encounters a field of the
      * specified type.
@@ -90,19 +96,29 @@ public class MessageSerializer implements JsonSerializer<Message>, JsonDeseriali
     @Override
     public JsonElement serialize(Message src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject jsonObject = new JsonObject();
+
         if (src == null) {
             return jsonObject;
         } else {
-            if (src.getId() != null) {
-                jsonObject.addProperty(MapKeys.id, src.getId());
-            }
-            if (src.propertiesCount() > 0) {
-                for (Map.Entry<String, Object> property : src.getProperties().entrySet()) {
-                    jsonObject.add(property.getKey(), context.serialize(property.getValue()));
+            if (src.hasFile) {
+
+
+            } else {
+                if (src.getId() != null) {
+                    jsonObject.addProperty(MapKeys.id, src.getId());
                 }
-            }
-            if (src.getDataTable() != null) {
-                jsonObject.add(MapKeys.dataTable, context.serialize(src.getDataTable()));
+                if (src.hasError) {
+                    jsonObject.addProperty(MapKeys.error, src.errorType);
+                    jsonObject.addProperty(MapKeys.errorMessage, src.errorMessage);
+                }
+                if (src.propertiesCount() > 0) {
+                    for (Map.Entry<String, Object> property : src.getProperties().entrySet()) {
+                        jsonObject.add(property.getKey(), context.serialize(property.getValue()));
+                    }
+                }
+                if (src.getDataTable() != null) {
+                    jsonObject.add(MapKeys.dataTable, context.serialize(src.getDataTable()));
+                }
             }
         }
         return jsonObject;
