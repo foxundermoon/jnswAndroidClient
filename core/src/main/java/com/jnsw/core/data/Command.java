@@ -21,7 +21,8 @@ public class Command {
     public static String SendTaskResponse = "SendTaskResponse";  //收到下发任务
     public static String DataTable = "DataTable";  //数据库/表相关操作
     public static String Response = "Response";  //返回消息
-
+    public static String SqlDataTable = "SqlDataTable";  //数据库/表相关操作
+    public static String MySqlDataTable = "MySqlDataTable";  //数据库/表相关操作
 
     private String name;
     private String operation;

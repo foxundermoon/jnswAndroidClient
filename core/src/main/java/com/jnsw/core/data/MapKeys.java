@@ -7,6 +7,7 @@ public class MapKeys {
     public static String dataTable = "dataTable";
     public static String id = "id";
     public static String toUser = "toUser";
+    public static String toResource = "toResource";
     public static String fromUser = "fromUser";
     public static String columns = "columns";
     public static String rows = "rows";
@@ -24,4 +25,5 @@ public class MapKeys {
     public static String sql = "sql";
     public static String error = "error";
     public static String errorMessage="errorMessage";
+    public static String databaseType = "databaseType";
 }

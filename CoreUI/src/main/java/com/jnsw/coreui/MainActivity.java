@@ -14,7 +14,7 @@ import com.jnsw.core.data.*;
 import com.jnsw.core.event.*;
 import com.jnsw.core.util.L;
 import com.jnsw.core.xmpp.ServiceManager;
-import com.jnsw.gas.services.swTable;
+//import com.jnsw.gas.services.swTable;
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
@@ -51,11 +51,13 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
             if (v == loginBtn) {
+                p("login....");
                 login();
             }
             if (v == sendTestBtn) {
-                mutiUpload();
-//                sendMutiQueryMessage();
+                p("sqlDataTable");
+                sqlDataTable();
+//                sendQueryMessage();
             }
 
             if (v == exitBtn) {
@@ -100,6 +102,40 @@ public class MainActivity extends Activity {
 
     }
 
+
+    private void taskTest(){
+        Task  task = new Task();
+        task.setTaskBody(new Runnable() {
+            @Override
+            public void run() {
+                L.d(MainActivity.this.getClass(),"task run : 8 * 8="+(8*8));
+            }
+        });
+        task.setOnFailed(new Runnable() {
+            @Override
+            public void run() {
+                L.d(" task failed----------");
+            }
+        });
+        task.setOnSuccess(new Runnable() {
+            @Override
+            public void run() {
+                L.d("task run success");
+            }
+        });
+        task.post();
+    }
+
+    private void sqlDataTable(){
+        com.jnsw.core.data.Message message = new Message();
+        message.creatCommand().setName(Command.SqlDataTable).setOperation(Operation.runsql)
+                .setSql("insert CityDustbinCollectDatabase.dbo.SW_轨迹表(车辆GUID,经度,时间,速度,纬度,状态) values ('测0000',117.112572,'2014/12/29 11:29:54',0.51,36.672970,'android测试状态')");
+        try {
+            message.send();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     private void sendQueryMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();  //①:新建 Message
         message.creatCommand()
@@ -476,7 +512,7 @@ public class MainActivity extends Activity {
 
             public void onCallback(Message msg) {
                 L.d(this.getClass(), "receive task msg:" + msg.toJson());
-                swTable swtb = null;
+             /*   swTable swtb = null;
                 try {
                     swtb = com.jnsw.gas.services.TableCast
                             .Table2swTable(msg.getDataTable());
@@ -484,7 +520,7 @@ public class MainActivity extends Activity {
                     L.e(this.getClass(), "Table2swTable exception:" + e3.getMessage());
                 }
 
-                L.d(this.getClass(), "transfomat to swTable:");
+                L.d(this.getClass(), "transfomat to swTable:");*/
             }
         });
     }
@@ -519,7 +555,7 @@ public class MainActivity extends Activity {
                 .setXmppPasword("222")
                 .setXmppUser("user2")
                 .setXmppServerPort(5222)
-                .setXmppServerHost("10.80.5.199")
+                .setXmppServerHost("10.80.5.222")
                 .setFileServerUrl("http://10.80.5.199:8080/")
                 .setXmppResource("XJAPP")
                 .commit().startXmppService();

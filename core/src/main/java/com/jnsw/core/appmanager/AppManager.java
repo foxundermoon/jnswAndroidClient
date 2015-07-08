@@ -27,6 +27,7 @@ import com.jnsw.core.data.AppErrorMessage;
 import com.jnsw.core.event.AppErrorEvent;
 import com.jnsw.core.event.LoginEvent;
 import com.jnsw.core.service.AppService;
+import com.jnsw.core.util.L;
 import com.jnsw.core.xmpp.LogUtil;
 import com.jnsw.core.xmpp.daemon.ReconnectionThread;
 import com.jnsw.core.xmpp.listener.*;
@@ -391,9 +392,9 @@ public class AppManager {
                 PacketListener packetListener = new PacketListener() {
 
                     public void processPacket(Packet packet) {
-                        Log.d("RegisterTask.PacketListener",
+                        L.d("RegisterTask",
                                 "processPacket().....");
-                        Log.d("RegisterTask.PacketListener", "packet="
+                        L.d("RegisterTask.PacketListener", "packet="
                                 + packet.toXML());
 
                         if (packet instanceof IQ) {

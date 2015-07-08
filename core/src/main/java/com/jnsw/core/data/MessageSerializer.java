@@ -25,7 +25,7 @@ public class MessageSerializer implements JsonSerializer<Message>, JsonDeseriali
                     ArrayList<Column> columns = null;
                     if (jsonTable.has(MapKeys.columns)) {
                         JsonArray jsonColumns = jsonTable.getAsJsonArray(MapKeys.columns);
-                        columns = new ArrayList<>(jsonColumns.size());
+                        columns = new ArrayList<Column>(jsonColumns.size());
                         for (JsonElement jsonColumn : jsonColumns) {
                             JsonObject column = jsonColumn.getAsJsonObject();
                             Column c = context.deserialize(column, Column.class);

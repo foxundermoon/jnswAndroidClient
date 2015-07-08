@@ -29,6 +29,7 @@ import com.jnsw.core.appmanager.task.MutiUploadTask;
 import com.jnsw.core.appmanager.task.DownloadTask;
 import com.jnsw.core.appmanager.task.UploadTask;
 import com.jnsw.core.config.ClientConfig;
+import com.jnsw.core.data.Task;
 import com.jnsw.core.event.*;
 import com.jnsw.core.util.EncryptUtil;
 import com.jnsw.core.util.L;
@@ -285,6 +286,13 @@ public class /**/AppService extends Service {
         appManager.sendPacketAsync(packet);
     }
 
+
+    @Subscribe
+    public void runTaskEvent(TaskEvent event){
+        Task task = event.getEventData();
+        appManager.submitTask(task);
+        appManager.runTask();
+    }
     @Subscribe
     public void sendMessageEvent(SendMessageEvent event) {
         com.jnsw.core.data.Message message = event.getEventData();
@@ -294,8 +302,12 @@ public class /**/AppService extends Service {
             xmppMessage.setLanguage("BASE64");
             xmppMessage.setSubject(message.getJsonCommand());
             xmppMessage.setBody(EncryptUtil.encrBASE64ByGzip(message.toJson()));
-            xmppMessage.setFrom(message.getFromUser() + "@" + ClientConfig.getXmppHost());
-            xmppMessage.setTo(message.getToUser() + "@" + ClientConfig.getXmppHost());
+            if(message.getFromUser()==null || message.getFromUser() =="")
+                message.setFromUser(ClientConfig.getUsrName());
+            if(message.getToUser() ==null || message.getToUser()== "")
+                message.setToUser("0");
+            xmppMessage.setFrom(message.getFromUser() + "@" + ClientConfig.getXmppHost() +"/"+ClientConfig.getXmppResource());
+            xmppMessage.setTo(message.getToUser() + "@" + ClientConfig.getXmppHost() +"/"+message.getToResource());
             CustomApplication.getInstance().eventBus.post(new SendXmppPacketEvent(xmppMessage));
         }
     }

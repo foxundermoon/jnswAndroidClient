@@ -1,26 +1,30 @@
+apply plugin: 'com.android.application'
 buildscript {
-    ext.jcenter_url = 'http://222.vvfox.com/jcenter/'
-    ext.public_maven_url = 'http://222.vvfox.com/public/'
-    repositories {
-        jcenter{
-            url = jcenter_url
-        }
-        maven {
-            url = public_maven_url
-        }
-    }
+//    repositories {
+//        jcenter{
+//            url = jcenter_url
+//        }
+//        maven {
+//            url = public_maven_url
+//        }
+//    }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.1.1'
     }
-}
-apply plugin: 'com.android.application'
 
-repositories {
-    jcenter{
-        url = jcenter_url
-    }
-    maven {
-        url = public_maven_url
+}
+
+//repositories {
+//    jcenter{
+//        url = jcenter_url
+//    }
+//    maven {
+//        url = public_maven_url
+//    }
+//}
+android {
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -30,14 +34,15 @@ android {
 
     defaultConfig {
         applicationId "com.jnsw.coreui"
-        minSdkVersion 14
+        minSdkVersion 9
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
-            minifyEnabled  false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

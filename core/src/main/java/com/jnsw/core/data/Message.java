@@ -94,6 +94,9 @@ public final class Message {
         return this;
     }
 
+    public String getToResource(){
+        return (String) getProperty(MapKeys.toResource);
+    }
     public String getToUser() {
         if (hasProperty(MapKeys.toUser)) {
             return getProperty(MapKeys.toUser).toString();
@@ -103,6 +106,10 @@ public final class Message {
 
     public Message setToUser(String toUser) {
         addProperty(MapKeys.toUser, toUser);
+        return this;
+    }
+    public Message setToResource(String toResource){
+        addProperty(MapKeys.toResource,toResource);
         return this;
     }
 

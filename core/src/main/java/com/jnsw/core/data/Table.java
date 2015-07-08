@@ -18,6 +18,7 @@ public class Table implements Serializable, Iterable {
     private String name;
     private String database;
 
+
     public Table(List<Column> columns) {
         this.columns = columns;
     }

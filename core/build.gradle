@@ -3,44 +3,49 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 //sourceCompatibility = 1.6
 //targetCompatibility = 1.6
-version = '0.4.1'
+version = '0.5.7'
 group = 'com.jnsw.android'
 buildscript {
-//    ext.version = '0.2.1'
-//    ext.group = 'com.jnsw.android'
-    ext.jcenter_url = 'http://222.vvfox.com/jcenter/'
-    ext.public_maven_url = 'http://222.vvfox.com/public/'
-    repositories {
-        jcenter {
-            url = jcenter_url
-        }
-        maven {
-            url = public_maven_url
-        }
-    }
+////    ext.version = '0.2.1'
+////    ext.group = 'com.jnsw.android'
+////    ext.jcenter_url = JCENTER_URL
+////    ext.public_maven_url =PUBLIC_URL
+//    ext.jcenter_url =JCENTER_URL
+//    ext.public_maven_url = PUBLIC_URL
+//    repositories {
+//        jcenter {
+//            url = jcenter_url
+//        }
+//        maven {
+//            url = public_maven_url
+//        }
+//    }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.1.1'
     }
 }
 apply plugin: 'com.android.library'
 
-repositories {
-    jcenter {
-        url = jcenter_url
-    }
-    maven {
-        url = public_maven_url
-    }
-}
+//repositories {
+//    jcenter {
+//        url = jcenter_url
+//    }
+//    maven {
+//        url = public_maven_url
+//    }
+//}
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
 
+    lintOptions {
+        abortOnError true
+    }
     defaultConfig {
 //        applicationId "com.jnsw.android.core"
-        minSdkVersion 14
-        targetSdkVersion 22
+        minSdkVersion 9
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
     }
@@ -81,8 +86,8 @@ dependencies {
 //    compile 'com.google.guava:guava:18.0'
     compile(
             'com.jnsw.android:asmack:1.0.0',
-            'com.android.support:support-v4:21.0.3',
-            'com.android.support:appcompat-v7:21.0.3',
+//            'com.android.support:support-v4:21.0.3',
+//            'com.android.support:appcompat-v7:21.0.3',
             'org.apache.httpcomponents:httpmime:4.3.5',
             'org.apache.httpcomponents:httpclient-android:4.3.5.1',
             'com.google.guava:guava:18.0',
