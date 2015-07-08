@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 //sourceCompatibility = 1.6
 //targetCompatibility = 1.6
-version = '0.5.7'
+version = CORE_VERSION
 group = 'com.jnsw.android'
 buildscript {
 ////    ext.version = '0.2.1'
@@ -110,7 +110,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
 //            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-            repository(url: 'http://222.vvfox.com/releases/') {
+            repository(url: 'http://jarlib.vvfox.com/releases/') {
                 authentication(userName: 'admin', password: 'admin123')
             }
             pom.project {
