@@ -33,7 +33,6 @@ import com.jnsw.core.xmpp.daemon.ReconnectionThread;
 import com.jnsw.core.xmpp.listener.*;
 import com.jnsw.core.xmpp.packet.NotificationIQ;
 import com.jnsw.core.xmpp.provider.NotificationIQProvider;
-import com.jnsw.core.xmpp.receiver.XmppStatusCode;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.filter.AndFilter;

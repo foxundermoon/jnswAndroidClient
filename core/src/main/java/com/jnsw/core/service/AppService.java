@@ -36,9 +36,6 @@ import com.jnsw.core.util.L;
 import com.jnsw.core.xmpp.LogUtil;
 import com.jnsw.core.appmanager.AppManager;
 import com.jnsw.core.xmpp.listener.PhoneStateChangeListener;
-import com.jnsw.core.xmpp.receiver.ConnectivityReceiver;
-import com.jnsw.core.xmpp.receiver.NotificationReceiver;
-import com.jnsw.core.xmpp.receiver.SendPacketReceiver;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
@@ -86,8 +83,6 @@ public class /**/AppService extends Service {
     private String deviceId;
 
     public AppService() {
-        notificationReceiver = new NotificationReceiver();
-        connectivityReceiver = new ConnectivityReceiver(this);
         phoneStateListener = new PhoneStateChangeListener(this);
 //        sendPacketReceiver = new SendPacketReceiver(this);
         executorService = Executors.newSingleThreadExecutor();
@@ -224,7 +219,6 @@ public class /**/AppService extends Service {
     private void registerSendPacketReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.SEND_PACKET);
-        sendPacketReceiver = new SendPacketReceiver(this);
         registerReceiver(sendPacketReceiver, intentFilter);
     }
 
