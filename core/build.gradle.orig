@@ -1,0 +1,182 @@
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'signing'
+//sourceCompatibility = 1.6
+//targetCompatibility = 1.6
+version = CORE_VERSION
+group = 'com.jnsw.android'
+buildscript {
+////    ext.version = '0.2.1'
+////    ext.group = 'com.jnsw.android'
+////    ext.jcenter_url = JCENTER_URL
+////    ext.public_maven_url =PUBLIC_URL
+//    ext.jcenter_url =JCENTER_URL
+//    ext.public_maven_url = PUBLIC_URL
+//    repositories {
+//        jcenter {
+//            url = jcenter_url
+//        }
+//        maven {
+//            url = public_maven_url
+//        }
+//    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+    }
+}
+apply plugin: 'com.android.library'
+
+//repositories {
+//    jcenter {
+//        url = jcenter_url
+//    }
+//    maven {
+//        url = public_maven_url
+//    }
+//}
+
+android {
+    compileSdkVersion compile_sdk_version as int
+    buildToolsVersion build_tools_version
+
+    lintOptions {
+        abortOnError true
+    }
+    defaultConfig {
+//        applicationId "com.jnsw.android.core"
+<<<<<<< HEAD
+        minSdkVersion 15
+        targetSdkVersion 19
+=======
+        minSdkVersion min_sdk_version as int
+        targetSdkVersion 22
+>>>>>>> jnsw/master
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+//        exclude 'META-INF/dependencies.txt'
+//        exclude 'META-INF/LGPL2.1'
+        //        exclude 'META-INF/DEPENDENCIES'
+//        exclude 'META-INF/DEPENDENCIES.txt'
+
+    }
+}
+
+dependencies {
+    //    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //    compile(name:'httpclient-android-4.3.5', ext:'aar')
+    //    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5'
+    //    compile fileTree(dir: 'libs', include: ['*.aar'])
+    //    compile 'org.igniterealtime.smack:smack-android:4.1.0-alpha5'
+
+//    compile 'com.jnsw.android:asmack:1.0.0'
+//    compile 'com.android.support:support-v4:21.0.3'
+//    compile 'com.android.support:appcompat-v7:21.0.3'
+//    compile 'org.apache.httpcomponents:httpmime:4.3.5'
+//    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
+//    compile 'com.google.guava:guava:18.0'
+    compile(
+            'com.jnsw.android:asmack:1.0.0',
+//            'com.android.support:support-v4:21.0.3',
+//            'com.android.support:appcompat-v7:21.0.3',
+            'org.apache.httpcomponents:httpmime:4.3.5',
+            'org.apache.httpcomponents:httpclient-android:4.3.5.1',
+            'com.google.guava:guava:18.0',
+            'com.google.code.gson:gson:2.2.4',
+//            'net.qiujuer.genius:kit:1.0.0',
+            'com.github.qiujuer:genius:2.4.0',
+    )
+}
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/java'
+        }
+    }
+    test {
+        resources {
+            srcDir 'src/androidTest/java'
+        }
+    }
+}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: 'http://jarlib.vvfox.com/releases/') {
+                authentication(userName: 'admin', password: 'admin123')
+            }
+            pom.project {
+//                name project.name
+                name 'core'
+                packaging 'jar'
+                description 'the android library of company  version:'+version +"  group:"+group
+                url 'https://github.com/foxundermoon/jnswAndroidClient'
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }
+    }
+
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+task releaseJar(type: Copy) {
+    from('build/intermediates/bundles/release')
+    into('build/output/jar')
+    include('classes.jar')
+    rename('calsses.jar', "core.jar")
+}
+task releaseLib(type: Copy, dependsOn: releaseJar) {
+    into "../../release"
+    from 'libs'
+    from 'build/libs'
+}
+
+File releaseJarFile() {
+//    def _version = version.replace('.','_')
+    copy {
+        from('build/intermediates/bundles/release')
+        into('build/outputs')
+        include('classes.jar')
+        rename('classes.jar', "core.jar")
+    }
+    file("build/outputs/core.jar")
+}
+
+artifacts {
+//    def myreleasejar = file 'build/output/jar/core0.0.1.jar'
+//    def myreleaseJar = file("build/output/jar/core_${version}.jar"){
+//        builtBy releaseJar
+//    }
+//    archives file("build/output/jar/core_${version}.jar")
+//    archives javadocJar
+    archives releaseJarFile()
+    archives sourcesJar
+//    exclude '*.aar'
+}
+
+//signing {
+//    sign configurations.archives
+//}

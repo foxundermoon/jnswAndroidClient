@@ -312,6 +312,7 @@ public class AppService extends Service {
                 }
             }
         };
+
         timer.schedule(task, 5000);
         start();
 

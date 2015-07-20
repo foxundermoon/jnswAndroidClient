@@ -576,8 +576,8 @@ public class MainActivity extends Activity {
         ClientConfig.Builder.getInstance()
                 .setXmppPasword("222")
                 .setXmppUser("user2")
-                .setXmppServerPort(5222)
-                .setXmppServerHost("10.80.5.222")
+                .setXmppServerPort(7777)
+                .setXmppServerHost("jnsw.vvfox.com")
                 .setFileServerUrl("http://10.80.5.199:8080/")
                 .setXmppResource("XJAPP")
                 .commit();//.startXmppService();
