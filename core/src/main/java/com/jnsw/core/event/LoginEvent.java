@@ -1,15 +1,14 @@
 package com.jnsw.core.event;
 
+import com.jnsw.core.CustomApplication;
 import com.jnsw.core.data.LoginMessage;
+import com.jnsw.core.data.LoginedMessage;
 
 /**
- * Created by foxundermoon on 2015/5/6.
+ * Created by foxundermoon on 2015/7/16.
  */
 public class LoginEvent extends AppEvent<LoginMessage> {
-    public LoginEvent(boolean success){
-        setEventData(new LoginMessage(success));
-    }
-    public LoginEvent(boolean success,String cause){
-        setEventData(new LoginMessage(success,cause));
-    }
+   public LoginEvent(LoginMessage loginMessage){
+       setEventData(loginMessage);
+   }
 }

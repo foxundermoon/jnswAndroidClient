@@ -1,35 +1,24 @@
 package com.jnsw.core.data;
 
+import com.jnsw.core.CustomApplication;
+import com.jnsw.core.event.LoginEvent;
+
 /**
- * Created by foxundermoon on 2015/5/6.
+ * Created by foxundermoon on 2015/7/16.
  */
 public class LoginMessage {
-    private boolean success;
-    private String cause;
+    private String password;
 
-    public LoginMessage(boolean success, String cause) {
-        this.success=success;
-        this.cause = cause;
+    public LoginMessage() {
     }
 
-    public LoginMessage(boolean success) {
-
-        this.success = success;
+    public LoginMessage(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
     }
 
-    public String getCause() {
-        return cause;
-    }
-
-    public void setCause(String cause) {
-        this.cause = cause;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
+    private String userName;
+    public void post(){
+        CustomApplication.getInstance().eventBus.post(new LoginEvent(this));
     }
 }

@@ -49,7 +49,7 @@ public class PersistentConnectionListener implements ConnectionListener {
                 && appManager.getConnection().isConnected()) {
             appManager.getConnection().disconnect();
         }
-        appManager.startReconnectionThread();
+//        appManager.startReconnectionThread();
     }
 
     @Override

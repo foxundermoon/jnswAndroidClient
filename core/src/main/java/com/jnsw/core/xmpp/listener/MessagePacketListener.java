@@ -49,7 +49,7 @@ public class MessagePacketListener implements PacketListener {
             if (Command.UserLogin.equalsIgnoreCase(msg.getCommand().getName())) {
                 String userName = (String) msg.getProperty("UserName");
                 if (ClientConfig.getUsrName().equalsIgnoreCase(userName)) {
-                    app.eventBus.post(new LoginEvent(true));
+                    app.eventBus.post(new LoginedEvent(true));
                 }
                 app.eventBus.post(new HasUserOnLineEvent(userName));
             }

@@ -1,7 +1,5 @@
 package com.jnsw.coreui;
-
 import android.app.Activity;
-import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
@@ -14,39 +12,56 @@ import com.jnsw.core.data.*;
 import com.jnsw.core.event.*;
 import com.jnsw.core.util.L;
 import com.jnsw.core.xmpp.ServiceManager;
-//import com.jnsw.gas.services.swTable;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
 
+
+@EActivity(R.layout.activity_main)
 public class MainActivity extends Activity {
-    private Button loginBtn;
-    private Button sendTestBtn;
-    private TextView textView;
-    private ClickListener clickListener;
-    private ServiceManager serverceManager;
-    private Button exitBtn;
-    private Button sendByEventBtn;
-    private android.os.Handler handler;
+    @ViewById
+     Button loginBtn;
+    @ViewById(R.id.sendTest)
+     Button sendTestBtn;
+    @ViewById
+     TextView textView;
+     ClickListener clickListener;
+     ServiceManager serverceManager;
+    @ViewById
+     Button exitBtn;
+    @ViewById(R.id.upAndDown)
+     Button sendByEventBtn;
+     android.os.Handler handler;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        loginBtn = (Button) findViewById(R.id.loginBtn);
-        sendTestBtn = (Button) findViewById(R.id.sendTest);
-        textView = (TextView) findViewById(R.id.textView);
-        exitBtn = (Button) findViewById(R.id.exitBtn);
-        sendByEventBtn = (Button) findViewById(R.id.upAndDown);
-        clickListener = new ClickListener();
-        sendByEventBtn.setOnClickListener(clickListener);
-        loginBtn.setOnClickListener(clickListener);
-        sendTestBtn.setOnClickListener(clickListener);
-        exitBtn.setOnClickListener(clickListener);
-        handler = new Handler();
-        CustomApplication.getInstance().eventBus.register(this);
+    @Click(R.id.loginBtn)
+    void _login(){
+        login();
     }
+    @Click
+  void exitBtn(){
+        CustomApplication.getInstance().eventBus.post(new ShutdownEvent());
+        textView.setText("shut down service");
+    }
+    @Click(R.id.upAndDown)
+    void sendByEventBtn(){
+            p("clicked sendQueryMessage");
+        sendQueryMessage();
+    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+////        setContentView(R.layout.activity_main);
+//    }
 
+    @AfterViews
+    void init(){
+        CustomApplication.getInstance().eventBus.register(this);
+        handler = new Handler();
+    }
     class ClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -99,7 +114,6 @@ public class MainActivity extends Activity {
             e.printStackTrace();
             p(e.getMessage());
         }
-
     }
 
 
@@ -176,7 +190,6 @@ public class MainActivity extends Activity {
             message.send();  //④发送
         } catch (JSONException e) {
         }
-
     }
 
     public void upAndDownLoad() {
@@ -208,10 +221,18 @@ public class MainActivity extends Activity {
     }
 
     @Subscribe
-    public void onLogin(LoginEvent event) {
+    public void onLogined(LoginedEvent event) {
         if (event.getEventData().isSuccess()) {
-            p("恭喜你登录成功");
+            p(Strings.repeat("-",200));
+            p("-----------------恭喜你登录成功------------------");
+            p(Strings.repeat("-",200));
         }
+        else {
+            p(Strings.repeat("-",200));
+            p("----------------登录失败  "+event.getEventData().getCause() +"--------------");
+            p(Strings.repeat("-",200));
+        }
+        p(event.getEventData().toString());
     }
 
     @Subscribe
@@ -260,6 +281,7 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
     }
+
 
     private void sendDeleteMessage() {
         com.jnsw.core.data.Message message = new com.jnsw.core.data.Message();
@@ -558,7 +580,8 @@ public class MainActivity extends Activity {
                 .setXmppServerHost("10.80.5.222")
                 .setFileServerUrl("http://10.80.5.199:8080/")
                 .setXmppResource("XJAPP")
-                .commit().startXmppService();
+                .commit();//.startXmppService();
+        new LoginMessage().post();
     }
 
     private void runAtUI(Runnable runnable) {

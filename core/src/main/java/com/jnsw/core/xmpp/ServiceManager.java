@@ -31,32 +31,15 @@ import com.jnsw.core.service.AppService;
  */
 public final class ServiceManager {
     private static  ServiceManager instance;
-
     private static final String LOGTAG = LogUtil
             .makeLogTag(ServiceManager.class);
 
     private Context context;
 
-    private SharedPreferences sharedPrefs;
-
-
-    private String version = "0.5.0";
-
-    private String callbackActivityPackageName;
-
-    private String callbackActivityClassName;
-
+    private String version = "0.6.0";
     private ServiceManager(Context context) {
         this.context = context;
-
-        if (context instanceof Activity) {
-            Log.i(LOGTAG, "Callback Activity...");
-            Activity callbackActivity = (Activity) context;
-            callbackActivityPackageName = callbackActivity.getPackageName();
-            callbackActivityClassName = callbackActivity.getClass().getName();
-        }
     }
-
     public static ServiceManager getInstance(Context context){
         synchronized (ServiceManager.class){
             if (null == instance)
@@ -79,20 +62,6 @@ public final class ServiceManager {
     public void stopService() {
         Intent intent = AppService.getIntent();
         context.stopService(intent);
-    }
-
-@Deprecated
-    public void setNotificationIcon(int iconId) {
-        Editor editor = sharedPrefs.edit();
-        editor.putInt(Constants.NOTIFICATION_ICON, iconId);
-        editor.commit();
-    }
-
-
-    public static void viewNotificationSettings(Context context) {
-        Intent intent = new Intent().setClass(context,
-                NotificationSettingsActivity.class);
-        context.startActivity(intent);
     }
 
 }

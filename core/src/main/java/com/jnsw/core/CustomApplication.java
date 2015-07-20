@@ -1,11 +1,16 @@
 package com.jnsw.core;
 
 import android.app.Application;
+
 import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jnsw.core.data.*;
 import com.jnsw.core.http.MyHttpClient;
+import com.jnsw.core.xmpp.ServiceManager;
+
+import net.qiujuer.genius.Genius;
+import net.qiujuer.genius.nettool.Ping;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,6 +27,7 @@ public class CustomApplication extends Application {
     public static CustomApplication instance;
     public MyHttpClient httpClient;
     public Gson gson;
+
     public String creatUUID() {
         return UUID.randomUUID().toString().replace("-", "");
     }
@@ -29,6 +35,7 @@ public class CustomApplication extends Application {
     public static CustomApplication getInstance() {
         return instance;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,11 +51,13 @@ public class CustomApplication extends Application {
                 .registerTypeAdapter(Command.class, new CommandSerilizer())
                 .registerTypeAdapter(Message.class, new MessageSerializer())
                 .registerTypeAdapter(Row.class, new RowSerializer()).create();
+        Genius.initialize(this);
+        ServiceManager.getInstance(this).startService();
     }
 
     @Override
     public void onTerminate() {
-        eventBus=null;
+        eventBus = null;
         try {
             httpClient.getHttpClient().close();
         } catch (IOException e) {

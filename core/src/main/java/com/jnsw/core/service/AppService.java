@@ -18,10 +18,14 @@ package com.jnsw.core.service;
 import android.app.Service;
 import android.content.*;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.google.common.base.Strings;
 import com.google.common.eventbus.Subscribe;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
@@ -29,6 +33,10 @@ import com.jnsw.core.appmanager.task.MutiUploadTask;
 import com.jnsw.core.appmanager.task.DownloadTask;
 import com.jnsw.core.appmanager.task.UploadTask;
 import com.jnsw.core.config.ClientConfig;
+import com.jnsw.core.data.LoginMessage;
+import com.jnsw.core.data.LoginedMessage;
+import com.jnsw.core.data.LoginStatusMessage;
+import com.jnsw.core.data.StatusCode;
 import com.jnsw.core.data.Task;
 import com.jnsw.core.event.*;
 import com.jnsw.core.util.EncryptUtil;
@@ -36,10 +44,17 @@ import com.jnsw.core.util.L;
 import com.jnsw.core.xmpp.LogUtil;
 import com.jnsw.core.appmanager.AppManager;
 import com.jnsw.core.xmpp.listener.PhoneStateChangeListener;
+
+import net.qiujuer.genius.nettool.NetModel;
+import net.qiujuer.genius.nettool.Ping;
+
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -51,7 +66,7 @@ import java.util.concurrent.Future;
  *
  * @author Sehwan Noh (devnoh@gmail.com)
  */
-public class /**/AppService extends Service {
+public class AppService extends Service {
 
     private static final String LOGTAG = LogUtil
             .makeLogTag(AppService.class);
@@ -59,14 +74,16 @@ public class /**/AppService extends Service {
     public static final String SERVICE_NAME = "com.jnsw.core.service.NotificationService";
     private TelephonyManager telephonyManager;
     boolean enableBroadcastReceiver = false;
+    Timer timer = new Timer();
+
     //    private WifiManager wifiManager;
     //
     //    private ConnectivityManager connectivityManager;
 
-    private BroadcastReceiver notificationReceiver;
+//    private BroadcastReceiver notificationReceiver;
 
     private BroadcastReceiver connectivityReceiver;
-    private BroadcastReceiver sendPacketReceiver;
+//    private BroadcastReceiver sendPacketReceiver;
 
     private PhoneStateListener phoneStateListener;
 
@@ -89,6 +106,7 @@ public class /**/AppService extends Service {
         taskSubmitter = new TaskSubmitter(this);
         taskTracker = new TaskTracker(this);
     }
+
 
     @Override
     public void onCreate() {
@@ -125,11 +143,11 @@ public class /**/AppService extends Service {
         Log.d(LOGTAG, "deviceId=" + deviceId);
         appManager = new AppManager(this);
         ((CustomApplication) getApplication()).eventBus.register(this);
-        taskSubmitter.submit(new Runnable() {
-            public void run() {
-                AppService.this.start();
-            }
-        });
+//        taskSubmitter.submit(new Runnable() {
+//            public void run() {
+//                AppService.this.start();
+//            }
+//        });
     }
 
     @Override
@@ -208,28 +226,28 @@ public class /**/AppService extends Service {
         });
     }
 
-    private void registerNotificationReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.ACTION_SHOW_NOTIFICATION);
-        filter.addAction(Constants.ACTION_NOTIFICATION_CLICKED);
-        filter.addAction(Constants.ACTION_NOTIFICATION_CLEARED);
-        registerReceiver(notificationReceiver, filter);
-    }
+//    private void registerNotificationReceiver() {
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(Constants.ACTION_SHOW_NOTIFICATION);
+//        filter.addAction(Constants.ACTION_NOTIFICATION_CLICKED);
+//        filter.addAction(Constants.ACTION_NOTIFICATION_CLEARED);
+//        registerReceiver(notificationReceiver, filter);
+//    }
 
-    private void registerSendPacketReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.SEND_PACKET);
-        registerReceiver(sendPacketReceiver, intentFilter);
-    }
+//    private void registerSendPacketReceiver() {
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction(Constants.SEND_PACKET);
+//        registerReceiver(sendPacketReceiver, intentFilter);
+//    }
 
-    private void unRegisterSendPacketReceiver() {
-        sendPacketReceiver = null;
-        unregisterReceiver(sendPacketReceiver);
-    }
-
-    private void unregisterNotificationReceiver() {
-        unregisterReceiver(notificationReceiver);
-    }
+//    private void unRegisterSendPacketReceiver() {
+//        sendPacketReceiver = null;
+//        unregisterReceiver(sendPacketReceiver);
+//    }
+//
+//    private void unregisterNotificationReceiver() {
+//        unregisterReceiver(notificationReceiver);
+//    }
 
     private void registerConnectivityReceiver() {
         Log.d(LOGTAG, "registerConnectivityReceiver()...");
@@ -243,21 +261,21 @@ public class /**/AppService extends Service {
 
     private void unregisterConnectivityReceiver() {
         Log.d(LOGTAG, "unregisterConnectivityReceiver()...");
-            telephonyManager.listen(phoneStateListener,
-                    PhoneStateListener.LISTEN_NONE);
-        try{
+        telephonyManager.listen(phoneStateListener,
+                PhoneStateListener.LISTEN_NONE);
+        try {
             unregisterReceiver(connectivityReceiver);
-        }catch(Exception ignore){
-            L.e(this.getClass(),"unregisterReceiver :"+connectivityReceiver);
+        } catch (Exception ignore) {
+            L.e(this.getClass(), "unregisterReceiver :" + connectivityReceiver);
         }
-        }
+    }
 
     private void start() {
         Log.d(LOGTAG, "start()...");
         registerConnectivityReceiver();
         if (enableBroadcastReceiver) {
-            registerSendPacketReceiver();
-            registerNotificationReceiver();
+//            registerSendPacketReceiver();
+//            registerNotificationReceiver();
         }
         appManager.connect();
     }
@@ -266,11 +284,11 @@ public class /**/AppService extends Service {
         Log.d(LOGTAG, "stop()...");
         unregisterConnectivityReceiver();
         if (enableBroadcastReceiver) {
-            unregisterNotificationReceiver();
-            unRegisterSendPacketReceiver();
+//            unregisterNotificationReceiver();
+//            unRegisterSendPacketReceiver();
         }
         appManager.disconnect();
-        executorService.shutdown();
+//        executorService.shutdown();
     }
 
 
@@ -280,13 +298,85 @@ public class /**/AppService extends Service {
         appManager.sendPacketAsync(packet);
     }
 
+    private boolean loginStatusCallback = false;
 
     @Subscribe
-    public void runTaskEvent(TaskEvent event){
+    public void onLogin(LoginEvent event) {
+        loginStatusCallback = false;
+        LoginMessage loginMessage = event.getEventData();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (!loginStatusCallback) {
+                    CustomApplication.getInstance().eventBus.post(new LoginStatusEvent(new LoginStatusMessage(StatusCode.LOGIN_TIME_OUT)));
+                }
+            }
+        };
+        timer.schedule(task, 5000);
+        start();
+
+    }
+
+    @Subscribe
+    public void onReceivedLoginStatus(LoginStatusEvent event) {
+        LoginStatusMessage loginStatusMessage = event.getEventData();
+        LoginedMessage loginedMessage = new LoginedMessage(false);
+        if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_SUCCESS)) {
+            loginedMessage.setLoginStatusCode(StatusCode.LOGIN_SUCCESS);
+            loginedMessage.setSuccess(true);
+        } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_ALREADY)) {
+            loginedMessage.setSuccess(true);
+            loginedMessage.setLoginStatusCode(StatusCode.LOGIN_ALREADY);
+        } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_FAILED)) {
+            diagnoseNet(loginStatusMessage);
+            loginedMessage.setLoginStatusCode(StatusCode.LOGIN_FAILED);
+            loginedMessage.setCause(loginStatusMessage.getErrorMessage());
+            loginedMessage.setNetStatus(loginStatusMessage.getNetStatus());
+        } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_TIME_OUT)) {
+            loginedMessage.setNetStatus(loginStatusMessage.getNetStatus());
+            loginedMessage.setCause("登录超时");
+        }
+        if (!loginStatusCallback) {
+            CustomApplication.getInstance().eventBus.post(new LoginedEvent(loginedMessage));
+            loginStatusCallback = true;
+        }
+
+
+    }
+
+    void diagnoseNet(LoginStatusMessage loginStatusMessage) {
+        if (getNetworkType() == StatusCode.NETWORN_NONE) {
+            loginStatusMessage.setErrorMessage("当前没有网络，请检查连接");
+            loginStatusMessage.setNetStatus(StatusCode.NETWORN_NONE);
+        } else {
+            String xmppHost = ClientConfig.getXmppHost();
+            Ping ping = new Ping(xmppHost);
+            ping.start();
+            if (ping.getError() == NetModel.SUCCEED) {
+                loginStatusMessage.setNetStatus(StatusCode.NETWORK_CAN_PING_MESSAGE_SERVER);
+                loginStatusMessage.setErrorMessage("当前网络可以ping通消息服务器，但是登录不成功");
+            } else {
+                Ping ping2 = new Ping("www.baidu.com");
+                ping2.start();
+                if (ping2.getError() == NetModel.SUCCEED) {
+                    loginStatusMessage.setNetStatus(StatusCode.NETWORK_CAN_PING_BAIDU);
+                    loginStatusMessage.setErrorMessage("当前网络无法访问消息服务器，但是可以访问外网");
+                } else {
+                    loginStatusMessage.setNetStatus(StatusCode.NETWORK_CAN_NOT_PING_BAIDU);
+                    loginStatusMessage.setErrorMessage("当前网络无法访问消息服务器以及外网");
+                }
+            }
+        }
+
+    }
+
+    @Subscribe
+    public void runTaskEvent(TaskEvent event) {
         Task task = event.getEventData();
         appManager.submitTask(task);
         appManager.runTask();
     }
+
     @Subscribe
     public void sendMessageEvent(SendMessageEvent event) {
         com.jnsw.core.data.Message message = event.getEventData();
@@ -295,13 +385,14 @@ public class /**/AppService extends Service {
 //            xmppMessage.setPacketID(message.getId());
             xmppMessage.setLanguage("BASE64");
             xmppMessage.setSubject(message.getJsonCommand());
+
             xmppMessage.setBody(EncryptUtil.encrBASE64ByGzip(message.toJson()));
-            if(message.getFromUser()==null || message.getFromUser() =="")
+            if (message.getFromUser() == null || message.getFromUser() == "")
                 message.setFromUser(ClientConfig.getUsrName());
-            if(message.getToUser() ==null || message.getToUser()== "")
+            if (message.getToUser() == null || message.getToUser() == "")
                 message.setToUser("0");
-            xmppMessage.setFrom(message.getFromUser() + "@" + ClientConfig.getXmppHost() +"/"+ClientConfig.getXmppResource());
-            xmppMessage.setTo(message.getToUser() + "@" + ClientConfig.getXmppHost() +"/"+message.getToResource());
+            xmppMessage.setFrom(message.getFromUser() + "@" + ClientConfig.getXmppHost() + "/" + ClientConfig.getXmppResource());
+            xmppMessage.setTo(message.getToUser() + "@" + ClientConfig.getXmppHost() + "/" + message.getToResource());
             CustomApplication.getInstance().eventBus.post(new SendXmppPacketEvent(xmppMessage));
         }
     }
@@ -310,9 +401,10 @@ public class /**/AppService extends Service {
     public void downloadEvent(DownloadEvent event) {
         appManager.submitTask(new DownloadTask(event.getEventData()));
     }
+
     @Subscribe
-    public void mutiUpload(MutiUplouadEvent event){
-        appManager.submitTask( new MutiUploadTask(event.getEventData()));
+    public void mutiUpload(MutiUplouadEvent event) {
+        appManager.submitTask(new MutiUploadTask(event.getEventData()));
     }
 
     @Subscribe
@@ -349,6 +441,22 @@ public class /**/AppService extends Service {
             return result;
         }
 
+    }
+
+    public int getNetworkType() {
+        int netType = StatusCode.NETWORN_NONE;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo == null) {
+            return netType;
+        }
+        int nType = networkInfo.getType();
+        if (nType == ConnectivityManager.TYPE_MOBILE) {
+            netType = StatusCode.NETWORN_MOBILE;
+        } else if (nType == ConnectivityManager.TYPE_WIFI) {
+            netType = StatusCode.NETWORN_WIFI;
+        }
+        return netType;
     }
 
     /**
