@@ -35,3 +35,4 @@ proguard-project.txt
 .idea/
 *.iml
 *.swp
+*.orig
