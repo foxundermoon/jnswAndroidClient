@@ -115,20 +115,20 @@ uploadArchives {
             repository(url: 'http://jarlib.vvfox.com/releases/') {
                 authentication(userName: 'admin', password: 'admin123')
             }
-            pom.project {
+//            pom.project {
 //                name project.name
-                name 'core'
-                packaging 'jar'
-                description 'the android library of company  version:'+version +"  group:"+group
-                url 'https://github.com/foxundermoon/jnswAndroidClient'
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
-            }
+//                name 'core'
+//                packaging 'jar'
+//                description 'the android library of company  version:'+version +"  group:"+group
+//                url 'https://github.com/foxundermoon/jnswAndroidClient'
+//                licenses {
+//                    license {
+//                        name 'The Apache Software License, Version 2.0'
+//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                        distribution 'repo'
+//                    }
+//                }
+//            }
         }
     }
 
@@ -137,17 +137,17 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
-task releaseJar(type: Copy) {
-    from('build/intermediates/bundles/release')
-    into('build/output/jar')
-    include('classes.jar')
-    rename('calsses.jar', "core.jar")
-}
-task releaseLib(type: Copy, dependsOn: releaseJar) {
-    into "../../release"
-    from 'libs'
-    from 'build/libs'
-}
+//task releaseJar(type: Copy) {
+//    from('build/intermediates/bundles/release')
+//    into('build/output/jar')
+//    include('classes.jar')
+//    rename('calsses.jar', "core.jar")
+//}
+//task releaseLib(type: Copy, dependsOn: releaseJar) {
+//    into "../../release"
+//    from 'libs'
+//    from 'build/libs'
+//}
 
 File releaseJarFile() {
 //    def _version = version.replace('.','_')
@@ -160,17 +160,17 @@ File releaseJarFile() {
     file("build/outputs/core.jar")
 }
 
-artifacts {
+//artifacts {
 //    def myreleasejar = file 'build/output/jar/core0.0.1.jar'
 //    def myreleaseJar = file("build/output/jar/core_${version}.jar"){
 //        builtBy releaseJar
 //    }
 //    archives file("build/output/jar/core_${version}.jar")
 //    archives javadocJar
-    archives releaseJarFile()
-    archives sourcesJar
+//    archives releaseJarFile()
+//    archives sourcesJar
 //    exclude '*.aar'
-}
+//}
 
 //signing {
 //    sign configurations.archives

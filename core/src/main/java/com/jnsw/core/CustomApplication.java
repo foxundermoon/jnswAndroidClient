@@ -36,6 +36,9 @@ public class CustomApplication extends Application {
         return instance;
     }
 
+    public String getObjectInfo(Object object) {
+        return gson.toJson(object);
+    }
     @Override
     public void onCreate() {
         super.onCreate();

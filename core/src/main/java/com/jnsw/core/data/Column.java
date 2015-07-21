@@ -24,6 +24,10 @@ public class Column {
     }
 
 
+    public Column(String name, String dbType) {
+        this.name = name;
+        this.dbType = dbType;
+    }
     public Column() {
     }
 
