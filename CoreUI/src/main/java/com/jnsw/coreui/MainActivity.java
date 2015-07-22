@@ -574,10 +574,10 @@ public class MainActivity extends Activity {
 
     private void login() {
         ClientConfig.Builder.getInstance()
-                .setXmppPasword("222")
-                .setXmppUser("user2")
+                .setXmppPasword("force")
+                .setXmppUser("1876586484")
                 .setXmppServerPort(7777)
-                .setXmppServerHost("jnsw.vvfox.com")
+                .setXmppServerHost("www.swgis.com")
                 .setFileServerUrl("http://10.80.5.199:8080/")
                 .setXmppResource("XJAPP")
                 .commit();//.startXmppService();

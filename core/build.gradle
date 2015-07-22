@@ -93,7 +93,7 @@ dependencies {
             'com.google.guava:guava:18.0',
             'com.google.code.gson:gson:2.2.4',
 //            'net.qiujuer.genius:kit:1.0.0',
-            'com.github.qiujuer:genius:2.4.0',
+            'com.github.qiujuer:genius:2.4.1',
     )
 }
 sourceSets {
