@@ -25,7 +25,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.google.common.base.Strings;
 import com.google.common.eventbus.Subscribe;
 import com.jnsw.core.Constants;
 import com.jnsw.core.CustomApplication;
@@ -50,7 +49,6 @@ import net.qiujuer.genius.nettool.Ping;
 
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.Random;
 import java.util.Timer;
@@ -270,6 +268,7 @@ public class AppService extends Service {
         }
     }
 
+
     private void start() {
         Log.d(LOGTAG, "start()...");
         registerConnectivityReceiver();
@@ -298,30 +297,29 @@ public class AppService extends Service {
         appManager.sendPacketAsync(packet);
     }
 
-    private boolean loginStatusCallback = false;
-
     @Subscribe
     public void onLogin(LoginEvent event) {
-        loginStatusCallback = false;
+        responsedLogin = false;
         LoginMessage loginMessage = event.getEventData();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (!loginStatusCallback) {
+                if (!responsedLogin) {
                     CustomApplication.getInstance().eventBus.post(new LoginStatusEvent(new LoginStatusMessage(StatusCode.LOGIN_TIME_OUT)));
                 }
             }
         };
-
-        timer.schedule(task, 8*1000);
+        timer.schedule(task, 8 * 1000);
         start();
-
     }
 
+    private boolean responsedLogin = false;
     @Subscribe
     public void onReceivedLoginStatus(LoginStatusEvent event) {
+        int maxRetryCount = 3;
         LoginStatusMessage loginStatusMessage = event.getEventData();
         LoginedMessage loginedMessage = new LoginedMessage(false);
+
         if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_SUCCESS)) {
             loginedMessage.setLoginStatusCode(StatusCode.LOGIN_SUCCESS);
             loginedMessage.setSuccess(true);
@@ -329,20 +327,23 @@ public class AppService extends Service {
             loginedMessage.setSuccess(true);
             loginedMessage.setLoginStatusCode(StatusCode.LOGIN_ALREADY);
         } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_FAILED)) {
-            diagnoseNet(loginStatusMessage);
             loginedMessage.setLoginStatusCode(StatusCode.LOGIN_FAILED);
             loginedMessage.setCause(loginStatusMessage.getErrorMessage());
             loginedMessage.setNetStatus(loginStatusMessage.getNetStatus());
         } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_TIME_OUT)) {
             loginedMessage.setNetStatus(loginStatusMessage.getNetStatus());
+            loginedMessage.setLoginStatusCode(loginStatusMessage.getLoginStatus());
             loginedMessage.setCause("登录超时");
         }
-        if (!loginStatusCallback) {
-            CustomApplication.getInstance().eventBus.post(new LoginedEvent(loginedMessage));
-            loginStatusCallback = true;
+        if (!responsedLogin) {
+            postLoginedMessage(loginedMessage);
+            responsedLogin = true;
         }
+    }
 
 
+    private void postLoginedMessage(LoginedMessage loginedMessage) {
+        CustomApplication.getInstance().eventBus.post(new LoginedEvent(loginedMessage));
     }
 
     void diagnoseNet(LoginStatusMessage loginStatusMessage) {
