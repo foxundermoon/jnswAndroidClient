@@ -38,8 +38,8 @@ public class AppManager {
     private static final String LOGTAG = LogUtil.makeLogTag(AppManager.class);
 
     private String XmppResourceName;
-    private final String password;
-    private final String username;
+//    private final String password;
+//    private final String username;
 
     private Context context;
 
@@ -47,7 +47,7 @@ public class AppManager {
 
     private AppService.TaskTracker taskTracker;
 
-    private SharedPreferences sharedPrefs;
+//    private SharedPreferences sharedPrefs;
 
     private String xmppHost;
 
@@ -65,13 +65,13 @@ public class AppManager {
         context = appService;
         taskSubmitter = appService.getTaskSubmitter();
         taskTracker = appService.getTaskTracker();
-        sharedPrefs = appService.getSharedPreferences();
+//        sharedPrefs = appService.getSharedPreferences();
 
-        xmppHost = sharedPrefs.getString(Constants.XMPP_HOST, "localhost");
-        xmppPort = sharedPrefs.getInt(Constants.XMPP_PORT, 5222);
-        username = sharedPrefs.getString(Constants.XMPP_USERNAME, "-1");
-        password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
-        XmppResourceName = sharedPrefs.getString(Constants.XMPP_RESOURCE, "android");
+//        xmppHost =ClientConfig.getXmppHost();    // sharedPrefs.getString(Constants.XMPP_HOST, "localhost");
+//        xmppPort = ClientConfig.getXmppPort(); // sharedPrefs.getInt(Constants.XMPP_PORT, 5222);
+//        username = ClientConfig.getUsrName();  //sharedPrefs.getString(Constants.XMPP_USERNAME, "-1");
+//        password = ClientConfig.getXmppPassword();   //sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
+//        XmppResourceName = ClientConfig.getXmppResource();// sharedPrefs.getString(Constants.XMPP_RESOURCE, "android");
 //        username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
 //        password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
 
@@ -180,10 +180,10 @@ public class AppManager {
                 && connection.isAuthenticated();
     }
 
-    private boolean isRegistered() {
-        return sharedPrefs.contains(Constants.XMPP_USERNAME)
-                && sharedPrefs.contains(Constants.XMPP_PASSWORD);
-    }
+//    private boolean isRegistered() {
+//        return sharedPrefs.contains(Constants.XMPP_USERNAME)
+//                && sharedPrefs.contains(Constants.XMPP_PASSWORD);
+//    }
 
     private void submitLoginTask() {
         Log.d(LOGTAG, "submitLoginTask()...");
@@ -221,12 +221,12 @@ public class AppManager {
 //            getConnection().removePacketListener(messagePacketListener);
 //    }
 
-    private void removeAccount() {
-        Editor editor = sharedPrefs.edit();
-        editor.remove(Constants.XMPP_USERNAME);
-        editor.remove(Constants.XMPP_PASSWORD);
-        editor.commit();
-    }
+//    private void removeAccount() {
+//        Editor editor = sharedPrefs.edit();
+//        editor.remove(Constants.XMPP_USERNAME);
+//        editor.remove(Constants.XMPP_PASSWORD);
+//        editor.commit();
+//    }
 
     /**
      * A runnable task to connect the server.
@@ -283,7 +283,7 @@ public class AppManager {
         public void run() {
             Log.i(LOGTAG, "LoginTask.run()...");
 
-            login(username, password);
+            login(ClientConfig.getUsrName(), ClientConfig.getXmppPassword());
 //            try {
 //                if (username == "" ||null==username) {
 //                    broadcastXmppStatus(XmppStatusCode.NoUserNumber);

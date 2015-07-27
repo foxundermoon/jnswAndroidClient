@@ -113,8 +113,8 @@ public class AppService extends Service {
         // wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         // connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        sharedPrefs = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME,
-                Context.MODE_PRIVATE);
+//        sharedPrefs = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME,
+//                Context.MODE_PRIVATE);
 
         // Get deviceId
         deviceId = telephonyManager.getDeviceId();

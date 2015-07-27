@@ -35,6 +35,9 @@ public class ClientConfig {
     public static int getIntConfig(Context context, String key, int defaultValue) {
         return Builder.getInstance().getSharedPreferences(context).getInt(key, defaultValue);
     }
+    public static  int getIntConfig(String key,int defaultValue) {
+        return getIntConfig(CustomApplication.getInstance(), key, defaultValue);
+    }
 
     public static String getStringConfig(Context context, String key, String defValue) {
         return Builder.getInstance().getSharedPreferences(context).getString(key, defValue);
@@ -46,6 +49,13 @@ public class ClientConfig {
 
     public static String getXmppHost() {
         return getStringConfig(Constants.XMPP_HOST, "");
+    }
+
+    public static int getXmppPort() {
+        return getIntConfig(Constants.XMPP_PORT,  -1);
+    }
+    public static   String getXmppPassword() {
+        return getStringConfig(Constants.XMPP_PASSWORD, "");
     }
 
     public static String getUsrName() {
