@@ -28,6 +28,22 @@ public class ClientConfig {
         String host = getStringConfig(Constants.XMPP_HOST, "");
         return "0@" + host +"/server";
     }
+
+    public static boolean putString(String key, String value) {
+      return   Builder.getInstance().getSharedPreferences().edit().putString(key,value).commit();
+    }
+
+    public static boolean putInt(String key, int value) {
+        return Builder.getInstance().getSharedPreferences().edit().putInt(key, value).commit();
+    }
+
+    public static boolean putBoolean(String key, boolean value) {
+        return Builder.getInstance().getSharedPreferences().edit().putBoolean(key, value).commit();
+    }
+
+    public static SharedPreferences getSharedPerferences() {
+        return Builder.getInstance().getSharedPreferences();
+    }
     public static String getServerDefaultDatabase(){
         return getStringConfig(Constants.SERVER_DEFAULT_DATABASE,"");
     }
@@ -150,6 +166,9 @@ public class ClientConfig {
 
         public SharedPreferences getSharedPreferences(Context context) {
             return context.getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        }
+        public  SharedPreferences getSharedPreferences() {
+            return getSharedPreferences(CustomApplication.getInstance());
         }
 
     }

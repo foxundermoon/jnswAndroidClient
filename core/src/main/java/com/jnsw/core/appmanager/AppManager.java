@@ -37,7 +37,7 @@ public class AppManager {
 
     private static final String LOGTAG = LogUtil.makeLogTag(AppManager.class);
 
-    private String XmppResourceName;
+//    private String XmppResourceName;
 //    private final String password;
 //    private final String username;
 
@@ -49,10 +49,10 @@ public class AppManager {
 
 //    private SharedPreferences sharedPrefs;
 
-    private String xmppHost;
+//    private String xmppHost;
 
 
-    private int xmppPort;
+//    private int xmppPort;
 
     private XMPPConnection connection;
     private ConnectionListener connectionListener;
@@ -244,7 +244,8 @@ public class AppManager {
 
             if (!appManager.isConnected()) {
                 ConnectionConfiguration connConfig = new ConnectionConfiguration(
-                        xmppHost, xmppPort);
+                        ClientConfig.getXmppHost(), ClientConfig.getXmppPort());
+                connConfig.setReconnectionAllowed(true);
                 connConfig.setSecurityMode(SecurityMode.disabled);
                 connConfig.setSASLAuthenticationEnabled(false);
                 connConfig.setCompressionEnabled(false);
@@ -283,7 +284,7 @@ public class AppManager {
         public void run() {
             Log.i(LOGTAG, "LoginTask.run()...");
 
-            login(ClientConfig.getUsrName(), ClientConfig.getXmppPassword());
+            login(ClientConfig.getUsrName(), ClientConfig.getXmppPassword(),ClientConfig.getXmppResource());
 //            try {
 //                if (username == "" ||null==username) {
 //                    broadcastXmppStatus(XmppStatusCode.NoUserNumber);
@@ -305,7 +306,7 @@ public class AppManager {
 //            }
         }
 
-        private void login(String username, String password) {
+        private void login(String username, String password,String resource) {
             Log.d(LOGTAG, "start login()->user:" + username + "   passwd:" + password);
             LoginStatusMessage loginStatusMessage = new LoginStatusMessage(StatusCode.NOT_LOGIN);
             if (!appManager.isAuthenticated()) {
@@ -314,7 +315,7 @@ public class AppManager {
                 try {
                     appManager.getConnection().login(
                             String.valueOf(username),
-                            password, XmppResourceName);
+                            password, resource);
                     Log.d(LOGTAG, "Loggedn in successfully");
                     loginStatusMessage.setLoginStatus(StatusCode.LOGIN_SUCCESS);
                     if (appManager.getConnectionListener() != null) {

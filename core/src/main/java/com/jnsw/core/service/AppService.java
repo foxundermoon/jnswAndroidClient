@@ -71,7 +71,7 @@ public class AppService extends Service {
 
     public static final String SERVICE_NAME = "com.jnsw.core.service.NotificationService";
     private TelephonyManager telephonyManager;
-    boolean enableBroadcastReceiver = false;
+    //    boolean enableBroadcastReceiver = false;
     Timer timer = new Timer();
 
     //    private WifiManager wifiManager;
@@ -118,11 +118,11 @@ public class AppService extends Service {
 
         // Get deviceId
         deviceId = telephonyManager.getDeviceId();
-        enableBroadcastReceiver = sharedPrefs.getBoolean(Constants.ENABLE_BROADCAST, false);
+//        enableBroadcastReceiver = sharedPrefs.getBoolean(Constants.ENABLE_BROADCAST, false);
         // Log.d(LOGTAG, "deviceId=" + deviceId);
-        Editor editor = sharedPrefs.edit();
-        editor.putString(Constants.DEVICE_ID, deviceId);
-        editor.commit();
+//        Editor editor = sharedPrefs.edit();
+//        editor.putString(Constants.DEVICE_ID, deviceId);
+        ClientConfig.putString(Constants.DEVICE_ID, deviceId);
 
         // If running on an emulator
         if (deviceId == null || deviceId.trim().length() == 0
@@ -134,8 +134,9 @@ public class AppService extends Service {
                 deviceId = (new StringBuilder("EMU")).append(
                         (new Random(System.currentTimeMillis())).nextLong())
                         .toString();
-                editor.putString(Constants.EMULATOR_DEVICE_ID, deviceId);
-                editor.commit();
+//                editor.putString(Constants.EMULATOR_DEVICE_ID, deviceId);
+                ClientConfig.putString(Constants.EMULATOR_DEVICE_ID, deviceId);
+//                editor.commit();
             }
         }
         Log.d(LOGTAG, "deviceId=" + deviceId);
@@ -272,20 +273,20 @@ public class AppService extends Service {
     private void start() {
         Log.d(LOGTAG, "start()...");
         registerConnectivityReceiver();
-        if (enableBroadcastReceiver) {
+//        if (enableBroadcastReceiver) {
 //            registerSendPacketReceiver();
 //            registerNotificationReceiver();
-        }
+//        }
         appManager.connect();
     }
 
     private void stop() {
         Log.d(LOGTAG, "stop()...");
         unregisterConnectivityReceiver();
-        if (enableBroadcastReceiver) {
+//        if (enableBroadcastReceiver) {
 //            unregisterNotificationReceiver();
 //            unRegisterSendPacketReceiver();
-        }
+//        }
         appManager.disconnect();
 //        executorService.shutdown();
     }
@@ -309,33 +310,63 @@ public class AppService extends Service {
                 }
             }
         };
-        timer.schedule(task, 8 * 1000);
+        timer.schedule(task, 10 * 1000);
         start();
     }
 
     private boolean responsedLogin = false;
+
     @Subscribe
     public void onReceivedLoginStatus(LoginStatusEvent event) {
-        int maxRetryCount = 3;
+        boolean canResponse = false;
         LoginStatusMessage loginStatusMessage = event.getEventData();
         LoginedMessage loginedMessage = new LoginedMessage(false);
 
         if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_SUCCESS)) {
             loginedMessage.setLoginStatusCode(StatusCode.LOGIN_SUCCESS);
+            canResponse = true;
             loginedMessage.setSuccess(true);
         } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_ALREADY)) {
             loginedMessage.setSuccess(true);
+            canResponse = true;
             loginedMessage.setLoginStatusCode(StatusCode.LOGIN_ALREADY);
-        } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_FAILED)) {
+        } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_FAILED) || loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_TIME_OUT)) {
+            if (getNetworkType() == StatusCode.NETWORN_NONE) {
+                loginStatusMessage.setErrorMessage("当前没有网络，请检查连接");
+                loginStatusMessage.setNetStatus(StatusCode.NETWORN_NONE);
+                canResponse = true;
+            } else {
+                String xmppHost = ClientConfig.getXmppHost();
+                Ping ping = new Ping(xmppHost);
+                ping.start();
+                if (ping.getError() == NetModel.SUCCEED) {
+                    loginStatusMessage.setNetStatus(StatusCode.NETWORK_CAN_PING_MESSAGE_SERVER);
+                    loginStatusMessage.setErrorMessage("当前网络可以ping通消息服务器，但是登录不成功");
+                    canResponse = true;
+                } else {
+                    Ping ping2 = new Ping("www.baidu.com");
+                    ping2.start();
+                    if (ping2.getError() == NetModel.SUCCEED) {
+                        loginStatusMessage.setNetStatus(StatusCode.NETWORK_CAN_PING_BAIDU);
+                        loginStatusMessage.setErrorMessage("当前网络无法访问消息服务器，但是可以访问外网");
+                        canResponse = true;
+                    } else {
+                        loginStatusMessage.setNetStatus(StatusCode.NETWORK_CAN_NOT_PING_BAIDU);
+                        loginStatusMessage.setErrorMessage("当前网络无法访问消息服务器以及外网");
+                        canResponse = true;
+                    }
+                }
+            }
             loginedMessage.setLoginStatusCode(StatusCode.LOGIN_FAILED);
             loginedMessage.setCause(loginStatusMessage.getErrorMessage());
             loginedMessage.setNetStatus(loginStatusMessage.getNetStatus());
-        } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_TIME_OUT)) {
-            loginedMessage.setNetStatus(loginStatusMessage.getNetStatus());
-            loginedMessage.setLoginStatusCode(loginStatusMessage.getLoginStatus());
-            loginedMessage.setCause("登录超时");
+//        } else if (loginStatusMessage.equalsLoginStatusCode(StatusCode.LOGIN_TIME_OUT)) {
+//            loginedMessage.setNetStatus(loginStatusMessage.getNetStatus());
+//            loginedMessage.setLoginStatusCode(loginStatusMessage.getLoginStatus());
+//            loginedMessage.setCause("登录超时");
+//            canResponse = true;
         }
-        if (!responsedLogin) {
+        if (!responsedLogin && canResponse) {
             postLoginedMessage(loginedMessage);
             responsedLogin = true;
         }
@@ -347,28 +378,7 @@ public class AppService extends Service {
     }
 
     void diagnoseNet(LoginStatusMessage loginStatusMessage) {
-        if (getNetworkType() == StatusCode.NETWORN_NONE) {
-            loginStatusMessage.setErrorMessage("当前没有网络，请检查连接");
-            loginStatusMessage.setNetStatus(StatusCode.NETWORN_NONE);
-        } else {
-            String xmppHost = ClientConfig.getXmppHost();
-            Ping ping = new Ping(xmppHost);
-            ping.start();
-            if (ping.getError() == NetModel.SUCCEED) {
-                loginStatusMessage.setNetStatus(StatusCode.NETWORK_CAN_PING_MESSAGE_SERVER);
-                loginStatusMessage.setErrorMessage("当前网络可以ping通消息服务器，但是登录不成功");
-            } else {
-                Ping ping2 = new Ping("www.baidu.com");
-                ping2.start();
-                if (ping2.getError() == NetModel.SUCCEED) {
-                    loginStatusMessage.setNetStatus(StatusCode.NETWORK_CAN_PING_BAIDU);
-                    loginStatusMessage.setErrorMessage("当前网络无法访问消息服务器，但是可以访问外网");
-                } else {
-                    loginStatusMessage.setNetStatus(StatusCode.NETWORK_CAN_NOT_PING_BAIDU);
-                    loginStatusMessage.setErrorMessage("当前网络无法访问消息服务器以及外网");
-                }
-            }
-        }
+
 
     }
 
