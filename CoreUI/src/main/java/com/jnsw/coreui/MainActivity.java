@@ -51,6 +51,28 @@ public class MainActivity extends Activity {
             p("clicked sendQueryMessage");
         sendQueryMessage();
     }
+    @Click(R.id.sendTest)
+    void sendTest() {
+        Message message = new Message();
+        message.creatCommand().setName(Command.DataTable)
+//                .setNeedResponse(true)
+                .setOperation(Operation.query)
+                .setSql("SELECT * FROM `xx_专题_综合管线_三维分析`");
+        message.setCallback(new Callback<Message>() {
+            @Override
+            public void onCallback(Message message) {
+                p(message.toJson());
+            }
+        });
+        try {
+            message.send();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            p(e.getMessage());
+
+        }
+
+    }
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
@@ -576,8 +598,8 @@ public class MainActivity extends Activity {
         ClientConfig.Builder.getInstance()
                 .setXmppPasword("222")
                 .setXmppUser("user2")
-                .setXmppServerPort(5222)
-                .setXmppServerHost("10.80.5.222")
+                .setXmppServerPort(7777)
+                .setXmppServerHost("10.80.4.8")
                 .setFileServerUrl("http://10.80.5.199:8080/")
                 .setXmppResource("XJAPP")
                 .commit();//.startXmppService();

@@ -170,10 +170,10 @@ public final class Message {
     @Subscribe
     public void onCallback(ReceivedMessageEvent receivedMessageEvent) {
         Message message = receivedMessageEvent.getEventData();
-        if (message != null) {
-//        if ((message !=null )&&  ( getId().equals(message.getId())) && (_callback != null)) {
-//            String sid = getId();
-//            String rid = message.getId();
+//        if (message != null) {
+        if ((message !=null )&&  ( getId().equals(message.getId()))) {
+            String sid = getId();
+            String rid = message.getId();
             if ((getId().equals(message.getId()))) {
                 if (_callback != null)
                     _callback.onCallback(message);
