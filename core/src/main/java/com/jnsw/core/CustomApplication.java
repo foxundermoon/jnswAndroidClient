@@ -1,6 +1,7 @@
 package com.jnsw.core;
 
 import android.app.Application;
+import android.os.Handler;
 
 import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
@@ -27,6 +28,7 @@ public class CustomApplication extends Application {
     public static CustomApplication instance;
     public MyHttpClient httpClient;
     public Gson gson;
+    public Handler appHandle;
 
     public String creatUUID() {
         return UUID.randomUUID().toString().replace("-", "");
@@ -42,6 +44,7 @@ public class CustomApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        appHandle = new Handler();
         shareMap = new HashMap<String, Object>();
         Map<String, Objects> xmppStatus = new HashMap<String, Objects>();
         shareMap.put(Constants.XMPP_STATUS, xmppStatus);

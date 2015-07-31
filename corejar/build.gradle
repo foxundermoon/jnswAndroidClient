@@ -1,0 +1,33 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+version CORE_JAR_VERSION
+group 'com.jnsw.java.core'
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: 'http://jarlib.vvfox.com/releases/') {
+                authentication(userName: 'admin', password: 'admin123')
+            }
+//            pom.project {
+//                name project.name
+//                name 'core'
+//                packaging 'jar'
+//                description 'the android library of company  version:'+version +"  group:"+group
+//                url 'https://github.com/foxundermoon/jnswAndroidClient'
+//                licenses {
+//                    license {
+//                        name 'The Apache Software License, Version 2.0'
+//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                        distribution 'repo'
+//                    }
+//                }
+//            }
+        }
+    }
+
+}

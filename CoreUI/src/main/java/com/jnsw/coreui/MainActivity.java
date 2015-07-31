@@ -19,6 +19,7 @@ import org.androidannotations.annotations.ViewById;
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 @EActivity(R.layout.activity_main)
@@ -83,6 +84,33 @@ public class MainActivity extends Activity {
     void init(){
         CustomApplication.getInstance().eventBus.register(this);
         handler = new Handler();
+    }
+    @Click
+   void insert() {
+        Message message_send = new Message();
+        message_send.creatCommand().setName(Command.DataTable)
+                .setOperation(Operation.insert);
+//                        .setNeedResponse(true);
+        Table tb = message_send.createTable(new Column("用户ID", "int"), new Column("LID","int"), new Column("用户名称"), new NowColumn("上班时间")).setName("xx_专题_巡检_员工签到表");
+        tb.setName("xx_专题_巡检_员工签到表");
+        Row row = tb.createRow();
+        try {
+            row.put("用户ID", Integer.parseInt("1"))
+                    .put("用户名称", "管理员")
+                    .put("上班时间", new Date())
+            .put("LID",1);
+            message_send.setCallback(new Callback<Message>() {
+                @Override
+                public void onCallback(Message message) {
+                    p(message.toJson());
+                }
+            });
+            message_send.send();
+        } catch (Exception e) {
+            e.printStackTrace();
+            p(e.getMessage());
+        }
+
     }
     class ClickListener implements View.OnClickListener {
         @Override
@@ -599,7 +627,7 @@ public class MainActivity extends Activity {
                 .setXmppPasword("222")
                 .setXmppUser("user2")
                 .setXmppServerPort(7777)
-                .setXmppServerHost("10.80.4.8")
+                .setXmppServerHost("10.80.5.222")
                 .setFileServerUrl("http://10.80.5.199:8080/")
                 .setXmppResource("XJAPP")
                 .commit();//.startXmppService();
