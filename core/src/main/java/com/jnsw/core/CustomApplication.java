@@ -61,6 +61,12 @@ public class CustomApplication extends Application {
         ServiceManager.getInstance(this).startService();
     }
 
+    public void putTemp(String key, Object value) {
+        shareMap.put(key, value);
+    }
+    public Object getTemp( String key) {
+        return shareMap.get(key);
+    }
     @Override
     public void onTerminate() {
         eventBus = null;
@@ -74,5 +80,22 @@ public class CustomApplication extends Application {
 
     public CustomApplication() {
         super();
+    }
+
+    public static class Keys {
+        public static String LOGIN_USER_NAME = "LOGIN_USER_NAME";
+        public static String USER_NICE_NAME = "USER_NICE_NAME";
+        public static String ON_LINE = "ON_LINE";
+        public static String OFF_LINE = "OFF_LINE";
+        public static String USER_ID = "USER_ID";
+        public static String STARTING_TASK = "STARTING_TASK";
+        public static String FLAG1 = "FLAG1_FSDFSDF";
+        public static String FLAG2 = "FLAG2_DFGDFGDFG";
+        public static String FLAG3 = "FLAG3_FSDFDSFDSF";
+        public static String FLAG4 = "FLAG4_FDFSDFSDFS";
+        public static String FLAG5 = "FLAG5_GDFGERTSD";
+        public static String FLAG6 = "FLAG6_DFGERGRY";
+        public static String FLAG7 = "FLAG7_VNVMVNDFGSGD";
+
     }
 }

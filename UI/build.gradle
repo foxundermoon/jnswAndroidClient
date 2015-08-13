@@ -1,32 +1,27 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+def AAVersion = '3.3.2'
+group 'com.jnsw.android'
+version UI_VERSION
 buildscript {
-    repositories {
-        jcenter {
-            url = 'http://10.80.5.222:8081/nexus/content/repositories/jcenter/'
-        }
-    }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.1'
+        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.6'
     }
 }
-apply plugin: 'com.android.application'
-
-repositories {
-    jcenter {
-        name = 'Local Jcenter'
-        url = 'http://10.80.5.222:8081/nexus/content/repositories/jcenter/'
-    }
-    maven {
-        url = 'http://10.80.5.222:8081/nexus/content/groups/public/'
+android {
+    lintOptions {
+        abortOnError false
     }
 }
-
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.jnsw.ui"
-        minSdkVersion 14
+//        applicationId "com.jnsw.android.ui"
+        minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -38,16 +33,25 @@ android {
         }
     }
     packagingOptions {
-//        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
-//        exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/license.txt'
-//        exclude 'META-INF/dependencies.txt'
-//        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: 'http://jarlib.vvfox.com/releases/') {
+                authentication(userName: 'admin', password: 'admin123')
+            }
+        }
     }
 }
 
@@ -55,11 +59,9 @@ dependencies {
 //    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.1.1'
 //    compile project(':core')
-    compile('com.jnsw.android:core:0.2.0')
-            {
-                exclude group: 'com.android.support', module: 'appcompat-v7'
-                exclude group: 'com.android.support', module: 'support-v4'
-            }
-    compile 'org.apache.httpcomponents:httpmime:4.3.5'
-    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
+//    compile('com.jnsw.android:core:0.2.0')
+//            {
+//                exclude group: 'com.android.support', module: 'appcompat-v7'
+//                exclude group: 'com.android.support', module: 'support-v4'
+//            }
 }
