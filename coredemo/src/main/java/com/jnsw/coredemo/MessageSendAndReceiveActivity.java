@@ -23,7 +23,7 @@ import java.util.Date;
 
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends Activity {
+public class MessageSendAndReceiveActivity extends Activity {
     @ViewById
      Button loginBtn;
     @ViewById(R.id.sendTest)
@@ -172,7 +172,7 @@ public class MainActivity extends Activity {
         task.setTaskBody(new Runnable() {
             @Override
             public void run() {
-                L.d(MainActivity.this.getClass(),"task run : 8 * 8="+(8*8));
+                L.d(MessageSendAndReceiveActivity.this.getClass(),"task run : 8 * 8="+(8*8));
             }
         });
         task.setOnFailed(new Runnable() {

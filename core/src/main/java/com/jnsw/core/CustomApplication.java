@@ -2,6 +2,7 @@ package com.jnsw.core;
 
 import android.app.Application;
 import android.os.Handler;
+import android.support.multidex.MultiDexApplication;
 
 import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
@@ -22,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by foxundermoon on 2014/10/30.
  */
-public class CustomApplication extends Application {
+public class CustomApplication extends MultiDexApplication {
     public Map<String, Object> shareMap;
     public EventBus eventBus;
     public static CustomApplication instance;
