@@ -21,5 +21,6 @@
 
     <string name="action_example">Example action</string>
     <string name="title_activity_nav">NavActivity</string>
+    <string name="title_activity_stick_drawer_layout_demo">StickDrawerLayoutDemo</string>
 
 </resources>

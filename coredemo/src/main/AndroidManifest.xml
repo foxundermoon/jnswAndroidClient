@@ -40,18 +40,22 @@
         <activity
             android:name=".DragActivity_"
             android:label="@string/title_activity_drag"
-            android:theme="@style/AppCompatTheme">
+            android:theme="@style/AppCompatTheme" >
         </activity>
-
         <activity
             android:name=".NavActivity_"
             android:label="@string/title_activity_nav"
-            android:theme="@style/AppCompatTheme">
+            android:theme="@style/AppCompatTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".StickDrawerLayoutDemo_"
+            android:label="@string/title_activity_stick_drawer_layout_demo"
+            android:theme="@style/AppCompatTheme">
         </activity>
     </application>
 

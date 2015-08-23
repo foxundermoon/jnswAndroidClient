@@ -22,6 +22,13 @@
                 android:layout_height="wrap_content"
                 android:text="LeftRightDrag"
                 android:id="@+id/LeftRightDrag" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="StickDrawerLayout"
+                android:id="@+id/stick_drawer_layout_demo" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -11,7 +11,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/Tangerine_Dark">
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -49,9 +50,10 @@
             android:layout_gravity="left|bottom" />
     </LinearLayout>
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:gravity="left|fill_vertical">
+        android:gravity="left|fill_vertical"
+        android:background="@color/LavenderHerb_Light">
 
         <Button
             android:layout_width="wrap_content"

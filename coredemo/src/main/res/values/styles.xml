@@ -4,9 +4,9 @@
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- Customize your theme here. -->
     </style>
-    <style name="AppCompatTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!--<style name="AppCompatTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
 
-    </style>
+    <!--</style>-->
 
     <style name="FullscreenTheme" parent="android:Theme.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>
