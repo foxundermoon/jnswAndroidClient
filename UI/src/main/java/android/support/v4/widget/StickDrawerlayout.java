@@ -1150,7 +1150,8 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                 if (mScrimOpacity > 0) {
                     final View child = mLeftDragger.findTopChildUnder((int) x, (int) y);
                     if (child != null && isContentView(child)) {
-                        interceptForTap = true;
+//                        interceptForTap = true;
+                        interceptForTap=false;
                     }
                 }
                 mDisallowInterceptRequested = false;
