@@ -57,12 +57,29 @@
             android:text="New RadioButton"
             android:id="@+id/radioButton4"
             android:layout_gravity="center_horizontal|top" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:layout_gravity="right|top"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:clickable="true" />
     </FrameLayout>
-    <LinearLayout
+    <ScrollView
         android:layout_width="200dp"
         android:layout_height="match_parent"
+
         android:layout_gravity="start"
-        android:background="@color/ClassicBlue_Dark"></LinearLayout>
+        android:background="@color/ClassicBlue_Dark">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/left_container"
+            android:orientation="vertical">
+        </LinearLayout>
+    </ScrollView>
     <LinearLayout
         android:layout_width="200dp"
         android:layout_height="match_parent"
