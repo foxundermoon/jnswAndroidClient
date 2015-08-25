@@ -1,1 +1,1 @@
-include ':core', ':corejar' , ':CoreUI'
+include ':core', ':corejar' , ':coredemo' , ':ui'

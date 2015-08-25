@@ -1,4 +1,3 @@
-apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'signing'
 //sourceCompatibility = 1.6
@@ -48,6 +47,7 @@ android {
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -95,22 +95,22 @@ dependencies {
             'com.google.code.gson:gson:2.2.4',
 //            'net.qiujuer.genius:kit:1.0.0',
             'com.github.qiujuer:genius:2.4.1',
-            'com.j256.ormlite:ormlite-android:4.43',
-            'com.j256.ormlite:ormlite-core:4.43',
+//            'com.j256.ormlite:ormlite-android:4.43',
+//            'com.j256.ormlite:ormlite-core:4.43',
     )
 }
-sourceSets {
-    main {
-        resources {
-            srcDir 'src/main/java'
-        }
-    }
-    test {
-        resources {
-            srcDir 'src/androidTest/java'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        resources {
+//            srcDir 'src/main/java'
+//        }
+//    }
+//    test {
+//        resources {
+//            srcDir 'src/androidTest/java'
+//        }
+//    }
+//}
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -118,28 +118,14 @@ uploadArchives {
             repository(url: 'http://jarlib.vvfox.com/releases/') {
                 authentication(userName: 'admin', password: 'admin123')
             }
-//            pom.project {
-//                name project.name
-//                name 'core'
-//                packaging 'jar'
-//                description 'the android library of company  version:'+version +"  group:"+group
-//                url 'https://github.com/foxundermoon/jnswAndroidClient'
-//                licenses {
-//                    license {
-//                        name 'The Apache Software License, Version 2.0'
-//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-//                        distribution 'repo'
-//                    }
-//                }
-//            }
         }
     }
 
 }
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+//task sourcesJar(type: Jar) {
+//    classifier = 'sources'
+//    from sourceSets.main.allSource
+//}
 //task releaseJar(type: Copy) {
 //    from('build/intermediates/bundles/release')
 //    into('build/output/jar')
@@ -152,16 +138,16 @@ task sourcesJar(type: Jar) {
 //    from 'build/libs'
 //}
 
-File releaseJarFile() {
-//    def _version = version.replace('.','_')
-    copy {
-        from('build/intermediates/bundles/release')
-        into('build/outputs')
-        include('classes.jar')
-        rename('classes.jar', "core.jar")
-    }
-    file("build/outputs/core.jar")
-}
+//File releaseJarFile() {
+////    def _version = version.replace('.','_')
+//    copy {
+//        from('build/intermediates/bundles/release')
+//        into('build/outputs')
+//        include('classes.jar')
+//        rename('classes.jar', "core.jar")
+//    }
+//    file("build/outputs/core.jar")
+//}
 
 //artifacts {
 //    def myreleasejar = file 'build/output/jar/core0.0.1.jar'
@@ -172,7 +158,6 @@ File releaseJarFile() {
 //    archives javadocJar
 //    archives releaseJarFile()
 //    archives sourcesJar
-//    exclude '*.aar'
 //}
 
 //signing {
