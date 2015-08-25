@@ -758,7 +758,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
      *            layout direction.
      * @return the drawer with the specified gravity
      */
-    View findDrawerWithGravity(int gravity) {
+   public View findDrawerWithGravity(int gravity) {
         final int absHorizGravity = GravityCompat.getAbsoluteGravity(
                 gravity, ViewCompat.getLayoutDirection(this)) & Gravity.HORIZONTAL_GRAVITY_MASK;
         final int childCount = getChildCount();
@@ -1679,7 +1679,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
             final LayoutParams lp = (LayoutParams) capturedChild.getLayoutParams();
             lp.isPeeking = false;
 
-            closeOtherDrawer();
+//            closeOtherDrawer();
         }
 
         private void closeOtherDrawer() {
