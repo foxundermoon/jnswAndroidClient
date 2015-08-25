@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -49,9 +51,21 @@ public class StickDrawerLayoutDemo extends AppCompatActivity {
     }
 
     private void initMenu() {
+        ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.abc_btn_rating_star_on_mtrl_alpha);
-        FloatingActionButton actionButton = new  FloatingActionButton.Builder(this)
+        FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
                 .setContentView(imageView)
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
+        ImageView itemIcon = new ImageView(this);
+        itemIcon.setImageResource(R.drawable.abc_btn_default_mtrl_shape);
+
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon).build();
+
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+                .addSubActionView(button1)
+                .attachTo(actionButton)
                 .build();
     }
 
@@ -65,10 +79,35 @@ public class StickDrawerLayoutDemo extends AppCompatActivity {
 //            params.setMargins(0,10,00,10);
             Button btn = new Button(this);
 
+            createSubMenuTo(btn);
             btn.setText("button "+i);
             btn.setGravity(Gravity.CENTER);
             leftContainer.addView(btn);
         }
+    }
+
+    private void createSubMenuTo(View btn) {
+        ImageView rlIcon1 = new ImageView(this);
+        ImageView rlIcon2 = new ImageView(this);
+        ImageView rlIcon3 = new ImageView(this);
+        ImageView rlIcon4 = new ImageView(this);
+
+        rlIcon1.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_chat_light));
+        rlIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_camera_light));
+        rlIcon3.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_video_light));
+        rlIcon4.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_place_light));
+
+        SubActionButton.Builder rLSubBuilder = new SubActionButton.Builder(this);
+        final FloatingActionMenu rightLowerMenu = new FloatingActionMenu.Builder(this)
+                .addSubActionView(rLSubBuilder.setContentView(rlIcon1).build())
+                .addSubActionView(rLSubBuilder.setContentView(rlIcon2).build())
+                .addSubActionView(rLSubBuilder.setContentView(rlIcon3).build())
+                .addSubActionView(rLSubBuilder.setContentView(rlIcon4).build())
+                .setStartAngle(-70)
+                .setEndAngle(70)
+                .attachTo(btn)
+                .build();
+
     }
 
     @Override
