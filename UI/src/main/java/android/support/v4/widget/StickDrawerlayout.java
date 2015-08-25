@@ -172,8 +172,8 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
     private float mScrimOpacity;
     private Paint mScrimPaint = new Paint();
 
-    private final ViewDragHelper mLeftDragger;
-    private final ViewDragHelper mRightDragger;
+    private final com.jnsw.android.ui.ViewDragHelper mLeftDragger;
+    private final com.jnsw.android.ui.ViewDragHelper mRightDragger;
     private final ViewDragCallback mLeftCallback;
     private final ViewDragCallback mRightCallback;
     private int mDrawerState;
@@ -339,12 +339,12 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
         mLeftCallback = new ViewDragCallback(Gravity.LEFT);
         mRightCallback = new ViewDragCallback(Gravity.RIGHT);
 
-        mLeftDragger = ViewDragHelper.create(this, TOUCH_SLOP_SENSITIVITY, mLeftCallback);
+        mLeftDragger = com.jnsw.android.ui.ViewDragHelper.create(this, TOUCH_SLOP_SENSITIVITY, mLeftCallback);
         mLeftDragger.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
         mLeftDragger.setMinVelocity(minVel);
         mLeftCallback.setDragger(mLeftDragger);
 
-        mRightDragger = ViewDragHelper.create(this, TOUCH_SLOP_SENSITIVITY, mRightCallback);
+        mRightDragger = com.jnsw.android.ui.ViewDragHelper.create(this, TOUCH_SLOP_SENSITIVITY, mRightCallback);
         mRightDragger.setEdgeTrackingEnabled(ViewDragHelper.EDGE_RIGHT);
         mRightDragger.setMinVelocity(minVel);
         mRightCallback.setDragger(mRightDragger);
@@ -478,7 +478,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
         }
         if (lockMode != LOCK_MODE_UNLOCKED) {
             // Cancel interaction in progress
-            final ViewDragHelper helper = absGravity == Gravity.LEFT ? mLeftDragger : mRightDragger;
+            final com.jnsw.android.ui.ViewDragHelper helper = absGravity == Gravity.LEFT ? mLeftDragger : mRightDragger;
             helper.cancel();
         }
         switch (lockMode) {
@@ -1212,6 +1212,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                         final View openDrawer = findOpenDrawer();
                         if (openDrawer != null) {
                             peekingOnly = getDrawerLockMode(openDrawer) == LOCK_MODE_LOCKED_OPEN;
+                            peekingOnly =true; // to always open util slide to close
                         }
                     }
                 }
@@ -1621,9 +1622,9 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                 };
     }
 
-    private class ViewDragCallback extends ViewDragHelper.Callback {
+    private class ViewDragCallback extends com.jnsw.android.ui.ViewDragHelper.Callback {
         private final int mAbsGravity;
-        private ViewDragHelper mDragger;
+        private com.jnsw.android.ui.ViewDragHelper mDragger;
 
         private final Runnable mPeekRunnable = new Runnable() {
             @Override public void run() {
@@ -1635,7 +1636,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
             mAbsGravity = gravity;
         }
 
-        public void setDragger(ViewDragHelper dragger) {
+        public void setDragger(com.jnsw.android.ui.ViewDragHelper dragger) {
             mDragger = dragger;
         }
 
