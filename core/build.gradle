@@ -1,38 +1,15 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
-//sourceCompatibility = 1.6
-//targetCompatibility = 1.6
 version = CORE_VERSION
 group = 'com.jnsw.android'
 buildscript {
-////    ext.version = '0.2.1'
-////    ext.group = 'com.jnsw.android'
-////    ext.jcenter_url = JCENTER_URL
-////    ext.public_maven_url =PUBLIC_URL
-//    ext.jcenter_url =JCENTER_URL
-//    ext.public_maven_url = PUBLIC_URL
-//    repositories {
-//        jcenter {
-//            url = jcenter_url
-//        }
-//        maven {
-//            url = public_maven_url
-//        }
-//    }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 apply plugin: 'com.android.library'
 
-//repositories {
-//    jcenter {
-//        url = jcenter_url
-//    }
-//    maven {
-//        url = public_maven_url
-//    }
-//}
+
 
 android {
     compileSdkVersion 19
@@ -99,18 +76,18 @@ dependencies {
 //            'com.j256.ormlite:ormlite-core:4.43',
     )
 }
-//sourceSets {
-//    main {
-//        resources {
-//            srcDir 'src/main/java'
-//        }
-//    }
-//    test {
-//        resources {
-//            srcDir 'src/androidTest/java'
-//        }
-//    }
-//}
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/java'
+        }
+    }
+    test {
+        resources {
+            srcDir 'src/androidTest/java'
+        }
+    }
+}
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -122,10 +99,10 @@ uploadArchives {
     }
 
 }
-//task sourcesJar(type: Jar) {
-//    classifier = 'sources'
-//    from sourceSets.main.allSource
-//}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
 //task releaseJar(type: Copy) {
 //    from('build/intermediates/bundles/release')
 //    into('build/output/jar')
@@ -149,7 +126,7 @@ uploadArchives {
 //    file("build/outputs/core.jar")
 //}
 
-//artifacts {
+artifacts {
 //    def myreleasejar = file 'build/output/jar/core0.0.1.jar'
 //    def myreleaseJar = file("build/output/jar/core_${version}.jar"){
 //        builtBy releaseJar
@@ -157,8 +134,8 @@ uploadArchives {
 //    archives file("build/output/jar/core_${version}.jar")
 //    archives javadocJar
 //    archives releaseJarFile()
-//    archives sourcesJar
-//}
+    archives sourcesJar
+}
 
 //signing {
 //    sign configurations.archives

@@ -41,12 +41,13 @@ android {
 
 dependencies {
     compile project(':core')
+
     compile project(':ui')
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.jnsw.android:CircularFloatingActionMenu:1.0.2'
+    compile 'com.jnsw.android:CircularFloatingActionMenu:1.0.+'
 }
 apt {
     arguments {
