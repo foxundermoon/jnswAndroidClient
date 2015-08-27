@@ -1,4 +1,4 @@
-package com.jnsw.android.ui;
+package com.jnsw.android.ui.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -21,9 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
-import android.widget.LinearLayout;
-
-import com.jnsw.core.util.L;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

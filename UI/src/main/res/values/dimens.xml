@@ -5,4 +5,14 @@
     <dimen name="fab_size">56dp</dimen>
     <dimen name="start_z">2dp</dimen>
     <dimen name="end_z">5dp</dimen>
+
+    <!--Default ImageTextButton -->
+    <dimen name="default_image_with_text_button_image_width">30dp</dimen>
+    <dimen name="default_image_with_text_button_image_height">30dp</dimen>
+    <dimen name="default_image_with_text_button_text_size">19sp</dimen>
+    <dimen name="default_image_with_text_button_width">120dp</dimen>
+    <dimen name="default_image_with_text_button_height">30dp</dimen>
+
+
+
 </resources>

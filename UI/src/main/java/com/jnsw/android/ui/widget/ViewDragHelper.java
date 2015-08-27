@@ -1,4 +1,4 @@
-package com.jnsw.android.ui;
+package com.jnsw.android.ui.widget;
 
 /**
  * Created by fox on 2015/8/25.

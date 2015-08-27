@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package com.jnsw.android.ui;
+package com.jnsw.android.ui.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -32,6 +32,8 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
+
+import com.jnsw.android.ui.R;
 
 /**
  * Created by francesco on 11/09/14.

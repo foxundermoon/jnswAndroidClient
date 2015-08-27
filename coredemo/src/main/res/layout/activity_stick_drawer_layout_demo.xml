@@ -1,85 +1,150 @@
-<android.support.v4.widget.StickDrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.StickDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:jnswui="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stick_drawer_layout_demo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/stick_drawer_layout_demo"
     tools:context="com.jnsw.coredemo.StickDrawerLayoutDemo_">
 
 
-    <FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <com.jnsw.android.ui.widget.ImageTextButton
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            jnswui:image="@drawable/button_action_dark_selector"
+            jnswui:image_height="40dp"
+
+            jnswui:image_width="40dp"
+            jnswui:text="开始巡检"
+            jnswui:text_color="@color/light_blue" />
+
+
+        <com.jnsw.android.ui.widget.ImageTextButton
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            jnswui:image="@drawable/ic_action_camera"
+            jnswui:image_max_height="40dp"
+
+            jnswui:image_max_width="40dp"
+            jnswui:text="开始巡检"
+            jnswui:text_color="@color/light_blue" />
+
+
+        <com.jnsw.android.ui.widget.ImageTextButton
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            jnswui:image="@drawable/button_action_red_selector"
+            jnswui:image_max_height="30dp"
+
+            jnswui:image_max_width="30dp"
+            jnswui:text="点我试试"
+            jnswui:text_color="@color/accent_material_light" />
+
+        <com.jnsw.android.ui.widget.ImageTextButton
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            jnswui:image="@drawable/btn_save"
+            jnswui:image_max_height="40dp"
+
+            jnswui:image_max_width="40dp"
+            jnswui:text="点我试试"
+            jnswui:text_color="@color/accent_material_light" />
+
+        <com.jnsw.android.ui.widget.ImageTextButton
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            jnswui:image="@drawable/btn_save"
+            jnswui:image_max_height="30dp"
+
+            jnswui:image_max_width="30dp"
+            jnswui:text="保  存"
+            jnswui:text_color="@color/accent_material_light" />
+
+
+        <com.jnsw.android.ui.widget.ImageTextButton
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            jnswui:image="@drawable/btn_xunjian"
+            jnswui:image_max_height="30dp"
+
+            jnswui:image_max_width="30dp"
+            jnswui:text="保  存"
+            jnswui:text_color="@color/accent_material_light" />
         <RadioButton
+            android:id="@+id/radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New RadioButton"
-            android:id="@+id/radioButton" />
+            android:text="New RadioButton" />
 
         <CheckBox
+            android:id="@+id/checkBox4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New CheckBox"
-            android:id="@+id/checkBox4" />
+            android:text="New CheckBox" />
 
         <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New RadioButton"
             android:id="@+id/radioButton2"
-            android:layout_gravity="right|center_vertical" />
-
-        <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New CheckBox"
+            android:layout_gravity="right|center_vertical"
+            android:text="New RadioButton" />
+
+        <CheckBox
             android:id="@+id/checkBox5"
-            android:layout_gravity="center_horizontal|bottom" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:text="New CheckBox" />
 
         <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New CheckBox"
             android:id="@+id/checkBox6"
-            android:layout_gravity="center" />
-
-        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New RadioButton"
+            android:layout_gravity="center"
+            android:text="New CheckBox" />
+
+        <RadioButton
             android:id="@+id/radioButton3"
-            android:layout_gravity="center_horizontal|bottom" />
-
-        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New RadioButton"
+            android:layout_gravity="center_horizontal|bottom"
+            android:text="New RadioButton" />
+
+        <RadioButton
             android:id="@+id/radioButton4"
-            android:layout_gravity="center_horizontal|top" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:text="New RadioButton" />
 
         <ImageView
+            android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView3"
             android:layout_gravity="right|top"
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
             android:clickable="true" />
-    </FrameLayout>
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="200dp"
         android:layout_height="match_parent"
 
         android:layout_gravity="start"
         android:background="@color/ClassicBlue_Dark">
+
         <LinearLayout
+            android:id="@+id/left_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/left_container"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:orientation="vertical"></LinearLayout>
     </ScrollView>
+
     <LinearLayout
         android:layout_width="200dp"
         android:layout_height="match_parent"

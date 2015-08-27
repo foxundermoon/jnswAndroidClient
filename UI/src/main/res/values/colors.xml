@@ -1,4 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <color name="light_blue">@android:color/holo_blue_light</color>
+
+    <!--Default ImageTextButton -->
+    <color name="default_image_with_text_button_text_color">@android:color/holo_blue_light</color>
 </resources>
