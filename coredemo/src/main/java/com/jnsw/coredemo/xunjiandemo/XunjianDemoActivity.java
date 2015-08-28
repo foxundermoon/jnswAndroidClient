@@ -1,5 +1,7 @@
 package com.jnsw.coredemo.xunjiandemo;
 
+import android.graphics.Color;
+import android.support.v4.widget.StickDrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,8 +10,10 @@ import android.view.Window;
 
 import com.jnsw.coredemo.R;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.WindowFeature;
 
 
@@ -17,7 +21,8 @@ import org.androidannotations.annotations.WindowFeature;
 @EActivity(R.layout.activity_xunjian_demo)
 @WindowFeature({Window.FEATURE_NO_TITLE})
 public class XunjianDemoActivity extends AppCompatActivity {
-
+    @ViewById(R.id.xunjian_demo_root)
+    StickDrawerLayout stickDrawerLayout;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -25,6 +30,11 @@ public class XunjianDemoActivity extends AppCompatActivity {
         return true;
     }
 
+    @AfterViews
+    void init(){
+        stickDrawerLayout.setScrimColor(Color.TRANSPARENT);
+        stickDrawerLayout.setDrawerLockMode(StickDrawerLayout.LOCK_MODE_UNLOCKED);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

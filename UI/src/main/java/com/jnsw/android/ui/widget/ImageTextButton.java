@@ -66,23 +66,51 @@ public class ImageTextButton extends LinearLayout {
             if (attr == R.styleable.ImageTextButton_text) {
                 mTextView.setText(typedArray.getText(attr));
             }else if (attr == R.styleable.ImageTextButton_text_color) {
-                mTextView.setTextColor(typedArray.getColor(attr, -1));
+                int color = typedArray.getColor(attr, -1);
+                if (color == -1) {
+                    color =R.color.default_image_with_text_button_text_color;
+                }
+                mTextView.setTextColor(color);
             }else if (attr == R.styleable.ImageTextButton_text_size) {
-                mTextView.setTextSize(typedArray.getDimensionPixelSize(attr,-1));
+                int dimensionPixelSize = typedArray.getDimensionPixelSize(attr, -1);
+                if (dimensionPixelSize == -1) {
+                    dimensionPixelSize = R.dimen.default_image_with_text_button_text_size;
+                }
+                mTextView.setTextSize(dimensionPixelSize);
             } else if (attr == R.styleable.ImageTextButton_image) {
-                imgDrawable = typedArray.getDrawable(attr);
+                Drawable drawable = typedArray.getDrawable(attr);
+                if (drawable == null) {
+                    drawable = getResources().getDrawable(R.drawable.default_image_text_drawable);
+                }
+                imgDrawable = drawable;
             } else if (attr == R.styleable.ImageTextButton_image_width) {
                 imgWidth = typedArray.getDimensionPixelSize(attr, -1);
             } else if (attr == R.styleable.ImageTextButton_image_height) {
                 imgHeight = typedArray.getDimensionPixelSize(attr, -1);
             } else if (attr == R.styleable.ImageTextButton_image_max_height) {
-                mImg.setMaxHeight(typedArray.getDimensionPixelSize(attr, -1));
+                int dimensionPixelSize = typedArray.getDimensionPixelSize(attr, -1);
+                if (dimensionPixelSize == -1) {
+                    dimensionPixelSize = R.dimen.default_image_with_text_button_image_max_height;
+                }
+                mImg.setMaxHeight(dimensionPixelSize);
             } else if (attr == R.styleable.ImageTextButton_image_max_width) {
-                mImg.setMaxWidth(typedArray.getDimensionPixelSize(attr, -1));
+                int dimensionPixelSize = typedArray.getDimensionPixelSize(attr, -1);
+                if (dimensionPixelSize == -1) {
+                    dimensionPixelSize = R.dimen.default_image_with_text_button_image_max_width;
+                }
+                mImg.setMaxWidth(dimensionPixelSize);
             } else if (attr == R.styleable.ImageTextButton_image_min_height) {
-                mImg.setMinimumHeight(typedArray.getDimensionPixelSize(attr, -1));
+                int dimensionPixelSize = typedArray.getDimensionPixelSize(attr, -1);
+                if (dimensionPixelSize == -1) {
+                    dimensionPixelSize = R.dimen.default_image_with_text_button_image_min_height;
+                }
+                mImg.setMinimumHeight(dimensionPixelSize);
             } else if (attr == R.styleable.ImageTextButton_image_min_width) {
-                mImg.setMinimumWidth(typedArray.getDimensionPixelSize(attr, -1));
+                int dimensionPixelSize = typedArray.getDimensionPixelSize(attr, -1);
+                if (dimensionPixelSize == -1) {
+                    dimensionPixelSize = R.dimen.default_image_with_text_button_image_min_width;
+                }
+                mImg.setMinimumWidth(dimensionPixelSize);
             }
         }
         typedArray.recycle();

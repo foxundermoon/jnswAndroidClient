@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.jnsw.coredemo.xunjiandemo.XunjianDemoActivity_;
+
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 
@@ -38,5 +40,10 @@ public class NavActivity extends AppCompatActivity {
     @Click(R.id.stick_drawer_layout_demo)
     void  stickDrawerLayoutDemo(){
         StickDrawerLayoutDemo_.intent(this).start();
+    }
+
+    @Click
+    void xunjian_demo(){
+        XunjianDemoActivity_.intent(this).start();
     }
 }

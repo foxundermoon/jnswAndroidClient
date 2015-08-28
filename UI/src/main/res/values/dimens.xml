@@ -8,11 +8,13 @@
 
     <!--Default ImageTextButton -->
     <dimen name="default_image_with_text_button_image_width">30dp</dimen>
-    <dimen name="default_image_with_text_button_image_height">30dp</dimen>
-    <dimen name="default_image_with_text_button_text_size">19sp</dimen>
+    <dimen name="default_image_with_text_button_image_height">40dp</dimen>
+    <dimen name="default_image_with_text_button_text_size">20sp</dimen>
     <dimen name="default_image_with_text_button_width">120dp</dimen>
-    <dimen name="default_image_with_text_button_height">30dp</dimen>
-
-
+    <dimen name="default_image_with_text_button_height">40dp</dimen>
+    <dimen name="default_image_with_text_button_image_max_width">50dp</dimen>
+    <dimen name="default_image_with_text_button_image_max_height">50dp</dimen>
+    <dimen name="default_image_with_text_button_image_min_width">50dp</dimen>
+    <dimen name="default_image_with_text_button_image_min_height">50dp</dimen>
 
 </resources>

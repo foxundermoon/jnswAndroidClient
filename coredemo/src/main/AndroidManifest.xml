@@ -63,6 +63,8 @@
         <activity
             android:name=".xunjiandemo.XunjianDemoActivity_"
             android:label="@string/title_activity_xunjian_demo"
+            android:launchMode="singleInstance"
+            android:screenOrientation="landscape"
             android:theme="@style/AppCompatTheme.NoActionBar">
         </activity>
     </application>

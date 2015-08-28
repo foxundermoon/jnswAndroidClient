@@ -1,11 +1,78 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.jnsw.coredemo.xunjiandemo.LeftFragment_"
-    android:background="#bb000000">
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:jnswui="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#aa000000"
+    android:orientation="vertical"
+    tools:context="com.jnsw.coredemo.xunjiandemo.LeftFragment_">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></LinearLayout>
-</ScrollView>
+        android:layout_height="200dp"
+        android:background="@color/black_overlay"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="40dp"
+
+                jnswui:image_max_width="40dp"
+                jnswui:text="保  存"
+                jnswui:text_color="@color/accent_material_light" />
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+
+                jnswui:image_max_width="30dp"
+                jnswui:text="点我试试"
+                jnswui:text_color="@color/accent_material_light" />
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+
+                jnswui:image_max_width="30dp"
+                jnswui:text="点我试试"
+                jnswui:text_color="@color/accent_material_light" />
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+
+                jnswui:image_max_width="30dp"
+                jnswui:text="点我试试"
+                jnswui:text_color="@color/accent_material_light" />
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+
+                jnswui:image_max_width="30dp"
+                jnswui:text="点我试试"
+                jnswui:text_color="@color/accent_material_light" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
