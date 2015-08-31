@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:src="@android:drawable/dialog_ic"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp" />
 </LinearLayout>

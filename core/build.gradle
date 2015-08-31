@@ -64,8 +64,8 @@ dependencies {
     compile project(":corejar")
     compile(
             'com.jnsw.android:asmack:1.0.0',
-//            'com.android.support:support-v4:21.0.3',
-//            'com.android.support:appcompat-v7:21.0.3',
+            'com.android.support:support-v4:22.+',
+            'com.android.support:appcompat-v7:22.+',
             'org.apache.httpcomponents:httpmime:4.3.5',
             'org.apache.httpcomponents:httpclient-android:4.3.5.1',
             'com.google.guava:guava:18.0',
