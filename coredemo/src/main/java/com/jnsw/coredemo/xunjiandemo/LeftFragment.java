@@ -20,4 +20,5 @@ public class LeftFragment extends Fragment {
     public LeftFragment() {
         // Required empty public constructor
     }
+
 }
