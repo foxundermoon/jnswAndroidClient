@@ -20,7 +20,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name=".MessageSendAndReceiveActivity_"
+            android:name=".message.MessageSendAndReceiveActivity_"
             android:label="@string/app_name" >
 
             <!-- <intent-filter> -->
@@ -34,11 +34,11 @@
         <service android:name="com.jnsw.core.service.AppService" />
 
         <activity
-            android:name=".Main2Activity"
+            android:name=".other.Main2Activity"
             android:label="@string/title_activity_main2" >
         </activity>
         <activity
-            android:name=".DragActivity_"
+            android:name=".customview.DragActivity_"
             android:label="@string/title_activity_drag"
             android:theme="@style/AppCompatTheme" >
         </activity>
@@ -53,7 +53,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".StickDrawerLayoutDemo_"
+            android:name=".customview.StickDrawerLayoutDemo_"
             android:configChanges="orientation|keyboard"
             android:label="@string/title_activity_stick_drawer_layout_demo"
             android:launchMode="singleInstance"
@@ -65,7 +65,12 @@
             android:label="@string/title_activity_xunjian_demo"
             android:launchMode="singleInstance"
             android:screenOrientation="landscape"
-            android:theme="@style/AppCompatTheme.NoActionBar">
+            android:theme="@style/AppCompatTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".customview.CloseableMenuGroupDemoActivity_"
+            android:theme="@style/AppCompatTheme"
+            android:label="@string/title_activity_closeable_menu_group_demo" >
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package com.jnsw.coredemo;
+package com.jnsw.coredemo.message;
 import android.app.Activity;
 import android.os.Handler;
 import android.view.View;
@@ -12,6 +12,8 @@ import com.jnsw.core.data.*;
 import com.jnsw.core.event.*;
 import com.jnsw.core.util.L;
 import com.jnsw.core.xmpp.ServiceManager;
+import com.jnsw.coredemo.R;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;

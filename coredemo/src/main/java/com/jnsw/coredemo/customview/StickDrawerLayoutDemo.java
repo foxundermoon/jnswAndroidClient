@@ -1,4 +1,4 @@
-package com.jnsw.coredemo;
+package com.jnsw.coredemo.customview;
 
 import android.graphics.Color;
 import android.support.v4.widget.StickDrawerLayout;
@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.jnsw.coredemo.R;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;

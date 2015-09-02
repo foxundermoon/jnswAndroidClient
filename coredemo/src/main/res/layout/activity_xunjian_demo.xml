@@ -1,19 +1,20 @@
 <android.support.v4.widget.StickDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/xunjian_demo_root"
     tools:context="com.jnsw.coredemo.xunjiandemo.XunjianDemoActivity_">
 
 
-    <RelativeLayout
+    <android.support.percent.PercentFrameLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:id="@+id/main_container"
         android:background="@android:color/holo_red_dark"
-        android:gravity="center_horizontal">
-
+        android:gravity="center_horizontal"
+        android:foregroundGravity="center|bottom">
         <fragment
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,11 +22,18 @@
             android:layout_centerVertical="true"
             android:id="@+id/center_float_container"
             android:layout_marginBottom="20dp"
+            app:layout_marginLeftPercent="%"
+            android:layout_marginLeft="400dp"
+            android:layout_marginTop="300dp"
             android:name="com.jnsw.coredemo.xunjiandemo.FloatCenterFragment_"
             />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/LavenderHerb_Light">
 
-
-    </RelativeLayout>
+        </ScrollView>
+    </android.support.percent.PercentFrameLayout>
     <!--<fragment-->
         <!--android:id="@+id/container_fragment"-->
         <!--android:layout_width="match_parent"-->

@@ -1,23 +1,27 @@
-package com.jnsw.coredemo;
+package com.jnsw.coredemo.other;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
+import com.jnsw.coredemo.R;
 
-@EActivity(R.layout.activity_drag)
-public class DragActivity extends AppCompatActivity {
+public class Main2Activity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_drag, menu);
+        getMenuInflater().inflate(R.menu.menu_main2, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
