@@ -53,4 +53,7 @@ public class NavActivity extends AppCompatActivity {
     void closeable_group(){
         CloseableMenuGroupDemoActivity_.intent(this).start();
     }
+    @Click void center_fragment_demo(){
+        
+    }
 }

@@ -69,8 +69,12 @@
         </activity>
         <activity
             android:name=".customview.CloseableMenuGroupDemoActivity_"
-            android:theme="@style/AppCompatTheme"
-            android:label="@string/title_activity_closeable_menu_group_demo" >
+            android:label="@string/title_activity_closeable_menu_group_demo"
+            android:theme="@style/AppCompatTheme" >
+        </activity>
+        <activity
+            android:name=".customview.FloatCenterFragmentActivity"
+            android:label="@string/title_activity_float_center_fragment" >
         </activity>
     </application>
 

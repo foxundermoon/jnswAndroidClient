@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageButton
+        android:id="@+id/imageButton_close_top_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/btn_close"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp"
+        android:tag="closeable_layout_root_view" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/closeable_container_center"
+        android:tag="closeable_layout_root_view"
+        android:orientation="horizontal">
+    </LinearLayout>
+</RelativeLayout>
