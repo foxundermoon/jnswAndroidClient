@@ -1,5 +1,6 @@
 package com.jnsw.coredemo.xunjiandemo;
 
+import android.app.Fragment;
 import android.graphics.Color;
 import android.support.v4.widget.StickDrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +9,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
+import com.google.common.eventbus.Subscribe;
+import com.jnsw.android.ui.widget.event.CloseableMenuGroupLayoutCloseEvent;
+import com.jnsw.core.CustomApplication;
 import com.jnsw.coredemo.R;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.WindowFeature;
@@ -21,6 +26,13 @@ import org.androidannotations.annotations.WindowFeature;
 @EActivity(R.layout.activity_xunjian_demo)
 @WindowFeature({Window.FEATURE_NO_TITLE})
 public class XunjianDemoActivity extends AppCompatActivity {
+    @FragmentById(R.id.left_fragment)
+    LeftFragment leftFragment;
+    @FragmentById(R.id.right_fragment)
+    RightFragment rightFragment;
+    @FragmentById(R.id.center_float_container)
+    Fragment currentCenterFragment;
+
     @ViewById(R.id.xunjian_demo_root)
     StickDrawerLayout stickDrawerLayout;
     @Override
@@ -34,6 +46,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
     void init(){
         stickDrawerLayout.setScrimColor(Color.TRANSPARENT);
         stickDrawerLayout.setDrawerLockMode(StickDrawerLayout.LOCK_MODE_UNLOCKED);
+        CustomApplication.getInstance().eventBus.register(this);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -46,7 +59,10 @@ public class XunjianDemoActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+    @Subscribe
+    public void onFloatCenterClose(CloseableMenuGroupLayoutCloseEvent closeableMenuGroupLayoutCloseEvent) {
+        getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
     }
 }

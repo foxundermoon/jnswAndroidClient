@@ -1,5 +1,7 @@
 package com.jnsw.core.event;
 
+import com.jnsw.core.CustomApplication;
+
 import java.util.Objects;
 
 /**
@@ -37,5 +39,8 @@ public abstract class BaseEvent<DataType> {
 
     public void setEventData(DataType eventData) {
         this.eventData = eventData;
+    }
+    public void post(){
+        CustomApplication.getInstance().eventBus.post(this);
     }
 }

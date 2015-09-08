@@ -19,6 +19,7 @@ allprojects {
         maven {
             url  PUBLIC_URL
         }
+//        jcenter()
     }
     buildscript {
 //        dependencies {

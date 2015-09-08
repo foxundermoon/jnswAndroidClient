@@ -6,4 +6,6 @@
     <string name="title_activity_hc">httpClient</string>
     <string name="title_activity_login">登录</string>
     <string name="title_activity_register">注册</string>
+    <string name="closeable_menu_group_layout_linelayout_container">closeable_menu_group_layout_linelayout_container</string>
+    <string name="closeable_menu_group_layout_close_button">closeable_menu_group_layout_close_button</string>
 </resources>

@@ -16,8 +16,6 @@ import org.androidannotations.annotations.EFragment;
  */
 @EFragment(R.layout.fragment_float_center)
 public class FloatCenterFragment extends Fragment {
-
-
     public FloatCenterFragment() {
         // Required empty public constructor
     }

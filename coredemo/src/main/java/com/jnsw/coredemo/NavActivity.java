@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import com.jnsw.coredemo.customview.CloseableMenuGroupDemoActivity_;
 import com.jnsw.coredemo.customview.DragActivity_;
+import com.jnsw.coredemo.customview.FloatCenterFragmentActivity_;
 import com.jnsw.coredemo.customview.StickDrawerLayoutDemo_;
 import com.jnsw.coredemo.xunjiandemo.XunjianDemoActivity_;
 
@@ -54,6 +55,6 @@ public class NavActivity extends AppCompatActivity {
         CloseableMenuGroupDemoActivity_.intent(this).start();
     }
     @Click void center_fragment_demo(){
-        
+        FloatCenterFragmentActivity_.intent(this).start();
     }
 }
