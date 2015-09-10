@@ -10,7 +10,14 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface  RemoteTable {
+public @interface RemoteTable {
     public String tableName() default "";
+
     public boolean sameAsLocalTableName() default false;
+
+    public boolean includeAllFeilds() default false;
+
+    public String includeFeilds() default "";
+
+    public String excludeFeilds() default "";
 }
