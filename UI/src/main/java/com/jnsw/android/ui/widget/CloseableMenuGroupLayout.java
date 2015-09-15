@@ -49,6 +49,22 @@ public class CloseableMenuGroupLayout extends FrameLayout {
 
     }
 
+    private boolean isUserAddedView(View child) {
+        if (child == null) {
+            return false;
+        }
+        return child != closebtn && child != closebtn && child != linearLayoutContainer && child != linearLayoutInScrollView && child != horizontalScrollView;
+    }
+
+    private boolean isVisibleUserAddedView(View child) {
+        if (child == null) {
+            return false;
+        }
+        return isUserAddedView(child) && child.getVisibility() != GONE;
+    }
+
+    private int  containerWeidth=0;
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int realWeidthMeasureSpec = widthMeasureSpec;
@@ -58,26 +74,32 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         int totalWidth = 0;
         if (currentContainer == null) {
             int childCount = getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View child = getChildAt(i);
-                if (child.getVisibility() != GONE && child != closebtn) {
-//                    LayoutParams params = (LayoutParams) child.getLayoutParams();
-                    final int childWidth = child.getMeasuredWidth();
-                    totalWidth += childWidth;
-                }
-            }
-            if (totalWidth == 0) {
+//            for (int i = 0; i < childCount; i++) {
+//                View child = getChildAt(i);
+//                if (isVisibleUserAddedView(child)) {
+////                    LayoutParams params = (LayoutParams) child.getLayoutParams();
+//                    final int childWidth = child.getMeasuredWidth();
+//                    if (childWidth == 0) {
+//                        break;
+//                    }
+//                    totalWidth += childWidth;
+//                }
+//            }
+            if (containerWeidth == 0) {
                 measureChildren(widthMeasureSpec, heightMeasureSpec);
                 for (int i = 0; i < childCount; i++) {
                     View child = getChildAt(i);
-                    if (child.getVisibility() != GONE && child != closebtn) {
+                    if (isVisibleUserAddedView(child)) {
 //                    LayoutParams params = (LayoutParams) child.getLayoutParams();
                         final int childWidth = child.getMeasuredWidth();
-                        totalWidth += childWidth;
+                        FrameLayout.LayoutParams params = (LayoutParams) child.getLayoutParams();
+                        totalWidth += childWidth+params.leftMargin +params.rightMargin;
                     }
                 }
+                containerWeidth =totalWidth;
             }
-            if (totalWidth != 0) {
+            else {
+                totalWidth =containerWeidth;
                 if (totalWidth > myWidthSize) {
                     currentContainer = linearLayoutInScrollView;
                     if (horizontalScrollView.getVisibility() == GONE) {
@@ -95,29 +117,42 @@ public class CloseableMenuGroupLayout extends FrameLayout {
                     childs[i] = getChildAt(i);
                 }
                 for (View child : childs) {
-                    if (child.getVisibility() != GONE && child != closebtn && child != horizontalScrollView && child != linearLayoutContainer) {
+                    if (isVisibleUserAddedView(child)) {
 //                    LayoutParams params = (LayoutParams) child.getLayoutParams();
-                        final int childWidth = child.getMeasuredWidth();
+//                        final int childWidth = child.getMeasuredWidth();
 //                        totalWidth += childWidth;
-                        removeView(child);
-                        currentContainer.addView(child);
+                        if (child.getParent() == this) {
+                            removeView(child);
+                            currentContainer.addView(child);
+                        }
                     }
                 }
             }
-        } else {
-            int viewCount = currentContainer.getChildCount();
-            for (int i = 0; i < viewCount; i++) {
-                View child = getChildAt(i);
-                if (child.getVisibility() != GONE) {
-//                    LayoutParams params = (LayoutParams) child.getLayoutParams();
-                    final int childWidth = child.getMeasuredWidth();
-                    totalWidth += childWidth;
-                }
-            }
+        } else {          //currentContainer !=null
+            FrameLayout.LayoutParams ll = (FrameLayout.LayoutParams) currentContainer.getLayoutParams();
+            totalWidth = containerWeidth + ll.leftMargin + ll.rightMargin;
+//            int viewCount = currentContainer.getChildCount();
+//            for (int i = 0; i < viewCount; i++) {
+//                View child = currentContainer.getChildAt(i);
+//                if (child.getVisibility() != GONE) {
+////                    LayoutParams params = (LayoutParams) child.getLayoutParams();
+//                    final int childWidth = child.getMeasuredWidth();
+//                    totalWidth += childWidth;
+//                }
+//            }
         }
         int widthModel = MeasureSpec.getMode(widthMeasureSpec);
         int realWidthSize = Math.min(totalWidth, myWidthSize);
-        realWeidthMeasureSpec = MeasureSpec.makeMeasureSpec(widthModel, realWidthSize);
+        if (widthModel == MeasureSpec.AT_MOST) {
+            String m = "AT_MOST";
+        }
+        if (widthModel == MeasureSpec.EXACTLY) {
+            String m = "EXACTLY";
+        }
+        if (widthModel == MeasureSpec.UNSPECIFIED) {
+            String m = "UNSPECIFIED";
+        }
+        realWeidthMeasureSpec = MeasureSpec.makeMeasureSpec(realWidthSize, widthModel);
 //        }
 
         super.onMeasure(realWeidthMeasureSpec, heightMeasureSpec);
@@ -129,6 +164,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         LayoutInflater.from(context).inflate(R.layout.horizontal_scroll_container_layout, this, true);
 
         linearLayoutContainer = (LinearLayout) findViewById(R.id.linear_layout_container_layout_linear_layout);
+        linearLayoutInScrollView = (LinearLayout) findViewById(R.id.horizontal_scroll_container_linearlayout);
         horizontalScrollView = (HorizontalScrollView) findViewById(R.id.horizontal_scroll_container_horizontal_scroll_view);
         closebtn = (ImageButton) findViewById(R.id.imageButton_close);
         closebtn.setOnClickListener(new OnClickListener() {
