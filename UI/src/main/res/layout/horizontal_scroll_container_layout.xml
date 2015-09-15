@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="35dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="40dp"
+    android:layout_marginTop="35dp"
+    android:id="@+id/horizontal_scroll_container_horizontal_scroll_view"
+    android:visibility="gone"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:id="@+id/horizontal_scroll_container_linearlayout"
+        android:tag="@string/linear_layout_in_horizontal_scrollview">
+
+    </LinearLayout>
+</HorizontalScrollView>

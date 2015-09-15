@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/Dark_Dark"
+    android:background="@color/Dark_Translucence"
     android:orientation="horizontal"
     tools:context="com.jnsw.coredemo.xunjiandemo.FloatCenterFragment_"
     android:gravity="center">
@@ -18,7 +18,10 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:tag="@string/closeable_menu_group_layout_linelayout_container">
 
             <Button
                 android:id="@+id/button7"
@@ -39,17 +42,6 @@
                 android:layout_height="wrap_content"
                 android:text="New Button" />
 
-            <CheckBox
-                android:id="@+id/checkBox7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New CheckBox" />
-
-            <Button
-                android:id="@+id/button9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Button" />
         </LinearLayout>
     </HorizontalScrollView>
 </com.jnsw.android.ui.widget.CloseableMenuGroupLayout>

@@ -8,4 +8,6 @@
     <string name="title_activity_register">注册</string>
     <string name="closeable_menu_group_layout_linelayout_container">closeable_menu_group_layout_linelayout_container</string>
     <string name="closeable_menu_group_layout_close_button">closeable_menu_group_layout_close_button</string>
+    <string name="linear_layout_in_horizontal_scrollview">linearLayout_in_horizontalScrollView</string>
+    <string name="linear_layout_container">linear_layout_container</string>
 </resources>

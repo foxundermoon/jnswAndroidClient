@@ -23,7 +23,7 @@
             android:layout_gravity="center|bottom"
             android:name="com.jnsw.coredemo.xunjiandemo.FloatCenterFragment_"
             android:background="@color/accent_material_light"
-            app:layout_widthPercent="40%"
+            app:layout_widthPercent="70%"
             app:layout_maxWidthPercent="50%"
             app:layout_minWidthPercent="30%"
             android:layout_marginBottom="15dp"
