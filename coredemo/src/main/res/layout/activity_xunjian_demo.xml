@@ -13,6 +13,12 @@
         android:background="@android:color/holo_red_dark"
         android:gravity="center_horizontal|bottom"
         android:foregroundGravity="bottom|center_horizontal">
+        <fragment
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/float_center_action_fragment"
+            android:name="com.jnsw.coredemo.xunjiandemo.FloatActionFragment_"
+            />
         <!--此处LinearLayout替换为 MapView-->
         <LinearLayout
             android:layout_width="match_parent"
