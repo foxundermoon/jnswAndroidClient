@@ -2,9 +2,11 @@ package com.jnsw.coredemo.xunjiandemo;
 
 import android.app.Fragment;
 import android.graphics.Color;
+import android.support.annotation.UiThread;
 import android.support.v4.widget.StickDrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -15,6 +17,7 @@ import com.jnsw.core.CustomApplication;
 import com.jnsw.coredemo.R;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.Fullscreen;
@@ -47,6 +50,8 @@ public class XunjianDemoActivity extends AppCompatActivity {
         stickDrawerLayout.setScrimColor(Color.TRANSPARENT);
         stickDrawerLayout.setDrawerLockMode(StickDrawerLayout.LOCK_MODE_UNLOCKED);
         CustomApplication.getInstance().eventBus.register(this);
+        stickDrawerLayout.openDrawer(Gravity.LEFT);
+        stickDrawerLayout.closeDrawer(Gravity.START);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -63,6 +68,28 @@ public class XunjianDemoActivity extends AppCompatActivity {
     }
     @Subscribe
     public void onFloatCenterClose(CloseableMenuGroupLayoutCloseEvent closeableMenuGroupLayoutCloseEvent) {
-        getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
+//        getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
+         Fragment  center =FloatCenterFragment_.builder().build();
+        getFragmentManager().beginTransaction().replace(R.id.center_float_container, center).commit();
+    }
+
+    @UiThread
+    @Subscribe
+    public void leftRightManager(LeftRightManageMessage message) {
+        if (message.open) {
+            stickDrawerLayout.openDrawer(message.witch);
+        }else {
+            stickDrawerLayout.closeDrawer(message.witch);
+        }
+    }
+    @Background
+   public void longTime(){
+        opUI("DF");
+
+    }
+
+    @UiThread
+    public  void  opUI(String sdsd) {
+
     }
 }

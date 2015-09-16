@@ -69,9 +69,9 @@
                 android:layout_height="40dp"
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
-
+                android:id="@+id/click_me"
                 jnswui:image_max_width="30dp"
-                jnswui:text="点我试试"
+                jnswui:text="关闭右边"
                 jnswui:text_color="@color/accent_material_light" />
         </LinearLayout>
     </ScrollView>
