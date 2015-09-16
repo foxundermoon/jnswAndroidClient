@@ -21,7 +21,7 @@
         <fragment
             android:id="@+id/center_float_container"
             android:layout_gravity="center|bottom"
-            android:name="com.jnsw.coredemo.xunjiandemo.FloatCenterFragment_"
+            android:name="com.jnsw.coredemo.xunjiandemo.AnotherCenterFragment_"
             android:background="@color/accent_material_light"
             app:layout_widthPercent="70%"
             app:layout_maxWidthPercent="50%"

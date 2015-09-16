@@ -1,7 +1,10 @@
 package com.jnsw.android.ui.widget;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.jnsw.android.ui.R;
 import com.jnsw.android.ui.widget.event.CloseableMenuGroupLayoutCloseEvent;
@@ -25,6 +28,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
     private LinearLayout linearLayoutInScrollView;
     private HorizontalScrollView horizontalScrollView;
     private ViewGroup currentContainer;
+    private TextView title;
 
     public CloseableMenuGroupLayout(Context context) {
         this(context, null);
@@ -44,8 +48,48 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         initCustomView(context, attrs);
     }
 
+    public void setTitleColor(int color) {
+        title.setTextColor(color);
+    }
+
+    public void setTitleText(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+        title.setText(text);
+    }
+
     private void initCustomView(Context context, AttributeSet attrs) {
+        Resources.Theme  theme =context.getTheme();
         inflaterLayout(context, attrs);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CloseableMenuGroupLayoutStyleable);
+        if (typedArray == null) {
+            return;
+        }
+        int conut = typedArray.getIndexCount();
+        int resId = 0;
+        for (int i = 0; i < conut; i++) {
+            int attr = typedArray.getIndex(i);
+            if (attr == R.styleable.CloseableMenuGroupLayoutStyleable_title_text) {
+                CharSequence text = typedArray.getText(attr);
+                if (text != null && text.length() > 0) {
+                    title.setText(text);
+                }
+            }
+            else if (attr == R.styleable.CloseableMenuGroupLayoutStyleable_title_color) {
+                int color = typedArray.getColor(attr, -1);
+                if (color != -1) {
+                    title.setTextColor(color);
+                }
+            }
+            else if (attr == R.styleable.CloseableMenuGroupLayoutStyleable_title_textSize) {
+                int textSize = typedArray.getDimensionPixelSize(attr, -1);
+                float fontSize = typedArray.getDimension(attr, -1);
+                if (textSize != -1) {
+                    title.setTextSize(TypedValue.COMPLEX_UNIT_PX,fontSize);
+                }
+            }
+        }
 
     }
 
@@ -53,7 +97,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         if (child == null) {
             return false;
         }
-        return child != closebtn && child != closebtn && child != linearLayoutContainer && child != linearLayoutInScrollView && child != horizontalScrollView;
+        return child!=title && child != closebtn && child != closebtn && child != linearLayoutContainer && child != linearLayoutInScrollView && child != horizontalScrollView;
     }
 
     private boolean isVisibleUserAddedView(View child) {
@@ -162,6 +206,8 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         LayoutInflater.from(context).inflate(R.layout.closeable_button, this, true);
         LayoutInflater.from(context).inflate(R.layout.linear_layout_container_layout, this, true);
         LayoutInflater.from(context).inflate(R.layout.horizontal_scroll_container_layout, this, true);
+        LayoutInflater.from(context).inflate(R.layout.closeable_container_title_text_view_layout, this, true);
+        title = (TextView) findViewById(R.id.closeable_container_title_text_view);
 
         linearLayoutContainer = (LinearLayout) findViewById(R.id.linear_layout_container_layout_linear_layout);
         linearLayoutInScrollView = (LinearLayout) findViewById(R.id.horizontal_scroll_container_linearlayout);

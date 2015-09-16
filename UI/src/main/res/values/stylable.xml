@@ -18,6 +18,13 @@
         <attr name="text_size" format="dimension" />
         <attr name="text_color" format="reference|color" />
     </declare-styleable>
+
+
+    <declare-styleable name="CloseableMenuGroupLayoutStyleable">
+        <attr name="title_text" format="reference|string" />
+        <attr name="title_color" format="reference|color" />
+        <attr name="title_textSize" format="dimension" />
+    </declare-styleable>
     <!--<declare-styleable name="ImageTextButton.Image.Width">-->
 
     <!--</declare-styleable>-->

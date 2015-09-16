@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.jnsw.android.ui.widget.CloseableMenuGroupLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title_text="居中标题  不需要可以忽略，默认不显示"
+    app:title_color="@color/LuciteGreen_Primary"
+    app:title_textSize="14sp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/Dark_Transparent">
+
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="你妈"
+            android:id="@+id/your_mother"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="你爸"
+            android:id="@+id/your_father"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="你女朋友"
+            android:id="@+id/your_gf"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="掉进去了  只能选一个"
+            android:id="@+id/your_self"
+            android:checked="false" />
+    </RadioGroup>
+</com.jnsw.android.ui.widget.CloseableMenuGroupLayout>
