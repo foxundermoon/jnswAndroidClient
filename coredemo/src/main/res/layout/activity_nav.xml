@@ -64,6 +64,12 @@
                 android:layout_height="wrap_content"
                 android:text="CenterFragmentTest"
                 android:id="@+id/center_fragment_demo" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="floatAction in fragment demo"
+                android:id="@+id/float_action_in_fragment" />
         </LinearLayout>
     </LinearLayout>
 
