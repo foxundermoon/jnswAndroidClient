@@ -108,7 +108,8 @@ public class FloatActionFragment extends Fragment {
             root.removeView(sub);
             leftCenterMenuBuilder.addSubActionView(lCSubBuilder.setContentView(sub, blueContentParams).build());
         }
-        leftCenterMenuBuilder.setRadius(redActionMenuRadius)
+        leftCenterMenuBuilder
+                .setRadius(redActionMenuRadius)
                 .setStartAngle(5)
                 .setEndAngle(175)
                 .attachTo(imageView_center_main)

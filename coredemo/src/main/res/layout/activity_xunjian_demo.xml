@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/float_center_action_fragment"
-            android:name="com.jnsw.coredemo.xunjiandemo.FloatActionFragment_"
+            android:name="com.jnsw.coredemo.xunjiandemo.ExtendFloatCenterActionFragment_"
             />
         <!--此处LinearLayout替换为 MapView-->
         <LinearLayout
@@ -27,7 +27,7 @@
         <fragment
             android:id="@+id/center_float_container"
             android:layout_gravity="center|bottom"
-            android:name="com.jnsw.coredemo.xunjiandemo.AnotherCenterFragment_"
+            android:name="com.jnsw.coredemo.xunjiandemo.BottomCenterFragment_"
             android:background="@color/accent_material_light"
             app:layout_widthPercent="70%"
             app:layout_maxWidthPercent="50%"

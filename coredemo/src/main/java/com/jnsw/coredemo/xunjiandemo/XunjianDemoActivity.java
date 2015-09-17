@@ -33,8 +33,8 @@ public class XunjianDemoActivity extends AppCompatActivity {
     LeftFragment leftFragment;
     @FragmentById(R.id.right_fragment)
     RightFragment rightFragment;
-    @FragmentById(R.id.center_float_container)
-    Fragment currentCenterFragment;
+//    @FragmentById(R.id.center_float_container)
+//    Fragment currentCenterFragment;
 
     @ViewById(R.id.xunjian_demo_root)
     StickDrawerLayout stickDrawerLayout;
@@ -69,8 +69,8 @@ public class XunjianDemoActivity extends AppCompatActivity {
     @Subscribe
     public void onFloatCenterClose(CloseableMenuGroupLayoutCloseEvent closeableMenuGroupLayoutCloseEvent) {
 //        getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
-         Fragment  center =FloatCenterFragment_.builder().build();
-        getFragmentManager().beginTransaction().replace(R.id.center_float_container, center).commit();
+//         Fragment  center =FloatCenterFragment_.builder().build();
+//        getFragmentManager().beginTransaction().replace(R.id.center_float_container, center).commit();
     }
 
     @UiThread
