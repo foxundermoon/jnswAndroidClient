@@ -23,6 +23,7 @@ public class AnotherCenterFragment extends Fragment {
     RadioButton your_father, your_gf, your_self;
 
 
+
     public  RadioButton  getSelectedRadioButton() {
         int id=   radioGroup.getCheckedRadioButtonId();
         return (RadioButton) getView().findViewById(id);

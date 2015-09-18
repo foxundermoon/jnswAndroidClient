@@ -12,8 +12,13 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.google.common.eventbus.Subscribe;
+import com.jnsw.android.ui.widget.ImageTextButton;
+import com.jnsw.android.ui.widget.event.CloseStickDrawerLayoutEvent;
 import com.jnsw.android.ui.widget.event.CloseableMenuGroupLayoutCloseEvent;
+import com.jnsw.android.ui.widget.event.ImageTextButtonClickEvent;
+import com.jnsw.android.ui.widget.event.OpenStickDrawerLayoutEvent;
 import com.jnsw.core.CustomApplication;
+import com.jnsw.core.util.Tip;
 import com.jnsw.coredemo.R;
 
 import org.androidannotations.annotations.AfterViews;
@@ -33,8 +38,8 @@ public class XunjianDemoActivity extends AppCompatActivity {
     LeftFragment leftFragment;
     @FragmentById(R.id.right_fragment)
     RightFragment rightFragment;
-//    @FragmentById(R.id.center_float_container)
-//    Fragment currentCenterFragment;
+    @FragmentById(R.id.center_float_container)
+    Fragment currentCenterFragment;
 
     @ViewById(R.id.xunjian_demo_root)
     StickDrawerLayout stickDrawerLayout;
@@ -68,7 +73,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
     }
     @Subscribe
     public void onFloatCenterClose(CloseableMenuGroupLayoutCloseEvent closeableMenuGroupLayoutCloseEvent) {
-//        getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
+        getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
 //         Fragment  center =FloatCenterFragment_.builder().build();
 //        getFragmentManager().beginTransaction().replace(R.id.center_float_container, center).commit();
     }
@@ -91,5 +96,60 @@ public class XunjianDemoActivity extends AppCompatActivity {
     @UiThread
     public  void  opUI(String sdsd) {
 
+    }
+
+    @Subscribe
+    public void onImageTextButtonClick(ImageTextButtonClickEvent event) {
+        ImageTextButton whitch = event.getEventData();
+        int buttonViewId = whitch.getId();
+        switch (buttonViewId) {
+            case R.id.left_fragment_btn_1:
+                clickBtn1();
+                break;
+            case R.id.left_fragment_btn_2:
+                clickBtn2();
+                break;
+            case R.id.left_fragment_btn_3:
+                clickBtn3();
+                break;
+            case R.id.left_fragment_btn_4:
+                clickBtn4();
+                break;
+            case R.id.left_fragment_btn_5:
+                clickBtn5();
+                
+            default:
+                otherBtnClick();
+        }
+    }
+
+
+    @UiThread
+    private void clickBtn5() {
+        BottomCenterFragment bottomCenterFragment = BottomCenterFragment_.builder().build();
+        getFragmentManager().beginTransaction().replace(R.id.center_float_container, bottomCenterFragment).commit();
+    }
+
+    private void otherBtnClick() {
+        Tip.shortTip("you clicked me");
+    }
+
+    @UiThread
+    private void clickBtn4() {
+        AnotherCenterFragment anotherCenterFragment = AnotherCenterFragment_.builder().build();
+        getFragmentManager().beginTransaction().replace(R.id.center_float_container, anotherCenterFragment).commit();
+    }
+
+
+    private void clickBtn3() {
+        new OpenStickDrawerLayoutEvent(Gravity.END).post();
+    }
+
+    private void clickBtn2() {
+        new CloseStickDrawerLayoutEvent(Gravity.START).post();
+    }
+
+    private void clickBtn1() {
+        new CloseStickDrawerLayoutEvent(Gravity.START | Gravity.END).post();
     }
 }

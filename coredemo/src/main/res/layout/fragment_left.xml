@@ -19,16 +19,15 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.jnsw.android.ui.widget.ImageTextButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
             <com.jnsw.android.ui.widget.ImageTextButton
+                android:id="@+id/left_fragment_btn_1"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 jnswui:image="@drawable/btn_save"
@@ -37,41 +36,122 @@
                 jnswui:image_max_width="40dp"
                 jnswui:text="保  存"
                 jnswui:text_color="@color/accent_material_light" />
+
             <com.jnsw.android.ui.widget.ImageTextButton
+                android:id="@+id/left_fragment_btn_2"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
 
                 jnswui:image_max_width="30dp"
-                jnswui:text="点我试试"
+                jnswui:text="close Gravity.START"
                 jnswui:text_color="@color/accent_material_light" />
+
             <com.jnsw.android.ui.widget.ImageTextButton
+                android:id="@+id/left_fragment_btn_3"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
 
                 jnswui:image_max_width="30dp"
-                jnswui:text="点我试试"
+                jnswui:text="open END"
                 jnswui:text_color="@color/accent_material_light" />
+
             <com.jnsw.android.ui.widget.ImageTextButton
+                android:id="@+id/left_fragment_btn_4"
                 android:layout_width="120dp"
+
                 android:layout_height="40dp"
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
 
                 jnswui:image_max_width="30dp"
-                jnswui:text="点我试试"
+                jnswui:text="打开AnotherCenterFragment"
                 jnswui:text_color="@color/accent_material_light" />
+
             <com.jnsw.android.ui.widget.ImageTextButton
+                android:id="@+id/left_fragment_btn_5"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
+                jnswui:image_max_width="30dp"
+                jnswui:text="BottomCenterFragment"
+                jnswui:text_color="@color/accent_material_light" />
+
+            <com.jnsw.android.ui.widget.ImageTextButton
                 android:id="@+id/click_me"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
                 jnswui:image_max_width="30dp"
                 jnswui:text="关闭右边"
+                jnswui:text_color="@color/accent_material_light" />
+
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+                jnswui:image_max_width="30dp"
+                jnswui:text="其他按钮"
+                jnswui:text_color="@color/accent_material_light" />
+
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+                jnswui:image_max_width="30dp"
+                jnswui:text="其他按钮"
+                jnswui:text_color="@color/accent_material_light" />
+
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+                jnswui:image_max_width="30dp"
+                jnswui:text="其他按钮"
+                jnswui:text_color="@color/accent_material_light" />
+
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+                jnswui:image_max_width="30dp"
+                jnswui:text="其他按钮"
+                jnswui:text_color="@color/accent_material_light" />
+
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+                jnswui:image_max_width="30dp"
+                jnswui:text="其他按钮"
+                jnswui:text_color="@color/accent_material_light" />
+
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+                jnswui:image_max_width="30dp"
+                jnswui:text="其他按钮"
+                jnswui:text_color="@color/accent_material_light" />
+
+            <com.jnsw.android.ui.widget.ImageTextButton
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                jnswui:image="@drawable/btn_save"
+                jnswui:image_max_height="30dp"
+                jnswui:image_max_width="30dp"
+                jnswui:text="其他按钮"
                 jnswui:text_color="@color/accent_material_light" />
         </LinearLayout>
     </ScrollView>

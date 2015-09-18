@@ -28,6 +28,7 @@ import java.util.List;
 /**
  * Created by fox on 2015/9/16.
  */
+@Deprecated
 @EFragment(R.layout.fragment_float_action)
 public class FloatActionFragment extends Fragment {
     @ViewById

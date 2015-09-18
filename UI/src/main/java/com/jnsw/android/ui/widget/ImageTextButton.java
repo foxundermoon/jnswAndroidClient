@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jnsw.android.ui.R;
+import com.jnsw.android.ui.widget.event.ImageTextButtonClickEvent;
 
 /**
  * Created by fox on 2015/8/27.
@@ -25,9 +26,10 @@ import com.jnsw.android.ui.R;
 public class ImageTextButton extends LinearLayout {
     private ImageView mImg;
     private TextView mTextView;
-    private Context mContext =null;
+    private Context mContext = null;
+
     public ImageTextButton(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public ImageTextButton(Context context, AttributeSet attrs) {
@@ -46,7 +48,7 @@ public class ImageTextButton extends LinearLayout {
 
     private void initCustomView(Context context, AttributeSet attrs) {
         mContext = context;
-        Resources.Theme  theme =context.getTheme();
+        Resources.Theme theme = context.getTheme();
         inflaterLayout(context);
         mImg = (ImageView) findViewById(R.id.imageView);
         mTextView = (TextView) findViewById(R.id.textView);
@@ -58,20 +60,20 @@ public class ImageTextButton extends LinearLayout {
         }
         int count = typedArray.getIndexCount();
         int resId = 0;
-        Drawable imgDrawable =null ;
-        int imgWidth =-1;
-        int imgHeight =-1;
+        Drawable imgDrawable = null;
+        int imgWidth = -1;
+        int imgHeight = -1;
         for (int i = 0; i < count; i++) {
             int attr = typedArray.getIndex(i);
             if (attr == R.styleable.ImageTextButton_text) {
                 mTextView.setText(typedArray.getText(attr));
-            }else if (attr == R.styleable.ImageTextButton_text_color) {
+            } else if (attr == R.styleable.ImageTextButton_text_color) {
                 int color = typedArray.getColor(attr, -1);
                 if (color == -1) {
-                    color =R.color.default_image_with_text_button_text_color;
+                    color = R.color.default_image_with_text_button_text_color;
                 }
                 mTextView.setTextColor(color);
-            }else if (attr == R.styleable.ImageTextButton_text_size) {
+            } else if (attr == R.styleable.ImageTextButton_text_size) {
                 int dimensionPixelSize = typedArray.getDimensionPixelSize(attr, -1);
                 if (dimensionPixelSize == -1) {
                     dimensionPixelSize = R.dimen.default_image_with_text_button_text_size;
@@ -115,7 +117,7 @@ public class ImageTextButton extends LinearLayout {
         }
         typedArray.recycle();
         if (imgDrawable != null) {
-            imgDrawable.setBounds(0,0,imgWidth,imgHeight);
+            imgDrawable.setBounds(0, 0, imgWidth, imgHeight);
         }
 //        mImg.setBackground(imgDrawable);
         mImg.setImageDrawable(imgDrawable);
@@ -124,8 +126,9 @@ public class ImageTextButton extends LinearLayout {
     protected void inflaterLayout(Context context) {
         LayoutInflater.from(context).inflate(R.layout.image_text_button_layout, this, true);
     }
+
     @Override
-    public void refreshDrawableState(){
+    public void refreshDrawableState() {
         super.refreshDrawableState();
         //------------ ImageView控件的联动刷新 -------------------
         Drawable drawable = mImg.getDrawable();
@@ -145,13 +148,14 @@ public class ImageTextButton extends LinearLayout {
 
     @Override
     public void setOnClickListener(OnClickListener l) {
-        final  OnClickListener clickListener = l;
+        final OnClickListener clickListener = l;
         super.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                clickListener.onClick(v);
-
+                new ImageTextButtonClickEvent(ImageTextButton.this).post();
+                if (clickListener != null)
+                    clickListener.onClick(v);
             }
         });
     }
@@ -162,7 +166,7 @@ public class ImageTextButton extends LinearLayout {
         super.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return touchListener.onTouch(v,event);
+                return touchListener.onTouch(v, event);
             }
         });
     }

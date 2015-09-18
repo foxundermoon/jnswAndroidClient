@@ -26,12 +26,14 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.AccessibilityDelegateCompat;
 import android.support.v4.view.GravityCompat;
@@ -48,6 +50,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
+
+import com.google.common.eventbus.Subscribe;
+import com.jnsw.android.ui.widget.event.CloseStickDrawerLayoutEvent;
+import com.jnsw.android.ui.widget.event.OpenStickDrawerLayoutEvent;
+import com.jnsw.core.CustomApplication;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -199,6 +206,29 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
     private Object mLastInsets;
     private boolean mDrawStatusBarBackground;
 
+
+    Handler handler = new Handler();
+    @Subscribe
+    public void closeStickDrawerLayout(final CloseStickDrawerLayoutEvent event) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                closeDrawer(event.getEventData());
+
+            }
+        });
+    }
+
+    @Subscribe
+    public void openStickDrawerLayout(final OpenStickDrawerLayoutEvent event) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                openDrawer(event.getEventData());
+            }
+        });
+    }
+
     /**
      * Listener for monitoring events about drawers.
      */
@@ -331,6 +361,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     public StickDrawerLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        CustomApplication.getInstance().eventBus.register(this);
         setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         final float density = getResources().getDisplayMetrics().density;
         mMinDrawerMargin = (int) (MIN_DRAWER_MARGIN * density + 0.5f);
