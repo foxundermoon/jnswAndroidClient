@@ -62,15 +62,15 @@ public class ExtendFloatCenterActionFragment extends CircularFloatActionFragment
 
     int click = 0;
 
-    @AfterViews  void init(){
-        imageView4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Tip.shortTip("imageView4");
-                L.d(getClass(), "click = " + click++);
-            }
-        });
-    }
+//    @AfterViews  void init(){
+//        imageView4.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Tip.shortTip("imageView4");
+//                L.d(getClass(), "click = " + click++);
+//            }
+//        });
+//    }
 
     @Click
     void imageView6() {

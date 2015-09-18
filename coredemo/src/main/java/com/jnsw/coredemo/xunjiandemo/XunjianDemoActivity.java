@@ -1,11 +1,11 @@
 package com.jnsw.coredemo.xunjiandemo;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.support.annotation.UiThread;
 import android.support.v4.widget.StickDrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +43,12 @@ public class XunjianDemoActivity extends AppCompatActivity {
     FrameLayout bottomFragmentContainer;
     @ViewById(R.id.xunjian_demo_root)
     StickDrawerLayout stickDrawerLayout;
+
+    @FragmentById(R.id.bottom_fragment)
+    Fragment bottomFragment;
+    @FragmentById(R.id.another_bottom_fragment)
+    Fragment anotherBottomFragment;
+
     private Fragment currentCenterFragment;
 
     @Override
@@ -59,6 +65,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
         CustomApplication.getInstance().eventBus.register(this);
         stickDrawerLayout.openDrawer(Gravity.LEFT);
         stickDrawerLayout.closeDrawer(Gravity.START);
+        getFragmentManager().beginTransaction().hide(anotherBottomFragment).hide(bottomFragment).commit();
     }
 
     @Override
@@ -111,10 +118,10 @@ public class XunjianDemoActivity extends AppCompatActivity {
                 clickBtn3();
                 break;
             case R.id.left_fragment_btn_4:
-                clickBtn4();
+                openBottomFragment();
                 break;
             case R.id.left_fragment_btn_5:
-                clickBtn5();
+                openAnotherBootomFragment();
 
             default:
                 otherBtnClick();
@@ -123,10 +130,13 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
 
     @UiThread
-    private void clickBtn5() {
-        BottomCenterFragment bottomCenterFragment = BottomCenterFragment.getInstance();
-        currentCenterFragment = bottomCenterFragment;
-        getFragmentManager().beginTransaction().replace(R.id.bottom_frame_layout, bottomCenterFragment).commit();
+    private void openAnotherBootomFragment() {
+        FragmentTransaction  trans = getFragmentManager().beginTransaction();
+        if (currentCenterFragment != null) {
+            trans.hide(currentCenterFragment);
+        }
+        trans.show(anotherBottomFragment).commit();
+        currentCenterFragment = anotherBottomFragment;
     }
 
     private void otherBtnClick() {
@@ -134,10 +144,13 @@ public class XunjianDemoActivity extends AppCompatActivity {
     }
 
     @UiThread
-    private void clickBtn4() {
-        AnotherCenterFragment anotherCenterFragment = AnotherCenterFragment.getInstance();
-        currentCenterFragment = anotherCenterFragment;
-        getFragmentManager().beginTransaction().replace(R.id.bottom_frame_layout, anotherCenterFragment).commit();
+    private void openBottomFragment() {
+        FragmentTransaction  trans = getFragmentManager().beginTransaction();
+        if (currentCenterFragment != null) {
+            trans.hide(currentCenterFragment);
+        }
+        trans.show(bottomFragment).commit();
+        currentCenterFragment = bottomFragment;
     }
 
 

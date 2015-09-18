@@ -63,7 +63,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
 
     private void initCustomView(Context context, AttributeSet attrs) {
         setClickable(true);
-        Resources.Theme  theme =context.getTheme();
+        Resources.Theme theme = context.getTheme();
         inflaterLayout(context, attrs);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CloseableMenuGroupLayoutStyleable);
         if (typedArray == null) {
@@ -78,18 +78,16 @@ public class CloseableMenuGroupLayout extends FrameLayout {
                 if (text != null && text.length() > 0) {
                     title.setText(text);
                 }
-            }
-            else if (attr == R.styleable.CloseableMenuGroupLayoutStyleable_title_color) {
+            } else if (attr == R.styleable.CloseableMenuGroupLayoutStyleable_title_color) {
                 int color = typedArray.getColor(attr, -1);
                 if (color != -1) {
                     title.setTextColor(color);
                 }
-            }
-            else if (attr == R.styleable.CloseableMenuGroupLayoutStyleable_title_textSize) {
+            } else if (attr == R.styleable.CloseableMenuGroupLayoutStyleable_title_textSize) {
                 int textSize = typedArray.getDimensionPixelSize(attr, -1);
                 float fontSize = typedArray.getDimension(attr, -1);
                 if (textSize != -1) {
-                    title.setTextSize(TypedValue.COMPLEX_UNIT_PX,fontSize);
+                    title.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize);
                 }
             }
         }
@@ -100,7 +98,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         if (child == null) {
             return false;
         }
-        return child!=title && child != closebtn && child != closebtn && child != linearLayoutContainer && child != linearLayoutInScrollView && child != horizontalScrollView;
+        return child != title && child != closebtn && child != closebtn && child != linearLayoutContainer && child != linearLayoutInScrollView && child != horizontalScrollView;
     }
 
     private boolean isVisibleUserAddedView(View child) {
@@ -110,8 +108,8 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         return isUserAddedView(child) && child.getVisibility() != GONE;
     }
 
-    private int containerWidth =0;
-    private  int containerHeight =0;
+    private int containerWidth = 0;
+    private int containerHeight = 0;
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -121,7 +119,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
 
 //        LinearLayout containerLayout = (LinearLayout) findViewWithTag(getResources().getString(R.string.closeable_menu_group_layout_linelayout_container));
         int totalWidth = 0;
-        int totalHeight =0;
+        int totalHeight = 0;
         if (currentContainer == null) {
             int childCount = getChildCount();
 //            for (int i = 0; i < childCount; i++) {
@@ -151,8 +149,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
                     }
                 }
                 containerWidth = totalWidth;
-            }
-            else {
+            } else {
                 totalWidth = containerWidth;
                 if (totalWidth > myWidthSize) {
                     currentContainer = linearLayoutInScrollView;
@@ -181,15 +178,24 @@ public class CloseableMenuGroupLayout extends FrameLayout {
                         }
                     }
                 }
+//                requestLayout();
+//                invalidate();
+                FrameLayout.LayoutParams ll = (FrameLayout.LayoutParams) currentContainer.getLayoutParams();
+                totalWidth = Math.max(containerWidth + ll.leftMargin + ll.rightMargin + totalMargin, totalWidth);
+
+                FrameLayout.LayoutParams containerParams = (LayoutParams) currentContainer.getLayoutParams();
+                totalHeight = Math.max(containerHeight + containerParams.topMargin + containerParams.bottomMargin, totalHeight);
+//                FrameLayout.LayoutParams rootParams = (LayoutParams) getLayoutParams();
+//                rootParams.height = totalHeight;
+
             }
         } else {          //currentContainer !=null
             FrameLayout.LayoutParams ll = (FrameLayout.LayoutParams) currentContainer.getLayoutParams();
-            totalWidth = containerWidth + ll.leftMargin + ll.rightMargin + totalMargin;
-            int childCount = getChildCount();
+            totalWidth = Math.max(containerWidth + ll.leftMargin + ll.rightMargin + totalMargin, totalWidth);
 
             FrameLayout.LayoutParams containerParams = (LayoutParams) currentContainer.getLayoutParams();
-            totalHeight += containerHeight + containerParams.topMargin + containerParams.bottomMargin;
-
+            totalHeight = Math.max(containerHeight + containerParams.topMargin + containerParams.bottomMargin, totalHeight);
+//            FrameLayout.LayoutParams rootParams = (LayoutParams) getLayoutParams();
 //            int viewCount = currentContainer.getChildCount();
 //            for (int i = 0; i < viewCount; i++) {
 //                View child = currentContainer.getChildAt(i);
@@ -202,21 +208,35 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         }
         int widthModel = MeasureSpec.getMode(widthMeasureSpec);
         int realWidthSize = Math.min(totalWidth, myWidthSize);
+        int heightModel = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        String m = "";
         if (widthModel == MeasureSpec.AT_MOST) {
-            String m = "AT_MOST";
+            m = "AT_MOST";
         }
         if (widthModel == MeasureSpec.EXACTLY) {
-            String m = "EXACTLY";
+            m = "EXACTLY";
         }
         if (widthModel == MeasureSpec.UNSPECIFIED) {
-            String m = "UNSPECIFIED";
+            m = "UNSPECIFIED";
         }
+        String mh = "";
+        if (heightModel == MeasureSpec.AT_MOST) {
+            mh = "AT_MOST";
+        }
+        if (heightModel == MeasureSpec.EXACTLY) {
+            mh = "EXACTLY";
+        }
+        if (heightModel == MeasureSpec.UNSPECIFIED) {
+            mh = "UNSPECIFIED";
+        }
+
         realWidthMeasureSpec = MeasureSpec.makeMeasureSpec(realWidthSize, widthModel);
         realHeightMeasureSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
 //        }
 
-        setMeasuredDimension(realWidthMeasureSpec,realHeightMeasureSpec);
-//        super.onMeasure(realWidthMeasureSpec, heightMeasureSpec);
+//        setMeasuredDimension(realWidthMeasureSpec,realHeightMeasureSpec);
+        super.onMeasure(realWidthMeasureSpec, heightMeasureSpec);
     }
 
     protected void inflaterLayout(Context context, AttributeSet attrs) {

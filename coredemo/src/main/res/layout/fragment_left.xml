@@ -78,7 +78,7 @@
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
                 jnswui:image_max_width="30dp"
-                jnswui:text="替换下面"
+                jnswui:text="打开另一个下面"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton

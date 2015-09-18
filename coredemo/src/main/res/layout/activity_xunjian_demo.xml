@@ -15,7 +15,7 @@
 
         <fragment
             android:id="@+id/float_center_action_fragment"
-            android:name="com.jnsw.coredemo.xunjiandemo.FloatActionFragment_"
+            android:name="com.jnsw.coredemo.xunjiandemo.ExtendFloatCenterActionFragment_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <!--此处LinearLayout替换为 MapView-->
@@ -32,6 +32,18 @@
             android:layout_marginBottom="15dp"
             app:layout_minWidthPercent="30%"
             app:layout_widthPercent="60%">
+            <fragment
+                android:layout_width="match_parent"
+                android:id="@+id/another_bottom_fragment"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:name="com.jnsw.coredemo.xunjiandemo.AnotherCenterFragment_" />
+            <fragment
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bottom_fragment"
+                android:name="com.jnsw.coredemo.xunjiandemo.BottomCenterFragment_" />
 
         </FrameLayout>
 
