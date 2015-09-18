@@ -1,7 +1,6 @@
 package com.jnsw.coredemo.xunjiandemo;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.support.annotation.UiThread;
 import android.support.v4.widget.StickDrawerLayout;
@@ -22,7 +21,6 @@ import com.jnsw.core.CustomApplication;
 import com.jnsw.core.util.Tip;
 import com.jnsw.coredemo.R;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
@@ -58,16 +56,24 @@ public class XunjianDemoActivity extends AppCompatActivity {
         return true;
     }
 
-    @AfterViews
-    void init() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        hideAllBottomFragment();
+        CustomApplication.getInstance().eventBus.register(this);
         stickDrawerLayout.setScrimColor(Color.TRANSPARENT);
         stickDrawerLayout.setDrawerLockMode(StickDrawerLayout.LOCK_MODE_UNLOCKED);
-        CustomApplication.getInstance().eventBus.register(this);
-        stickDrawerLayout.openDrawer(Gravity.LEFT);
-        stickDrawerLayout.closeDrawer(Gravity.START);
-        getFragmentManager().beginTransaction().hide(anotherBottomFragment).hide(bottomFragment).commit();
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+    }
+
+    private void hideAllBottomFragment() {
+        getFragmentManager().beginTransaction().hide(bottomFragment).hide(anotherBottomFragment).commit();
+        currentCenterFragment = null;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -84,9 +90,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     @Subscribe
     public void onFloatCenterClose(CloseableMenuGroupLayoutCloseEvent closeableMenuGroupLayoutCloseEvent) {
-        if (currentCenterFragment != null)
-            getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
-        currentCenterFragment = null;
+        hideAllBottomFragment();
 //         Fragment  center =FloatCenterFragment_.builder().build();
 //        getFragmentManager().beginTransaction().replace(R.id.center_float_container, center).commit();
     }
@@ -129,14 +133,18 @@ public class XunjianDemoActivity extends AppCompatActivity {
     }
 
 
+    private void showBottomFragment(Fragment fragment) {
+        showFragment(fragment);
+        currentCenterFragment = fragment;
+    }
+
+    private void showFragment(Fragment fragment) {
+        getFragmentManager().beginTransaction().show(fragment).commit();
+    }
     @UiThread
     private void openAnotherBootomFragment() {
-        FragmentTransaction  trans = getFragmentManager().beginTransaction();
-        if (currentCenterFragment != null) {
-            trans.hide(currentCenterFragment);
-        }
-        trans.show(anotherBottomFragment).commit();
-        currentCenterFragment = anotherBottomFragment;
+        hideAllBottomFragment();
+        showBottomFragment(anotherBottomFragment);
     }
 
     private void otherBtnClick() {
@@ -145,12 +153,8 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     @UiThread
     private void openBottomFragment() {
-        FragmentTransaction  trans = getFragmentManager().beginTransaction();
-        if (currentCenterFragment != null) {
-            trans.hide(currentCenterFragment);
-        }
-        trans.show(bottomFragment).commit();
-        currentCenterFragment = bottomFragment;
+        hideAllBottomFragment();
+        showBottomFragment(bottomFragment);
     }
 
 
