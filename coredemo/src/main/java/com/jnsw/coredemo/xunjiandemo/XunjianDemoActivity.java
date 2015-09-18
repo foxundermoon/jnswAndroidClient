@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.FrameLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.jnsw.android.ui.widget.ImageTextButton;
@@ -38,11 +39,12 @@ public class XunjianDemoActivity extends AppCompatActivity {
     LeftFragment leftFragment;
     @FragmentById(R.id.right_fragment)
     RightFragment rightFragment;
-    @FragmentById(R.id.center_float_container)
-    Fragment currentCenterFragment;
-
+    @ViewById(R.id.bottom_frame_layout)
+    FrameLayout bottomFragmentContainer;
     @ViewById(R.id.xunjian_demo_root)
     StickDrawerLayout stickDrawerLayout;
+    private Fragment currentCenterFragment;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -51,13 +53,14 @@ public class XunjianDemoActivity extends AppCompatActivity {
     }
 
     @AfterViews
-    void init(){
+    void init() {
         stickDrawerLayout.setScrimColor(Color.TRANSPARENT);
         stickDrawerLayout.setDrawerLockMode(StickDrawerLayout.LOCK_MODE_UNLOCKED);
         CustomApplication.getInstance().eventBus.register(this);
         stickDrawerLayout.openDrawer(Gravity.LEFT);
         stickDrawerLayout.closeDrawer(Gravity.START);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -71,32 +74,27 @@ public class XunjianDemoActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Subscribe
     public void onFloatCenterClose(CloseableMenuGroupLayoutCloseEvent closeableMenuGroupLayoutCloseEvent) {
-        getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
+        if (currentCenterFragment != null)
+            getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
+        currentCenterFragment = null;
 //         Fragment  center =FloatCenterFragment_.builder().build();
 //        getFragmentManager().beginTransaction().replace(R.id.center_float_container, center).commit();
     }
 
-    @UiThread
-    @Subscribe
-    public void leftRightManager(LeftRightManageMessage message) {
-        if (message.open) {
-            stickDrawerLayout.openDrawer(message.witch);
-        }else {
-            stickDrawerLayout.closeDrawer(message.witch);
-        }
-    }
     @Background
-   public void longTime(){
+    public void longTime() {
         opUI("DF");
 
     }
 
     @UiThread
-    public  void  opUI(String sdsd) {
+    public void opUI(String sdsd) {
 
     }
+
 
     @Subscribe
     public void onImageTextButtonClick(ImageTextButtonClickEvent event) {
@@ -117,7 +115,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
                 break;
             case R.id.left_fragment_btn_5:
                 clickBtn5();
-                
+
             default:
                 otherBtnClick();
         }
@@ -126,8 +124,9 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     @UiThread
     private void clickBtn5() {
-        BottomCenterFragment bottomCenterFragment = BottomCenterFragment_.builder().build();
-        getFragmentManager().beginTransaction().replace(R.id.center_float_container, bottomCenterFragment).commit();
+        BottomCenterFragment bottomCenterFragment = BottomCenterFragment.getInstance();
+        currentCenterFragment = bottomCenterFragment;
+        getFragmentManager().beginTransaction().replace(R.id.bottom_frame_layout, bottomCenterFragment).commit();
     }
 
     private void otherBtnClick() {
@@ -136,8 +135,9 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     @UiThread
     private void clickBtn4() {
-        AnotherCenterFragment anotherCenterFragment = AnotherCenterFragment_.builder().build();
-        getFragmentManager().beginTransaction().replace(R.id.center_float_container, anotherCenterFragment).commit();
+        AnotherCenterFragment anotherCenterFragment = AnotherCenterFragment.getInstance();
+        currentCenterFragment = anotherCenterFragment;
+        getFragmentManager().beginTransaction().replace(R.id.bottom_frame_layout, anotherCenterFragment).commit();
     }
 
 

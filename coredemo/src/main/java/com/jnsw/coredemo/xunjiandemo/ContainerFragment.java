@@ -13,12 +13,9 @@ import com.jnsw.coredemo.R;
  * A simple {@link Fragment} subclass.
  */
 public class ContainerFragment extends Fragment {
-
-
     public ContainerFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,6 +23,4 @@ public class ContainerFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_container, container, false);
     }
-
-
 }

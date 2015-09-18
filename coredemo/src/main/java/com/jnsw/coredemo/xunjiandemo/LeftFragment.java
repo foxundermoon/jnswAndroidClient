@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jnsw.core.CustomApplication;
+import com.jnsw.core.util.Tip;
 import com.jnsw.coredemo.R;
 
 import org.androidannotations.annotations.Click;
@@ -24,11 +25,7 @@ public class LeftFragment extends Fragment {
         // Required empty public constructor
     }
     @Click void click_me() {
-      LeftRightManageMessage message=  new LeftRightManageMessage();
-        message.witch = Gravity.END;
-        message.open = false;
-
-        CustomApplication.getInstance().eventBus.post(message);
+        Tip.shortTip("自定义点击方法");
 
     }
 

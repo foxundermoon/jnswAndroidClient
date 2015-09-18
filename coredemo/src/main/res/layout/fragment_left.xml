@@ -34,7 +34,7 @@
                 jnswui:image_max_height="40dp"
 
                 jnswui:image_max_width="40dp"
-                jnswui:text="保  存"
+                jnswui:text="关闭两边"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton
@@ -45,7 +45,7 @@
                 jnswui:image_max_height="30dp"
 
                 jnswui:image_max_width="30dp"
-                jnswui:text="close Gravity.START"
+                jnswui:text="关闭左边"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton
@@ -56,7 +56,7 @@
                 jnswui:image_max_height="30dp"
 
                 jnswui:image_max_width="30dp"
-                jnswui:text="open END"
+                jnswui:text="打开右边"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton
@@ -68,7 +68,7 @@
                 jnswui:image_max_height="30dp"
 
                 jnswui:image_max_width="30dp"
-                jnswui:text="打开AnotherCenterFragment"
+                jnswui:text="打开下面"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton
@@ -78,7 +78,7 @@
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
                 jnswui:image_max_width="30dp"
-                jnswui:text="BottomCenterFragment"
+                jnswui:text="替换下面"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton
@@ -88,7 +88,7 @@
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
                 jnswui:image_max_width="30dp"
-                jnswui:text="关闭右边"
+                jnswui:text="自定义点击"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton

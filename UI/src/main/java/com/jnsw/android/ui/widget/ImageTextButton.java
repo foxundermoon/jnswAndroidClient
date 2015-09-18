@@ -23,10 +23,11 @@ import com.jnsw.android.ui.widget.event.ImageTextButtonClickEvent;
 /**
  * Created by fox on 2015/8/27.
  */
-public class ImageTextButton extends LinearLayout {
+public class ImageTextButton extends LinearLayout implements View.OnClickListener {
     private ImageView mImg;
     private TextView mTextView;
     private Context mContext = null;
+    private View.OnClickListener userOnclickListener;
 
     public ImageTextButton(Context context) {
         this(context, null);
@@ -121,6 +122,10 @@ public class ImageTextButton extends LinearLayout {
         }
 //        mImg.setBackground(imgDrawable);
         mImg.setImageDrawable(imgDrawable);
+        initClickListener();
+    }
+    private void initClickListener() {
+        setOnClickListener(this);
     }
 
     protected void inflaterLayout(Context context) {
@@ -148,16 +153,10 @@ public class ImageTextButton extends LinearLayout {
 
     @Override
     public void setOnClickListener(OnClickListener l) {
-        final OnClickListener clickListener = l;
-        super.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                new ImageTextButtonClickEvent(ImageTextButton.this).post();
-                if (clickListener != null)
-                    clickListener.onClick(v);
-            }
-        });
+        if(l ==this)
+            super.setOnClickListener(l);
+        else
+            userOnclickListener = l;
     }
 
     @Override
@@ -185,5 +184,13 @@ public class ImageTextButton extends LinearLayout {
 
     public void setTextViewText(CharSequence charSequence) {
         mTextView.setText(charSequence);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (userOnclickListener != null) {
+            userOnclickListener.onClick(v);
+        }
+        new ImageTextButtonClickEvent(ImageTextButton.this).post();
     }
 }

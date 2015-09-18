@@ -63,29 +63,29 @@ import java.util.List;
 /**
  * DrawerLayout acts as a top-level container for window content that allows for
  * interactive "drawer" views to be pulled out from the edge of the window.
- *
+ * <p/>
  * <p>Drawer positioning and layout is controlled using the <code>android:layout_gravity</code>
  * attribute on child views corresponding to which side of the view you want the drawer
  * to emerge from: left or right. (Or start/end on platform versions that support layout direction.)
  * </p>
- *
+ * <p/>
  * <p>To use a DrawerLayout, position your primary content view as the first child with
  * a width and height of <code>match_parent</code>. Add drawers as child views after the main
  * content view and set the <code>layout_gravity</code> appropriately. Drawers commonly use
  * <code>match_parent</code> for height with a fixed width.</p>
- *
+ * <p/>
  * <p>{@link DrawerListener} can be used to monitor the state and motion of drawer views.
  * Avoid performing expensive operations such as layout during animation as it can cause
  * stuttering; try to perform expensive operations during the {@link #STATE_IDLE} state.
  * {@link SimpleDrawerListener} offers default/no-op implementations of each callback method.</p>
- *
+ * <p/>
  * <p>As per the <a href="{@docRoot}design/patterns/navigation-drawer.html">Android Design
  * guide</a>, any drawers positioned to the left/start should
  * always contain content for navigating around the application, whereas any drawers
  * positioned to the right/end should always contain actions to take on the current content.
  * This preserves the same navigation left, actions right structure present in the Action Bar
  * and elsewhere.</p>
- *
+ * <p/>
  * <p>For more information about how to use DrawerLayout, read <a
  * href="{@docRoot}training/implementing-navigation/nav-drawer.html">Creating a Navigation
  * Drawer</a>.</p>
@@ -95,7 +95,8 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     @IntDef({STATE_IDLE, STATE_DRAGGING, STATE_SETTLING})
     @Retention(RetentionPolicy.SOURCE)
-    private @interface State {}
+    private @interface State {
+    }
 
     /**
      * Indicates that any drawers are in an idle, settled state. No animation is in progress.
@@ -112,10 +113,13 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
      */
     public static final int STATE_SETTLING = ViewDragHelper.STATE_SETTLING;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @IntDef({LOCK_MODE_UNLOCKED, LOCK_MODE_LOCKED_CLOSED, LOCK_MODE_LOCKED_OPEN})
     @Retention(RetentionPolicy.SOURCE)
-    private @interface LockMode {}
+    private @interface LockMode {
+    }
 
     /**
      * The drawer is unlocked.
@@ -134,10 +138,13 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
      */
     public static final int LOCK_MODE_LOCKED_OPEN = 2;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @IntDef({Gravity.LEFT, Gravity.RIGHT, GravityCompat.START, GravityCompat.END})
     @Retention(RetentionPolicy.SOURCE)
-    private @interface EdgeGravity {}
+    private @interface EdgeGravity {
+    }
 
 
     private static final int MIN_DRAWER_MARGIN = 64; // dp
@@ -163,11 +170,13 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     private static final float TOUCH_SLOP_SENSITIVITY = 1.f;
 
-    private static final int[] LAYOUT_ATTRS = new int[] {
+    private static final int[] LAYOUT_ATTRS = new int[]{
             android.R.attr.layout_gravity
     };
 
-    /** Whether we can use NO_HIDE_DESCENDANTS accessibility importance. */
+    /**
+     * Whether we can use NO_HIDE_DESCENDANTS accessibility importance.
+     */
     private static final boolean CAN_HIDE_DESCENDANTS = Build.VERSION.SDK_INT >= 19;
 
     private final ChildAccessibilityDelegate mChildAccessibilityDelegate =
@@ -208,13 +217,18 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
 
     Handler handler = new Handler();
+
     @Subscribe
     public void closeStickDrawerLayout(final CloseStickDrawerLayoutEvent event) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                closeDrawer(event.getEventData());
-
+                int gravity = event.getEventData();
+                if (gravity == (Gravity.LEFT | Gravity.RIGHT) || gravity == (Gravity.START | Gravity.END)) {
+                    closeDrawers();
+                    return;
+                }
+                closeDrawer(gravity);
             }
         });
     }
@@ -235,7 +249,8 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
     public interface DrawerListener {
         /**
          * Called when a drawer's position changes.
-         * @param drawerView The child view that was moved
+         *
+         * @param drawerView  The child view that was moved
          * @param slideOffset The new offset of this drawer within its range, from 0-1
          */
         public void onDrawerSlide(View drawerView, float slideOffset);
@@ -288,9 +303,13 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     interface DrawerLayoutCompatImpl {
         void configureApplyInsets(View drawerLayout);
+
         void dispatchChildInsets(View child, Object insets, int drawerGravity);
+
         void applyMarginInsets(MarginLayoutParams lp, Object insets, int drawerGravity);
+
         int getTopInset(Object lastInsets);
+
         Drawable getDefaultStatusBarBackground(Context context);
     }
 
@@ -410,7 +429,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
      * The drawable provided must have a nonzero intrinsic width.
      *
      * @param shadowDrawable Shadow drawable to use at the edge of a drawer
-     * @param gravity Which drawer the shadow should apply to
+     * @param gravity        Which drawer the shadow should apply to
      */
     public void setDrawerShadow(Drawable shadowDrawable, @EdgeGravity int gravity) {
         /*
@@ -435,7 +454,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
      * Set a simple drawable used for the left or right shadow.
      * The drawable provided must have a nonzero intrinsic width.
      *
-     * @param resId Resource id of a shadow drawable to use at the edge of a drawer
+     * @param resId   Resource id of a shadow drawable to use at the edge of a drawer
      * @param gravity Which drawer the shadow should apply to
      */
     public void setDrawerShadow(@DrawableRes int resId, @EdgeGravity int gravity) {
@@ -464,11 +483,11 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     /**
      * Enable or disable interaction with all drawers.
-     *
+     * <p/>
      * <p>This allows the application to restrict the user's ability to open or close
      * any drawer within this layout. DrawerLayout will still respond to calls to
      * {@link #openDrawer(int)}, {@link #closeDrawer(int)} and friends if a drawer is locked.</p>
-     *
+     * <p/>
      * <p>Locking drawers open or closed will implicitly open or close
      * any drawers as appropriate.</p>
      *
@@ -482,19 +501,18 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     /**
      * Enable or disable interaction with the given drawer.
-     *
+     * <p/>
      * <p>This allows the application to restrict the user's ability to open or close
      * the given drawer. DrawerLayout will still respond to calls to {@link #openDrawer(int)},
      * {@link #closeDrawer(int)} and friends if a drawer is locked.</p>
-     *
+     * <p/>
      * <p>Locking a drawer open or closed will implicitly open or close
      * that drawer as appropriate.</p>
      *
-     * @param lockMode The new lock mode for the given drawer. One of {@link #LOCK_MODE_UNLOCKED},
-     *                 {@link #LOCK_MODE_LOCKED_CLOSED} or {@link #LOCK_MODE_LOCKED_OPEN}.
+     * @param lockMode    The new lock mode for the given drawer. One of {@link #LOCK_MODE_UNLOCKED},
+     *                    {@link #LOCK_MODE_LOCKED_CLOSED} or {@link #LOCK_MODE_LOCKED_OPEN}.
      * @param edgeGravity Gravity.LEFT, RIGHT, START or END.
      *                    Expresses which drawer to change the mode for.
-     *
      * @see #LOCK_MODE_UNLOCKED
      * @see #LOCK_MODE_LOCKED_CLOSED
      * @see #LOCK_MODE_LOCKED_OPEN
@@ -531,18 +549,17 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     /**
      * Enable or disable interaction with the given drawer.
-     *
+     * <p/>
      * <p>This allows the application to restrict the user's ability to open or close
      * the given drawer. DrawerLayout will still respond to calls to {@link #openDrawer(int)},
      * {@link #closeDrawer(int)} and friends if a drawer is locked.</p>
-     *
+     * <p/>
      * <p>Locking a drawer open or closed will implicitly open or close
      * that drawer as appropriate.</p>
      *
-     * @param lockMode The new lock mode for the given drawer. One of {@link #LOCK_MODE_UNLOCKED},
-     *                 {@link #LOCK_MODE_LOCKED_CLOSED} or {@link #LOCK_MODE_LOCKED_OPEN}.
+     * @param lockMode   The new lock mode for the given drawer. One of {@link #LOCK_MODE_UNLOCKED},
+     *                   {@link #LOCK_MODE_LOCKED_CLOSED} or {@link #LOCK_MODE_LOCKED_OPEN}.
      * @param drawerView The drawer view to change the lock mode for
-     *
      * @see #LOCK_MODE_UNLOCKED
      * @see #LOCK_MODE_LOCKED_CLOSED
      * @see #LOCK_MODE_LOCKED_OPEN
@@ -561,7 +578,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
      *
      * @param edgeGravity Gravity of the drawer to check
      * @return one of {@link #LOCK_MODE_UNLOCKED}, {@link #LOCK_MODE_LOCKED_CLOSED} or
-     *         {@link #LOCK_MODE_LOCKED_OPEN}.
+     * {@link #LOCK_MODE_LOCKED_OPEN}.
      */
     @LockMode
     public int getDrawerLockMode(@EdgeGravity int edgeGravity) {
@@ -580,7 +597,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
      *
      * @param drawerView Drawer view to check lock mode
      * @return one of {@link #LOCK_MODE_UNLOCKED}, {@link #LOCK_MODE_LOCKED_CLOSED} or
-     *         {@link #LOCK_MODE_LOCKED_OPEN}.
+     * {@link #LOCK_MODE_LOCKED_OPEN}.
      */
     @LockMode
     public int getDrawerLockMode(View drawerView) {
@@ -595,13 +612,13 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     /**
      * Sets the title of the drawer with the given gravity.
-     * <p>
+     * <p/>
      * When accessibility is turned on, this is the title that will be used to
      * identify the drawer to the active accessibility service.
      *
      * @param edgeGravity Gravity.LEFT, RIGHT, START or END. Expresses which
-     *            drawer to set the title for.
-     * @param title The title for the drawer.
+     *                    drawer to set the title for.
+     * @param title       The title for the drawer.
      */
     public void setDrawerTitle(@EdgeGravity int edgeGravity, CharSequence title) {
         final int absGravity = GravityCompat.getAbsoluteGravity(
@@ -617,7 +634,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
      * Returns the title of the drawer with the given gravity.
      *
      * @param edgeGravity Gravity.LEFT, RIGHT, START or END. Expresses which
-     *            drawer to return the title for.
+     *                    drawer to return the title for.
      * @return The title of the drawer, or null if none set.
      * @see #setDrawerTitle(int, CharSequence)
      */
@@ -748,7 +765,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     /**
      * @return the absolute gravity of the child drawerView, resolved according
-     *         to the current layout direction
+     * to the current layout direction
      */
     int getDrawerViewAbsoluteGravity(View drawerView) {
         final int gravity = ((LayoutParams) drawerView.getLayoutParams()).gravity;
@@ -785,11 +802,11 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     /**
      * @param gravity the gravity of the child to return. If specified as a
-     *            relative value, it will be resolved according to the current
-     *            layout direction.
+     *                relative value, it will be resolved according to the current
+     *                layout direction.
      * @return the drawer with the specified gravity
      */
-   public View findDrawerWithGravity(int gravity) {
+    public View findDrawerWithGravity(int gravity) {
         final int absHorizGravity = GravityCompat.getAbsoluteGravity(
                 gravity, ViewCompat.getLayoutDirection(this)) & Gravity.HORIZONTAL_GRAVITY_MASK;
         final int childCount = getChildCount();
@@ -852,8 +869,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                 }
                 if (heightMode == MeasureSpec.AT_MOST) {
                     heightMode = MeasureSpec.EXACTLY;
-                }
-                else if (heightMode == MeasureSpec.UNSPECIFIED) {
+                } else if (heightMode == MeasureSpec.UNSPECIFIED) {
                     heightMode = MeasureSpec.EXACTLY;
                     heightSize = 300;
                 }
@@ -1152,6 +1168,10 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
     }
 
     boolean isContentView(View child) {
+//        if (child != null) {
+//             return child.getTag() == "stick_drawer_layout_content_view";
+//        }
+//        return false;
         return ((LayoutParams) child.getLayoutParams()).gravity == Gravity.NO_GRAVITY;
     }
 
@@ -1182,7 +1202,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                     final View child = mLeftDragger.findTopChildUnder((int) x, (int) y);
                     if (child != null && isContentView(child)) {
 //                        interceptForTap = true;
-                        interceptForTap=false;
+                        interceptForTap = false;
                     }
                 }
                 mDisallowInterceptRequested = false;
@@ -1243,7 +1263,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
                         final View openDrawer = findOpenDrawer();
                         if (openDrawer != null) {
                             peekingOnly = getDrawerLockMode(openDrawer) == LOCK_MODE_LOCKED_OPEN;
-                            peekingOnly =true; // to always open util slide to close
+                            peekingOnly = true; // to always open util slide to close
                         }
                     }
                 }
@@ -1391,8 +1411,9 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
     public void closeDrawer(@EdgeGravity int gravity) {
         final View drawerView = findDrawerWithGravity(gravity);
         if (drawerView == null) {
-            throw new IllegalArgumentException("No drawer view found with gravity " +
-                    gravityToString(gravity));
+            return;
+//            throw new IllegalArgumentException("No drawer view found with gravity " +
+//                    gravityToString(gravity));
         }
         closeDrawer(drawerView);
     }
@@ -1658,7 +1679,8 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
         private com.jnsw.android.ui.widget.ViewDragHelper mDragger;
 
         private final Runnable mPeekRunnable = new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 peekDrawer();
             }
         };

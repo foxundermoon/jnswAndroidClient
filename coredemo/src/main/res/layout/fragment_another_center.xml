@@ -4,10 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:title_text="居中标题  不需要可以忽略，默认不显示"
     app:title_color="@color/LuciteGreen_Primary"
+    android:layout_gravity="center"
     app:title_textSize="14sp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/Dark_Transparent">
+    android:background="@color/Dark_Translucence">
 
 
     <RadioGroup
@@ -40,7 +41,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="掉进去了  只能选一个"
+            android:text="掉进去了只能选一个"
             android:id="@+id/your_self"
             android:checked="false" />
     </RadioGroup>

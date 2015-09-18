@@ -5,36 +5,36 @@
     android:layout_height="match_parent"
     tools:context="com.jnsw.coredemo.xunjiandemo.XunjianDemoActivity_">
 
-    <com.zhy.android.percent.support.PercentFrameLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.zhy.android.percent.support.PercentFrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_container"
+        android:tag="stick_drawer_layout_content_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/holo_red_dark"
-        android:gravity="center_horizontal|bottom"
-        android:foregroundGravity="bottom|center_horizontal">
+        android:gravity="center_horizontal|bottom">
+
         <fragment
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/float_center_action_fragment"
-            android:name="com.jnsw.coredemo.xunjiandemo.ExtendFloatCenterActionFragment_"
-            />
+            android:name="com.jnsw.coredemo.xunjiandemo.FloatActionFragment_"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <!--此处LinearLayout替换为 MapView-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/jinan_map_bg"></LinearLayout>
-        <fragment
-            android:id="@+id/center_float_container"
-            android:layout_gravity="center|bottom"
-            android:name="com.jnsw.coredemo.xunjiandemo.BottomCenterFragment_"
-            android:background="@color/accent_material_light"
-            app:layout_widthPercent="70%"
-            app:layout_maxWidthPercent="50%"
-            app:layout_minWidthPercent="30%"
-            android:layout_marginBottom="15dp"
+
+        <FrameLayout
+            android:id="@+id/bottom_frame_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            />
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="15dp"
+            app:layout_minWidthPercent="30%"
+            app:layout_widthPercent="60%">
+
+        </FrameLayout>
+
 
     </com.zhy.android.percent.support.PercentFrameLayout>
     <!--<fragment-->
@@ -49,6 +49,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         tools:layout="@layout/fragment_left" />
+
     <fragment
         android:id="@+id/right_fragment"
         android:name="com.jnsw.coredemo.xunjiandemo.RightFragment_"

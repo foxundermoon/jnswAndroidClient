@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.jnsw.core.util.L;
 import com.jnsw.core.util.ScreenKit;
+import com.jnsw.core.util.Tip;
 import com.jnsw.coredemo.R;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -137,11 +138,13 @@ public class FloatActionFragment extends Fragment {
     @Click(R.id.imageView4)
     void first() {
         click++;
+        Tip.shortTip("click imageView4  ="+click);
         L.d(getClass(), "click " + click);
     }
 
     @Touch(R.id.imageView5)
     void img5() {
+        Tip.shortTip("touch imageView5  ="+click);
         click++;
         L.d(getClass(), "click " + click);
     }

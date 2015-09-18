@@ -8,9 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.jnsw.android.ui.widget.CircularFloatActionFragment;
+import com.jnsw.core.util.L;
+import com.jnsw.core.util.Tip;
 import com.jnsw.coredemo.R;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -54,5 +58,23 @@ public class ExtendFloatCenterActionFragment extends CircularFloatActionFragment
     @Override
     protected void onSetMainActionMenu() {
         setMainActionMenuView(imageView_center_main);
+    }
+
+    int click = 0;
+
+    @AfterViews  void init(){
+        imageView4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tip.shortTip("imageView4");
+                L.d(getClass(), "click = " + click++);
+            }
+        });
+    }
+
+    @Click
+    void imageView6() {
+        Tip.shortTip("imageView6");
+        L.d(getClass(), "click = " + click++);
     }
 }
