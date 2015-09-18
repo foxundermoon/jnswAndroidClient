@@ -65,7 +65,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
     }
 
     private void initCustomView(Context context, AttributeSet attrs) {
-        setClickable(true);
+        setVisibility(INVISIBLE);
         Resources.Theme theme = context.getTheme();
         inflaterLayout(context, attrs);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CloseableMenuGroupLayoutStyleable);

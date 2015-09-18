@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 
@@ -59,7 +60,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        hideAllBottomFragment();
+//        hideAllBottomFragment();
         CustomApplication.getInstance().eventBus.register(this);
         stickDrawerLayout.setScrimColor(Color.TRANSPARENT);
         stickDrawerLayout.setDrawerLockMode(StickDrawerLayout.LOCK_MODE_UNLOCKED);
@@ -135,6 +136,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     private void showBottomFragment(Fragment fragment) {
         showFragment(fragment);
+        fragment.getView().setVisibility(View.VISIBLE);
         currentCenterFragment = fragment;
     }
 
