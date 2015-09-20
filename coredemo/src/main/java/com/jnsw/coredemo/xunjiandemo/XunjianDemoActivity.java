@@ -14,9 +14,12 @@ import android.widget.FrameLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.jnsw.android.ui.widget.ImageTextButton;
+import com.jnsw.android.ui.widget.event.CircularFloatingMenuClickEvent;
+import com.jnsw.android.ui.widget.event.CloseCircularActionMenuEvent;
 import com.jnsw.android.ui.widget.event.CloseStickDrawerLayoutEvent;
 import com.jnsw.android.ui.widget.event.CloseableMenuGroupLayoutCloseEvent;
 import com.jnsw.android.ui.widget.event.ImageTextButtonClickEvent;
+import com.jnsw.android.ui.widget.event.OpenCircularActionButtonEvent;
 import com.jnsw.android.ui.widget.event.OpenStickDrawerLayoutEvent;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.util.Tip;
@@ -48,6 +51,8 @@ public class XunjianDemoActivity extends AppCompatActivity {
     @FragmentById(R.id.another_bottom_fragment)
     Fragment anotherBottomFragment;
 
+    @FragmentById(R.id.float_center_action_fragment)
+    ExtendFloatCenterActionFragment circularMenuFragment;
     private Fragment currentCenterFragment;
 
     @Override
@@ -127,7 +132,13 @@ public class XunjianDemoActivity extends AppCompatActivity {
                 break;
             case R.id.left_fragment_btn_5:
                 openAnotherBootomFragment();
-
+                break;
+            case R.id.open_circular_menu:
+                new OpenCircularActionButtonEvent(circularMenuFragment.imageView_center_main).post();
+                break;
+            case R.id.close_circular_menu:
+                new CloseCircularActionMenuEvent(circularMenuFragment.imageView_center_main).post();
+                break;
             default:
                 otherBtnClick();
         }
@@ -170,5 +181,21 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     private void clickBtn1() {
         new CloseStickDrawerLayoutEvent(Gravity.START | Gravity.END).post();
+    }
+
+    @Subscribe
+    public void onSubMenuClick(CircularFloatingMenuClickEvent event) {
+        View which = event.getEventData();
+        if (which != null) {
+            int id = which.getId();
+            switch (id) {
+            case R.id.imageView4:
+                Tip.shortTip("clicked me "+id);
+                break;
+                case R.id.imageView5:
+                    Tip.shortTip("clicked me "+id);
+                    break;
+            }
+        }
     }
 }
