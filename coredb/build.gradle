@@ -1,0 +1,87 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'android-apt'
+
+version = xunjiandb_version
+group = 'com.jnsw.android'
+android {
+    compileSdkVersion compile_sdk_version as int
+    buildToolsVersion build_tools_version
+    defaultConfig {
+        minSdkVersion min_sdk_version as int
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+        buildConfigField "Integer", "XJ_DB_VERSION", xj_db_version
+        buildConfigField "boolean", "XJ_DB_DEBYG", xj_db_debug
+    }
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+//        debug {
+//            buildConfigField "Integer", "XJ_DB_VERSION", XJ_DB_VERSION
+//        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+
+
+dependencies {
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile "com.jnsw.android:core:$CORE_VERSION"
+//    compile 'com.j256.ormlite:ormlite-android:4.43'
+//    compile 'com.j256.ormlite:ormlite-core:4.43'
+    apt project(":dbcompiler")
+}
+
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+        resourcePackageName android.defaultConfig.applicationId
+        // if you have multiple outputs (when using splits), you may want to have other index than 0
+
+        // you should set your package name here if you are using different application IDs
+        // resourcePackageName "your.package.name"
+
+        // You can set optional annotation processing options here, like these commented options:
+        logLevel 'INFO'
+        logFile 'log/compiler.log'
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: 'http://jarlib.vvfox.com/releases/') {
+                authentication(userName: 'admin', password: 'admin123')
+            }
+//            pom.project {
+////                name project.name
+//                name 'core'
+//                packaging 'jar'
+//                description 'the android library of company  version:'+version +"  group:"+group
+//                url 'https://github.com/foxundermoon/jnswAndroidClient'
+//                licenses {
+//                    license {
+//                        name 'The Apache Software License, Version 2.0'
+//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                        distribution 'repo'
+//                    }
+//                }
+//            }
+        }
+    }
+
+}

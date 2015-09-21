@@ -1,0 +1,43 @@
+{
+  "status" : "warn",
+  "name" : "XMLConfigTest",
+  "packages" : "org.apache.logging.log4j.test",
+  "properties" : {
+    "filename" : "target/test.log"
+  },
+  "filter" : {
+    "type" : "ThresholdFilter",
+    "level" : "debug"
+  },
+  "appenders" : [ {
+    "type" : "Console",
+    "name" : "STDOUT",
+    "layout" : {
+      "type" : "PatternLayout",
+      "pattern" : "%m MDC%X%n"
+    },
+    "filters" : [ {
+      "type" : "MarkerFilter",
+      "marker" : "FLOW",
+      "onMatch" : "DENY",
+      "onMismatch" : "NEUTRAL"
+    }, {
+      "type" : "MarkerFilter",
+      "marker" : "EXCEPTION",
+      "onMatch" : "DENY",
+      "onMismatch" : "ACCEPT"
+    } ]
+  } ],
+  "loggers" : [ {
+    "name" : "org.apache.logging.log4j.test1",
+    "filters" : [ {
+      "type" : "ThreadContextMapFilter",
+      "properties" : {
+        "test" : "123"
+      }
+    } ],
+    "appender" : {
+      "ref" : "STDOUT"
+    }
+  } ]
+}
