@@ -37,7 +37,7 @@ public class ExtendFloatCenterActionFragment extends CircularFloatActionFragment
     @ViewById
     ImageView imageView8;
     @ViewById
-    ImageView imageView_center_main;
+  public   ImageView imageView_center_main;
 
 
     @Override

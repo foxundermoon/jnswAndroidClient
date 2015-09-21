@@ -1,7 +1,6 @@
 package com.jnsw.coredemo.xunjiandemo;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.support.annotation.UiThread;
 import android.support.v4.widget.StickDrawerLayout;
@@ -9,20 +8,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.jnsw.android.ui.widget.ImageTextButton;
+import com.jnsw.android.ui.widget.event.CircularFloatingMenuClickEvent;
+import com.jnsw.android.ui.widget.event.CloseCircularActionMenuEvent;
 import com.jnsw.android.ui.widget.event.CloseStickDrawerLayoutEvent;
 import com.jnsw.android.ui.widget.event.CloseableMenuGroupLayoutCloseEvent;
 import com.jnsw.android.ui.widget.event.ImageTextButtonClickEvent;
+import com.jnsw.android.ui.widget.event.OpenCircularActionButtonEvent;
 import com.jnsw.android.ui.widget.event.OpenStickDrawerLayoutEvent;
 import com.jnsw.core.CustomApplication;
 import com.jnsw.core.util.Tip;
 import com.jnsw.coredemo.R;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
@@ -49,6 +51,8 @@ public class XunjianDemoActivity extends AppCompatActivity {
     @FragmentById(R.id.another_bottom_fragment)
     Fragment anotherBottomFragment;
 
+    @FragmentById(R.id.float_center_action_fragment)
+    ExtendFloatCenterActionFragment circularMenuFragment;
     private Fragment currentCenterFragment;
 
     @Override
@@ -58,16 +62,24 @@ public class XunjianDemoActivity extends AppCompatActivity {
         return true;
     }
 
-    @AfterViews
-    void init() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        hideAllBottomFragment();
+        CustomApplication.getInstance().eventBus.register(this);
         stickDrawerLayout.setScrimColor(Color.TRANSPARENT);
         stickDrawerLayout.setDrawerLockMode(StickDrawerLayout.LOCK_MODE_UNLOCKED);
-        CustomApplication.getInstance().eventBus.register(this);
-        stickDrawerLayout.openDrawer(Gravity.LEFT);
-        stickDrawerLayout.closeDrawer(Gravity.START);
-        getFragmentManager().beginTransaction().hide(anotherBottomFragment).hide(bottomFragment).commit();
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+    }
+
+    private void hideAllBottomFragment() {
+        getFragmentManager().beginTransaction().hide(bottomFragment).hide(anotherBottomFragment).commit();
+        currentCenterFragment = null;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -84,9 +96,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     @Subscribe
     public void onFloatCenterClose(CloseableMenuGroupLayoutCloseEvent closeableMenuGroupLayoutCloseEvent) {
-        if (currentCenterFragment != null)
-            getFragmentManager().beginTransaction().hide(currentCenterFragment).commit();
-        currentCenterFragment = null;
+        hideAllBottomFragment();
 //         Fragment  center =FloatCenterFragment_.builder().build();
 //        getFragmentManager().beginTransaction().replace(R.id.center_float_container, center).commit();
     }
@@ -122,21 +132,32 @@ public class XunjianDemoActivity extends AppCompatActivity {
                 break;
             case R.id.left_fragment_btn_5:
                 openAnotherBootomFragment();
-
+                break;
+            case R.id.open_circular_menu:
+                new OpenCircularActionButtonEvent(circularMenuFragment.imageView_center_main).post();
+                break;
+            case R.id.close_circular_menu:
+                new CloseCircularActionMenuEvent(circularMenuFragment.imageView_center_main).post();
+                break;
             default:
                 otherBtnClick();
         }
     }
 
 
+    private void showBottomFragment(Fragment fragment) {
+        showFragment(fragment);
+        fragment.getView().setVisibility(View.VISIBLE);
+        currentCenterFragment = fragment;
+    }
+
+    private void showFragment(Fragment fragment) {
+        getFragmentManager().beginTransaction().show(fragment).commit();
+    }
     @UiThread
     private void openAnotherBootomFragment() {
-        FragmentTransaction  trans = getFragmentManager().beginTransaction();
-        if (currentCenterFragment != null) {
-            trans.hide(currentCenterFragment);
-        }
-        trans.show(anotherBottomFragment).commit();
-        currentCenterFragment = anotherBottomFragment;
+        hideAllBottomFragment();
+        showBottomFragment(anotherBottomFragment);
     }
 
     private void otherBtnClick() {
@@ -145,12 +166,8 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     @UiThread
     private void openBottomFragment() {
-        FragmentTransaction  trans = getFragmentManager().beginTransaction();
-        if (currentCenterFragment != null) {
-            trans.hide(currentCenterFragment);
-        }
-        trans.show(bottomFragment).commit();
-        currentCenterFragment = bottomFragment;
+        hideAllBottomFragment();
+        showBottomFragment(bottomFragment);
     }
 
 
@@ -164,5 +181,21 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     private void clickBtn1() {
         new CloseStickDrawerLayoutEvent(Gravity.START | Gravity.END).post();
+    }
+
+    @Subscribe
+    public void onSubMenuClick(CircularFloatingMenuClickEvent event) {
+        View which = event.getEventData();
+        if (which != null) {
+            int id = which.getId();
+            switch (id) {
+            case R.id.imageView4:
+                Tip.shortTip("clicked me "+id);
+                break;
+                case R.id.imageView5:
+                    Tip.shortTip("clicked me "+id);
+                    break;
+            }
+        }
     }
 }

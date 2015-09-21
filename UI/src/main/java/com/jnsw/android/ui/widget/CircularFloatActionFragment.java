@@ -5,7 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.google.common.eventbus.Subscribe;
 import com.jnsw.android.ui.R;
+import com.jnsw.android.ui.widget.event.CircularFloatingMenuClickEvent;
+import com.jnsw.android.ui.widget.event.CloseCircularActionMenuEvent;
+import com.jnsw.android.ui.widget.event.OpenCircularActionButtonEvent;
+import com.jnsw.core.CustomApplication;
 import com.jnsw.core.util.ScreenKit;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -33,6 +39,7 @@ public abstract class CircularFloatActionFragment extends Fragment {
     protected int subMenuBackGround = R.drawable.button_action_blue_selector;
     protected int mainMenuBackGround = R.drawable.button_action_red_selector;
 
+    private FloatingActionMenu mainActionMenu;
 
     public void setMainMenuPosition(int mainMenuPosition) {
         this.mainMenuPosition = mainMenuPosition;
@@ -49,7 +56,7 @@ public abstract class CircularFloatActionFragment extends Fragment {
     private FloatingActionButton.LayoutParams defaultMainMenuIconLayoutParams;
 
     private void initializeFloatingActionMenu() {
-
+        CustomApplication.getInstance().eventBus.register(this);
         FrameLayout.LayoutParams subMenuContentLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         subMenuContentLayoutParams.setMargins(subActionButtonContentMargin,
                 subActionButtonContentMargin,
@@ -98,25 +105,37 @@ public abstract class CircularFloatActionFragment extends Fragment {
 //        lCSubBuilder.setLayoutParams(blueContentParams);
         lCSubBuilder.setLayoutParams(subMenuLayoutParams);
 
-        FrameLayout.LayoutParams blueParams = new FrameLayout.LayoutParams(subActionButtonSize,subActionButtonSize);
+        FrameLayout.LayoutParams blueParams = new FrameLayout.LayoutParams(subActionButtonSize, subActionButtonSize);
         lCSubBuilder.setLayoutParams(blueParams);
 
 
         final FloatingActionMenu.Builder leftCenterMenuBuilder = new FloatingActionMenu.Builder(getActivity());
 
-        for (View subView : subMenuList) {
+        for (final View subView : subMenuList) {
             root.removeView(subView);
-            leftCenterMenuBuilder.addSubActionView(lCSubBuilder.setContentView(subView, blueContentParams).build());
+            SubActionButton sb = lCSubBuilder.setContentView(subView, blueContentParams).build();
+            sb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new CircularFloatingMenuClickEvent(subView).post();
+                }
+            });
+            leftCenterMenuBuilder.addSubActionView(sb);
         }
         leftCenterMenuBuilder
                 .setRadius(actionMenuRadius)
                 .setStartAngle(startAngle)
                 .setEndAngle(endAngle);
         onInterceptCreateFloatingActionMenu(leftCenterMenuBuilder);
-        leftCenterMenuBuilder.attachTo(mainActionMenuView).build();
+        mainActionMenu = leftCenterMenuBuilder.attachTo(mainActionMenuView).build();
     }
 
 
+    public boolean isMenuOpen(){
+        if(mainActionMenu !=null)
+            return mainActionMenu.isOpen();
+        return false;
+    }
     protected abstract void onInterceptCreateFloatingActionMenu(FloatingActionMenu.Builder floatingActionMenuBuilder);
 
     protected abstract List<View> onAddSubMenuView(List<View> subMenuList);
@@ -128,8 +147,44 @@ public abstract class CircularFloatActionFragment extends Fragment {
         this.mainActionMenuView = mainActionMenuView;
     }
 
+    public void setActionMenuStateChangeListener(FloatingActionMenu.MenuStateChangeListener stateChangeListener) {
+        if (mainActionMenu != null)
+            mainActionMenu.setStateChangeListener(stateChangeListener);
+    }
+
     protected void clearSubViews() {
         subMenuList.clear();
+    }
+
+    @Subscribe
+    public void onOpenCircularFloatingActionMenu(OpenCircularActionButtonEvent event) {
+            if( event.getEventData() == mainActionMenuView)
+                openMenu();
+    }
+
+    @Subscribe
+   public void onCloseCircularFloatingActionMenu(CloseCircularActionMenuEvent event) {
+        if (event.getEventData() == mainActionMenuView) {
+            closeMenu();
+        }
+    }
+
+    private void closeMenu() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mainActionMenu.close(true);
+            }
+        });
+    }
+
+    private void openMenu() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mainActionMenu.open(true);
+            }
+        });
     }
 
 }

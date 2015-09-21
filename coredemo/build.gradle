@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-    compile project(':core')
+//    compile project(':core')
     compile project(':ui')
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"

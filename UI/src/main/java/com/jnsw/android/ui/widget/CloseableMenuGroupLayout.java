@@ -1,8 +1,10 @@
 package com.jnsw.android.ui.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -30,7 +32,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
     private HorizontalScrollView horizontalScrollView;
     private ViewGroup currentContainer;
     private TextView title;
-    private int totalMargin = ScreenKit.dip2px(20);
+    private int totalMargin = ScreenKit.dip2px(0);
 
     public CloseableMenuGroupLayout(Context context) {
         this(context, null);
@@ -45,6 +47,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         initCustomView(context, attrs);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CloseableMenuGroupLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initCustomView(context, attrs);
@@ -62,7 +65,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
     }
 
     private void initCustomView(Context context, AttributeSet attrs) {
-        setClickable(true);
+        setVisibility(INVISIBLE);
         Resources.Theme theme = context.getTheme();
         inflaterLayout(context, attrs);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CloseableMenuGroupLayoutStyleable);
@@ -109,46 +112,40 @@ public class CloseableMenuGroupLayout extends FrameLayout {
     }
 
     private int containerWidth = 0;
-    private int containerHeight = 0;
+
+//    @Override
+//    protected void onFinishInflate() {
+//        super.onFinishInflate();
+//        if (isFirst) {
+//            requestLayout();
+//            invalidate();
+//            forceLayout();
+//        }
+//
+//        isFirst = false;
+//    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int realWidthMeasureSpec = widthMeasureSpec;
-        int realHeightMeasureSpec = heightMeasureSpec;
         int myWidthSize = MeasureSpec.getSize(widthMeasureSpec);
 
 //        LinearLayout containerLayout = (LinearLayout) findViewWithTag(getResources().getString(R.string.closeable_menu_group_layout_linelayout_container));
         int totalWidth = 0;
-        int totalHeight = 0;
         if (currentContainer == null) {
             int childCount = getChildCount();
-//            for (int i = 0; i < childCount; i++) {
-//                View child = getChildAt(i);
-//                if (isVisibleUserAddedView(child)) {
-////                    LayoutParams params = (LayoutParams) child.getLayoutParams();
-//                    final int childWidth = child.getMeasuredWidth();
-//                    if (childWidth == 0) {
-//                        break;
-//                    }
-//                    totalWidth += childWidth;
-//                }
-//            }
             if (containerWidth == 0) {
-//                measureChildren(MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec)+500,MeasureSpec.AT_MOST), heightMeasureSpec);
                 measureChildren(widthMeasureSpec, heightMeasureSpec);
                 for (int i = 0; i < childCount; i++) {
                     View child = getChildAt(i);
                     if (isVisibleUserAddedView(child)) {
-//                    LayoutParams params = (LayoutParams) child.getLayoutParams();
                         final int childWidth = child.getMeasuredWidth();
                         FrameLayout.LayoutParams params = (LayoutParams) child.getLayoutParams();
                         totalWidth += childWidth + params.leftMargin + params.rightMargin;
-
-                        final int childHeight = child.getMeasuredHeight();
-                        containerHeight = Math.max(childHeight + params.topMargin + params.bottomMargin, containerHeight);
                     }
                 }
                 containerWidth = totalWidth;
+//                measure(widthMeasureSpec, heightMeasureSpec);
             } else {
                 totalWidth = containerWidth;
                 if (totalWidth > myWidthSize) {
@@ -163,48 +160,24 @@ public class CloseableMenuGroupLayout extends FrameLayout {
                     }
                 }
                 childCount = getChildCount();
-                View[] childs = new View[childCount];
+                View[] children = new View[childCount];
                 for (int i = 0; i < childCount; i++) {
-                    childs[i] = getChildAt(i);
+                    children[i] = getChildAt(i);
                 }
-                for (View child : childs) {
+                for (View child : children) {
                     if (isVisibleUserAddedView(child)) {
-//                    LayoutParams params = (LayoutParams) child.getLayoutParams();
-//                        final int childWidth = child.getMeasuredWidth();
-//                        totalWidth += childWidth;
                         if (child.getParent() == this) {
                             removeView(child);
                             currentContainer.addView(child);
                         }
                     }
                 }
-//                requestLayout();
-//                invalidate();
                 FrameLayout.LayoutParams ll = (FrameLayout.LayoutParams) currentContainer.getLayoutParams();
                 totalWidth = Math.max(containerWidth + ll.leftMargin + ll.rightMargin + totalMargin, totalWidth);
-
-                FrameLayout.LayoutParams containerParams = (LayoutParams) currentContainer.getLayoutParams();
-                totalHeight = Math.max(containerHeight + containerParams.topMargin + containerParams.bottomMargin, totalHeight);
-//                FrameLayout.LayoutParams rootParams = (LayoutParams) getLayoutParams();
-//                rootParams.height = totalHeight;
-
             }
         } else {          //currentContainer !=null
             FrameLayout.LayoutParams ll = (FrameLayout.LayoutParams) currentContainer.getLayoutParams();
             totalWidth = Math.max(containerWidth + ll.leftMargin + ll.rightMargin + totalMargin, totalWidth);
-
-            FrameLayout.LayoutParams containerParams = (LayoutParams) currentContainer.getLayoutParams();
-            totalHeight = Math.max(containerHeight + containerParams.topMargin + containerParams.bottomMargin, totalHeight);
-//            FrameLayout.LayoutParams rootParams = (LayoutParams) getLayoutParams();
-//            int viewCount = currentContainer.getChildCount();
-//            for (int i = 0; i < viewCount; i++) {
-//                View child = currentContainer.getChildAt(i);
-//                if (child.getVisibility() != GONE) {
-////                    LayoutParams params = (LayoutParams) child.getLayoutParams();
-//                    final int childWidth = child.getMeasuredWidth();
-//                    totalWidth += childWidth;
-//                }
-//            }
         }
         int widthModel = MeasureSpec.getMode(widthMeasureSpec);
         int realWidthSize = Math.min(totalWidth, myWidthSize);
@@ -230,12 +203,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
         if (heightModel == MeasureSpec.UNSPECIFIED) {
             mh = "UNSPECIFIED";
         }
-
         realWidthMeasureSpec = MeasureSpec.makeMeasureSpec(realWidthSize, widthModel);
-        realHeightMeasureSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
-//        }
-
-//        setMeasuredDimension(realWidthMeasureSpec,realHeightMeasureSpec);
         super.onMeasure(realWidthMeasureSpec, heightMeasureSpec);
     }
 
