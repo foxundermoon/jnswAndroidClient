@@ -79,8 +79,12 @@
         </activity>
         <activity
             android:name=".customview.FloatActionInFragmentActivity_"
-            android:theme="@style/AppCompatTheme.NoActionBar"
-            android:label="@string/title_activity_float_action_in_fragment" >
+            android:label="@string/title_activity_float_action_in_fragment"
+            android:theme="@style/AppCompatTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".filetransfer.FileUploadActivity"
+            android:label="@string/title_activity_file_uploadctivity" >
         </activity>
     </application>
 

@@ -29,5 +29,6 @@
     <string name="title_activity_closeable_menu_group_demo">CloseableMenuGroupDemoActivity</string>
     <string name="title_activity_float_center_fragment">FloatCenterFragmentActivity</string>
     <string name="title_activity_float_action_in_fragment">FloatActionInFragmentActivity</string>
+    <string name="title_activity_file_uploadctivity">FileUploadctivity</string>
 
 </resources>
