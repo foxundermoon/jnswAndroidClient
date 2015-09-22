@@ -83,7 +83,8 @@
             android:theme="@style/AppCompatTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".filetransfer.FileUploadActivity"
+            android:name=".filetransfer.FileUploadActivity_"
+            android:theme="@style/AppCompatTheme"
             android:label="@string/title_activity_file_uploadctivity" >
         </activity>
     </application>

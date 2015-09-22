@@ -8,6 +8,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jnsw.core.data.*;
+import com.jnsw.core.filetransfer.FileTransfer;
 import com.jnsw.core.http.MyHttpClient;
 import com.jnsw.core.xmpp.ServiceManager;
 
@@ -30,6 +31,7 @@ public class CustomApplication extends MultiDexApplication {
     public MyHttpClient httpClient;
     public Gson gson;
     public Handler appHandle;
+    public FileTransfer fileTransfer;
 
     public String creatUUID() {
         return UUID.randomUUID().toString().replace("-", "");
@@ -60,6 +62,7 @@ public class CustomApplication extends MultiDexApplication {
                 .registerTypeAdapter(Row.class, new RowSerializer()).create();
         Genius.initialize(this);
         ServiceManager.getInstance(this).startService();
+        fileTransfer = FileTransfer.getInstance();
     }
 
     public void putTemp(String key, Object value) {
