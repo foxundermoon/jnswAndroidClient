@@ -7,6 +7,7 @@ import com.jnsw.core.CustomApplication;
 import com.jnsw.core.config.ClientConfig;
 import com.jnsw.core.data.FileMessage;
 import com.jnsw.core.event.UploadedEvent;
+
 import org.jivesoftware.smack.util.StringUtils;
 
 import java.io.IOException;
@@ -39,10 +40,15 @@ public class UploadTask implements Runnable {
  *           "err"      : "the error reason"
  *        }
  ****************************************/
-        if(fileMessage.getFileName() ==null || fileMessage.getFileName().length()<1){
-            fileMessage.setFileName("null");
-        }
-            String jsonrst = app.httpClient.uploadByPut(fileSysUri, fileMessage.getData(), fileMessage.getFileName());
+            if (fileMessage.getFileName() == null || fileMessage.getFileName().length() < 1) {
+                fileMessage.setFileName("null");
+            }
+            String jsonrst;
+            if (fileMessage.getFile() != null) {
+                jsonrst = app.httpClient.upload(fileSysUri, fileMessage.getFile());
+            } else {
+                jsonrst = app.httpClient.uploadByPut(fileSysUri, fileMessage.getData(), fileMessage.getFileName());
+            }
             JsonObject result = app.gson.fromJson(jsonrst, JsonObject.class);
             if (result == null) {
                 fileMessage.setErrorMessage("上传失败");

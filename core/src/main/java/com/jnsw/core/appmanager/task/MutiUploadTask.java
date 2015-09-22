@@ -37,10 +37,15 @@ public class MutiUploadTask implements Runnable {
  *           "err"      : "the error reason"
  *        }
  ****************************************/
+                String jsonrst = null;
+                if (fileMessage.getFile() != null) {
+                    jsonrst = app.httpClient.upload(fileSysUri, fileMessage.getFile());
+                }
                 if (fileMessage.getFileName() == null || fileMessage.getFileName().length() < 1) {
                     fileMessage.setFileName("null");
+                }else {
+                    jsonrst = app.httpClient.uploadByPut(fileSysUri, fileMessage.getData(), fileMessage.getFileName());
                 }
-                String jsonrst = app.httpClient.uploadByPut(fileSysUri, fileMessage.getData(), fileMessage.getFileName());
                 JsonObject result = app.gson.fromJson(jsonrst, JsonObject.class);
                 if (result == null) {
                     fileMessage.setErrorMessage("上传失败");
@@ -63,7 +68,7 @@ public class MutiUploadTask implements Runnable {
             } finally {
             }
         }
-        if(filesMessage.getErrorMessage()==null)
+        if (filesMessage.getErrorMessage() == null)
             filesMessage.setUploadSuccess(true);
         else {
             filesMessage.setUploadSuccess(false);

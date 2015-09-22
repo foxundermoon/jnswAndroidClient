@@ -1,5 +1,6 @@
 package com.jnsw.core.data;
 
+import java.io.File;
 import java.util.UUID;
 
 /**
@@ -12,6 +13,16 @@ public class FileMessage {
     private byte[] data;
     private String errorMessage;
     private  int id;
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    private File file;
     private boolean downloaded;
     private int lid;
 
