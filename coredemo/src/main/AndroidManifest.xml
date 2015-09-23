@@ -84,8 +84,13 @@
         </activity>
         <activity
             android:name=".filetransfer.FileUploadActivity_"
-            android:theme="@style/AppCompatTheme"
-            android:label="@string/title_activity_file_uploadctivity" >
+            android:label="@string/title_activity_file_uploadctivity"
+            android:theme="@style/AppCompatTheme" >
+        </activity>
+        <activity
+            android:name=".audiorecord.AudioRecordActivity_"
+            android:label="@string/title_activity_audio_record"
+            android:theme="@style/AppCompatTheme">
         </activity>
     </application>
 

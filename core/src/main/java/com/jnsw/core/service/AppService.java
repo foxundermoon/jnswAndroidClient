@@ -93,7 +93,7 @@ public class AppService extends Service {
 
     private AppManager appManager;
 
-    private SharedPreferences sharedPrefs;
+//    private SharedPreferences sharedPrefs;
 
     private String deviceId;
 
@@ -127,9 +127,8 @@ public class AppService extends Service {
         // If running on an emulator
         if (deviceId == null || deviceId.trim().length() == 0
                 || deviceId.matches("0+")) {
-            if (sharedPrefs.contains("EMULATOR_DEVICE_ID")) {
-                deviceId = sharedPrefs.getString(Constants.EMULATOR_DEVICE_ID,
-                        "");
+            if (ClientConfig.getSharedPerferences().contains("EMULATOR_DEVICE_ID")) {
+                deviceId = ClientConfig.getStringConfig(Constants.EMULATOR_DEVICE_ID, "");
             } else {
                 deviceId = (new StringBuilder("EMU")).append(
                         (new Random(System.currentTimeMillis())).nextLong())
@@ -200,7 +199,7 @@ public class AppService extends Service {
     }
 
     public SharedPreferences getSharedPreferences() {
-        return sharedPrefs;
+        return ClientConfig.getSharedPerferences();
     }
 
     public String getDeviceId() {

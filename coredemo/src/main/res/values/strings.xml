@@ -30,5 +30,6 @@
     <string name="title_activity_float_center_fragment">FloatCenterFragmentActivity</string>
     <string name="title_activity_float_action_in_fragment">FloatActionInFragmentActivity</string>
     <string name="title_activity_file_uploadctivity">FileUploadctivity</string>
+    <string name="title_activity_audio_record">AudioRecordActivity</string>
 
 </resources>
