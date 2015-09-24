@@ -90,7 +90,11 @@
         <activity
             android:name=".audiorecord.AudioRecordActivity_"
             android:label="@string/title_activity_audio_record"
-            android:theme="@style/AppCompatTheme">
+            android:theme="@style/AppCompatTheme" >
+        </activity>
+        <activity
+            android:name=".sharedata.ApplicationDataActivity"
+            android:label="@string/title_activity_application_data" >
         </activity>
     </application>
 

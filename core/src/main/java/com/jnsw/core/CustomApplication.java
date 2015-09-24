@@ -71,6 +71,18 @@ public class CustomApplication extends MultiDexApplication {
     public Object getTemp( String key) {
         return shareMap.get(key);
     }
+
+    public String getStringTemp(String key) {
+        return (String) shareMap.get(key);
+    }
+
+    public int getIntTemp(String key) {
+        return (int) shareMap.get(key);
+    }
+
+    public boolean getBooleanTemp(String key) {
+        return (boolean) shareMap.get(key);
+    }
     @Override
     public void onTerminate() {
         eventBus = null;

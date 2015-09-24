@@ -71,6 +71,21 @@
                 android:text="floatAction in fragment demo"
                 android:id="@+id/float_action_in_fragment" />
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="record"
+                android:id="@+id/record"
+                android:layout_gravity="center" />
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

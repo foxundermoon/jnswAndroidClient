@@ -1,3 +1,3 @@
 include ':core', ':corejar' , ':coredemo' , ':ui'
-include ':dbcompiler'
-include ':coredb'
+//include ':dbcompiler'
+//include ':coredb'

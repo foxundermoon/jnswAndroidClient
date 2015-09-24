@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.jnsw.coredemo.audiorecord.AudioRecordActivity;
+import com.jnsw.coredemo.audiorecord.AudioRecordActivity_;
 import com.jnsw.coredemo.customview.CloseableMenuGroupDemoActivity_;
 import com.jnsw.coredemo.customview.DragActivity_;
 import com.jnsw.coredemo.customview.FloatActionInFragmentActivity;
@@ -62,6 +64,9 @@ public class NavActivity extends AppCompatActivity {
 
     @Click void float_action_in_fragment(){
         FloatActionInFragmentActivity_.intent(this).start();
+    }
+    @Click void record(){
+        AudioRecordActivity_.intent(this).start();
     }
 
 }

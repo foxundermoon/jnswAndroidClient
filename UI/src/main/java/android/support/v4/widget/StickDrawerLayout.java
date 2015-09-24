@@ -1638,7 +1638,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
     }
 
     /**
-     * State persisted across instances
+     * RecordState persisted across instances
      */
     protected static class SavedState extends BaseSavedState {
         int openDrawerGravity = Gravity.NO_GRAVITY;

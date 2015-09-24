@@ -41,7 +41,7 @@ public class PhoneStateChangeListener extends PhoneStateListener {
     public void onDataConnectionStateChanged(int state) {
         super.onDataConnectionStateChanged(state);
         Log.d(LOGTAG, "onDataConnectionStateChanged()...");
-        Log.d(LOGTAG, "Data Connection State = " + getState(state));
+        Log.d(LOGTAG, "Data Connection RecordState = " + getState(state));
         
         if (state == TelephonyManager.DATA_CONNECTED) {
             appService.connect();
