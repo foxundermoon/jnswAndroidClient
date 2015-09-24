@@ -8,6 +8,8 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -17,8 +19,9 @@ import com.google.common.eventbus.Subscribe;
 import com.jnsw.android.ui.R;
 import com.jnsw.android.ui.widget.event.StopPlayAudioEvent;
 import com.jnsw.core.CustomApplication;
-import com.jnsw.core.record.audio.MediaPlayerCompletionEvent;
+import com.jnsw.core.record.audio.event.MediaPlayerCompletionEvent;
 import com.jnsw.core.record.audio.VoicePlayer;
+import com.jnsw.core.util.FileUtil;
 import com.jnsw.core.util.Tip;
 
 import java.io.File;
@@ -41,6 +44,7 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
     private static final int STOP_PLAY = 44402;
     private static final int START_PLAY = 44403;
     private static final int COMPLETION_PLAY = 44404;
+    private ImageButton deletebtn;
 
     private static String CURRENT_PROGRRESS;
     Timer timer;
@@ -113,6 +117,9 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
             e.printStackTrace();
         }
     }
+    public String  getAudioPath(){
+        return audioPath;
+    }
 
     protected void inflaterLayout(Context context) {
         LayoutInflater.from(context).inflate(R.layout.audio_player_layout, this, true);
@@ -128,6 +135,8 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
         textView = (TextView) findViewById(R.id.voice_display_voice_time);
         progressBar = (ProgressBar) findViewById(R.id.voice_display_voice_progressbar);
         voicePlayerBtn.setOnClickListener(this);
+        deletebtn = (ImageButton) findViewById(R.id.voice_display_delete);
+        deletebtn.setOnClickListener(this);
 
     }
 
@@ -201,6 +210,10 @@ public class AudioPlayerView extends LinearLayout implements View.OnClickListene
             } else {
                 startPlay();
             }
+        }
+        if (v == deletebtn) {
+            FileUtil.deleteFile(audioPath);
+            ((ViewGroup)getParent()).removeView(this);
         }
     }
 

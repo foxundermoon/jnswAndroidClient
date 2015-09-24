@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jnsw.android.ui.widget.AudioPlayerView;
+import com.jnsw.android.ui.widget.event.StopPlayAudioEvent;
 import com.jnsw.core.record.audio.VoiceRecorder;
 import com.jnsw.core.util.Tip;
 import com.jnsw.coredemo.R;
@@ -29,8 +30,6 @@ import java.util.UUID;
 public class AudioRecordActivity extends AppCompatActivity {
     @ViewById(R.id.voice_record_btn)
     Button recordBtn;
-
-
     @ViewById
     LinearLayout play_linearlayout;
     private static final int RECORD_NO = 0; // 不在录音
@@ -46,10 +45,6 @@ public class AudioRecordActivity extends AppCompatActivity {
 
     @Touch(R.id.voice_record_btn)
     boolean onTouch(View btn, MotionEvent event) {
-//        if (event.isButtonPressed(R.id.voice_record_btn)) {
-//            Tip.shortTip("pressed");
-//        }
-//        if(event.)
         switch (event.getAction()) {
             // 开始录音
             case MotionEvent.ACTION_DOWN:
@@ -66,6 +61,7 @@ public class AudioRecordActivity extends AppCompatActivity {
                     try {
                         // 开始录音
 //                        voiceRecorder.setSavePath(mRecordPath);
+                        new StopPlayAudioEvent().post();
                         if (!voiceRecorder.start(mRecordPath)) {
                             Tip.shortTip(voiceRecorder.getErrorMessage());
                         }
@@ -73,33 +69,6 @@ public class AudioRecordActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-//                    new Thread(new Runnable() {
-//
-//                        public void run() {
-//                            // 初始化录音时间
-//                            mRecord_Time = 0;
-//                            while (mRecord_State == RECORD_ING) {
-//                                // 大于最大录音时间则停止录音
-//                                if (mRecord_Time >= MAX_TIME) {
-//                                    mRecordHandler.sendEmptyMessage(0);
-//                                } else {
-//                                    try {
-//                                        // 每隔200毫秒就获取声音音量并更新界面显示
-//                                        Thread.sleep(200);
-//                                        mRecord_Time += 0.2;
-//                                        if (mRecord_State == RECORD_ING) {
-//                                            mRecord_Volume = mRecordUtil
-//                                                    .getAmplitude();
-//                                            mRecordHandler
-//                                                    .sendEmptyMessage(1);
-//                                        }
-//                                    } catch (InterruptedException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }).start();
                 }
                 break;
             // 停止录音
@@ -123,35 +92,6 @@ public class AudioRecordActivity extends AppCompatActivity {
                     play_linearlayout.addView(playerView);
                     playerView.startPlay();
 
-                    // 如果录音时间小于最短时间
-//                    if (mRecord_Time <= MIN_TIME) {
-//                        // 显示提醒
-//                        Toast.makeText(VoiceActivity.this, "录音时间过短",
-//                                Toast.LENGTH_SHORT).show();
-//                        // 修改录音状态
-//                        mRecord_State = RECORD_NO;
-//                        // 修改录音时间
-//                        mRecord_Time = 0;
-//                        // 修改显示界面
-//                        mRecordTime.setText("0″");
-//                        mRecordProgressBar.setProgress(0);
-//                        // 修改录音声音界面
-//                        ViewGroup.LayoutParams params = mRecordVolume
-//                                .getLayoutParams();
-//                        params.height = 0;
-//                        mRecordVolume.setLayoutParams(params);
-//                    } else {
-//                        // 录音成功,则显示录音成功后的界面
-//                        mRecordLayout.setVisibility(View.GONE);
-//                        mRecord.setVisibility(View.GONE);
-//                        mDisplayVoiceLayout.setVisibility(View.VISIBLE);
-//                        mDisplayVoicePlay
-//                                .setImageResource(R.drawable.globle_player_btn_play);
-//                        mDisplayVoiceProgressBar.setMax((int) mRecord_Time);
-//                        mDisplayVoiceProgressBar.setProgress(0);
-//                        mDisplayVoiceTime.setText((int) mRecord_Time + "″");
-//                        send.setVisibility(View.VISIBLE);
-//                    }
                 }
                 break;
         }

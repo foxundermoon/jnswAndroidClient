@@ -2,6 +2,8 @@ package com.jnsw.core.record.audio;
 
 import android.media.MediaRecorder;
 
+import com.jnsw.core.record.audio.event.CompletedVoiceRecordEvent;
+
 import java.io.File;
 import java.io.IOException;
 

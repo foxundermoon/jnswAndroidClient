@@ -2,6 +2,9 @@ package com.jnsw.core.record.audio;
 
 import android.media.MediaPlayer;
 
+import com.jnsw.core.record.audio.event.MediaPlayerCompletionEvent;
+import com.jnsw.core.record.audio.event.OnMediaPlayerErrorEvent;
+
 import java.io.IOException;
 
 /**
@@ -108,7 +111,7 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, MediaPlaye
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         setErrorWhat(what);
-        new OnMediaPlayerError(this).post();
+        new OnMediaPlayerErrorEvent(this).post();
         return false;
     }
 }

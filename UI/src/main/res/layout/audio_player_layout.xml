@@ -32,4 +32,10 @@
         android:text="7″"
         android:textColor="#999999"
         android:textSize="12sp" />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btn_close"
+        android:background="@android:color/transparent"
+        android:id="@+id/voice_display_delete"/>
 </LinearLayout>
