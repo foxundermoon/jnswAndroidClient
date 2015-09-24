@@ -89,6 +89,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
         rightFragments.add(rightFragment);
         rightFragments.add(rightSecondFragment);
 
+        showRightFragment(rightSecondFragment);
         stickDrawerLayout.setDrawerListener(new StickDrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -97,6 +98,11 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerOpened(View drawerView) {
+                currentRightFragment.getView().getLayoutParams().width++;
+                currentRightFragment.getView().requestLayout();
+                currentRightFragment.getView().invalidate();
+                currentRightFragment.getView().getLayoutParams().width--;
+
 //                if (drawerView == rightContainer) {
 //                    drawerView.requestLayout();
 //                    drawerView.invalidate();
@@ -125,16 +131,12 @@ public class XunjianDemoActivity extends AppCompatActivity {
 //        showRightFragment(currentRightFragment!=null?currentRightFragment: rightFragment);
     }
 
+
     private void hideAllBottomFragment() {
         getFragmentManager().beginTransaction().hide(bottomFragment).hide(anotherBottomFragment).commit();
         currentCenterFragment = null;
     }
 
-    private void hideAllRightFragment() {
-        getFragmentManager().beginTransaction().hide(rightFragment).hide(rightSecondFragment).commit();
-        currentRightFragment = null;
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -195,13 +197,16 @@ public class XunjianDemoActivity extends AppCompatActivity {
     }
 
     private void showRightFragment(Fragment fragment) {
-        fragment.getView().setVisibility(View.VISIBLE);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         for (Fragment right : rightFragments) {
             if (right == fragment) {
                 transaction.show(fragment);
+                right.getView().setVisibility(View.VISIBLE);
+
             } else {
-                transaction.hide(fragment);
+                transaction.hide(right);
+                right.getView().setVisibility(View.GONE);
+
             }
         }
         transaction.commit();
