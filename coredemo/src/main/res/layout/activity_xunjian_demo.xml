@@ -1,17 +1,18 @@
 <android.support.v4.widget.StickDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/xunjian_demo_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.jnsw.coredemo.xunjiandemo.XunjianDemoActivity_">
 
-    <com.zhy.android.percent.support.PercentFrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.zhy.android.percent.support.PercentFrameLayout
         android:id="@+id/main_container"
-        android:tag="stick_drawer_layout_content_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/holo_red_dark"
-        android:gravity="center_horizontal|bottom">
+        android:gravity="center_horizontal|bottom"
+        android:tag="stick_drawer_layout_content_view">
 
         <fragment
             android:id="@+id/float_center_action_fragment"
@@ -32,18 +33,20 @@
             android:layout_marginBottom="15dp"
             app:layout_minWidthPercent="30%"
             app:layout_widthPercent="60%">
+
             <fragment
-                android:layout_width="match_parent"
                 android:id="@+id/another_bottom_fragment"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:name="com.jnsw.coredemo.xunjiandemo.AnotherCenterFragment_" />
-            <fragment
-                android:layout_gravity="center"
+                android:name="com.jnsw.coredemo.xunjiandemo.AnotherCenterFragment_"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <fragment
                 android:id="@+id/bottom_fragment"
-                android:name="com.jnsw.coredemo.xunjiandemo.BottomCenterFragment_" />
+                android:name="com.jnsw.coredemo.xunjiandemo.BottomCenterFragment_"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
 
         </FrameLayout>
 
@@ -62,11 +65,19 @@
         android:layout_gravity="start"
         tools:layout="@layout/fragment_left" />
 
-    <fragment
-        android:id="@+id/right_fragment"
-        android:name="com.jnsw.coredemo.xunjiandemo.RightFragment_"
-        android:layout_width="250dp"
+    <com.zhy.android.percent.support.PercentFrameLayout
+        android:id="@+id/right_container"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
-        tools:layout="@layout/fragment_right" />
+        android:background="@android:color/holo_red_dark"
+        android:tag="stick_drawer_layout_content_view">
+
+        <fragment
+            android:id="@+id/right_fragment"
+            android:name="com.jnsw.coredemo.xunjiandemo.RightFragment_"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end" />
+    </com.zhy.android.percent.support.PercentFrameLayout>
+
 </android.support.v4.widget.StickDrawerLayout>
