@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_container"
+    android:layout_width="140dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@android:color/holo_red_dark"
+    android:gravity="center_horizontal|bottom"
+    android:tag="stick_drawer_layout_content_view">
+
+    <fragment
+        android:id="@+id/left_fragment"
+        android:name="com.jnsw.coredemo.xunjiandemo.LeftFragment_"
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_left" />
+
+</com.zhy.android.percent.support.PercentFrameLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_red_dark"
+    android:gravity="center_horizontal|bottom"
+    android:tag="stick_drawer_layout_content_view">
+
+    <fragment
+        android:id="@+id/float_center_action_fragment"
+        android:name="com.jnsw.coredemo.xunjiandemo.ExtendFloatCenterActionFragment_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <!--此处LinearLayout替换为 MapView-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/jinan_map_bg"></LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/bottom_frame_layout"
+        app:layout_minWidthPercent="30%"
+        app:layout_widthPercent="60%"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="15dp">
+
+        <fragment
+            android:id="@+id/another_bottom_fragment"
+            android:name="com.jnsw.coredemo.xunjiandemo.AnotherCenterFragment_"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <fragment
+            android:id="@+id/bottom_fragment"
+            android:name="com.jnsw.coredemo.xunjiandemo.BottomCenterFragment_"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+
+</com.zhy.android.percent.support.PercentFrameLayout>

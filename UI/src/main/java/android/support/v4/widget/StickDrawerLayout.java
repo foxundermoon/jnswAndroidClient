@@ -95,7 +95,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
 
     @IntDef({STATE_IDLE, STATE_DRAGGING, STATE_SETTLING})
     @Retention(RetentionPolicy.SOURCE)
-    private @interface State {
+    public @interface State {
     }
 
     /**
@@ -112,6 +112,7 @@ public class StickDrawerLayout extends ViewGroup implements DrawerLayoutImpl {
      * Indicates that a drawer is in the process of settling to a final position.
      */
     public static final int STATE_SETTLING = ViewDragHelper.STATE_SETTLING;
+
 
     /**
      * @hide

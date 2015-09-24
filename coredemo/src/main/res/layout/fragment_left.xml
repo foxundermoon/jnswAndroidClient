@@ -112,21 +112,24 @@
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton
+                android:id="@+id/display_right_first_fragment"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
                 jnswui:image_max_width="30dp"
-                jnswui:text="其他按钮"
+                jnswui:text="右边第一页"
+                android:background="@android:color/holo_blue_dark"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton
+                android:id="@+id/display_right_second_fragment"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
                 jnswui:image_max_width="30dp"
-                jnswui:text="其他按钮"
+                jnswui:text="右边第二页"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton

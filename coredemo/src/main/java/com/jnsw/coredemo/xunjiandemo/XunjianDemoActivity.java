@@ -1,14 +1,17 @@
 package com.jnsw.coredemo.xunjiandemo;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.support.annotation.UiThread;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.StickDrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 
@@ -25,6 +28,7 @@ import com.jnsw.core.CustomApplication;
 import com.jnsw.core.util.Tip;
 import com.jnsw.coredemo.R;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
@@ -32,11 +36,18 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.WindowFeature;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Fullscreen
 @EActivity(R.layout.activity_xunjian_demo)
 @WindowFeature({Window.FEATURE_NO_TITLE})
 public class XunjianDemoActivity extends AppCompatActivity {
+    @ViewById(R.id.right_container)
+    ViewGroup rightContainer;
+    @ViewById(R.id.xunjian_center)
+    ViewGroup centerContainer;
     @FragmentById(R.id.left_fragment)
     LeftFragment leftFragment;
     @FragmentById(R.id.right_fragment)
@@ -53,7 +64,11 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     @FragmentById(R.id.float_center_action_fragment)
     ExtendFloatCenterActionFragment circularMenuFragment;
+    @FragmentById(R.id.right_second_fragment)
+    Fragment rightSecondFragment;
     private Fragment currentCenterFragment;
+    private Fragment currentRightFragment;
+    List<Fragment>  rightFragments;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,9 +81,38 @@ public class XunjianDemoActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 //        hideAllBottomFragment();
+        rightSecondFragment.getView().setVisibility(View.VISIBLE);
         CustomApplication.getInstance().eventBus.register(this);
         stickDrawerLayout.setScrimColor(Color.TRANSPARENT);
         stickDrawerLayout.setDrawerLockMode(StickDrawerLayout.LOCK_MODE_UNLOCKED);
+        rightFragments = new ArrayList<>();
+        rightFragments.add(rightFragment);
+        rightFragments.add(rightSecondFragment);
+
+        stickDrawerLayout.setDrawerListener(new StickDrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+//                if (drawerView == rightContainer) {
+//                    drawerView.requestLayout();
+//                    drawerView.invalidate();
+//                }
+            }
+
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(@StickDrawerLayout.State int newState) {
+
+            }
+        });
     }
 
     @Override
@@ -76,10 +120,22 @@ public class XunjianDemoActivity extends AppCompatActivity {
         super.onResumeFragments();
     }
 
+    @AfterViews
+    void initDefault() {
+//        showRightFragment(currentRightFragment!=null?currentRightFragment: rightFragment);
+    }
+
     private void hideAllBottomFragment() {
         getFragmentManager().beginTransaction().hide(bottomFragment).hide(anotherBottomFragment).commit();
         currentCenterFragment = null;
     }
+
+    private void hideAllRightFragment() {
+        getFragmentManager().beginTransaction().hide(rightFragment).hide(rightSecondFragment).commit();
+        currentRightFragment = null;
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -100,18 +156,6 @@ public class XunjianDemoActivity extends AppCompatActivity {
 //         Fragment  center =FloatCenterFragment_.builder().build();
 //        getFragmentManager().beginTransaction().replace(R.id.center_float_container, center).commit();
     }
-
-    @Background
-    public void longTime() {
-        opUI("DF");
-
-    }
-
-    @UiThread
-    public void opUI(String sdsd) {
-
-    }
-
 
     @Subscribe
     public void onImageTextButtonClick(ImageTextButtonClickEvent event) {
@@ -139,13 +183,34 @@ public class XunjianDemoActivity extends AppCompatActivity {
             case R.id.close_circular_menu:
                 new CloseCircularActionMenuEvent(circularMenuFragment.imageView_center_main).post();
                 break;
+            case R.id.display_right_first_fragment:
+                showRightFragment(rightFragment);
+                break;
+            case R.id.display_right_second_fragment:
+                showRightFragment(rightSecondFragment);
+                break;
             default:
                 otherBtnClick();
         }
     }
 
+    private void showRightFragment(Fragment fragment) {
+        fragment.getView().setVisibility(View.VISIBLE);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        for (Fragment right : rightFragments) {
+            if (right == fragment) {
+                transaction.show(fragment);
+            } else {
+                transaction.hide(fragment);
+            }
+        }
+        transaction.commit();
+        stickDrawerLayout.openDrawer(Gravity.END);
+        currentCenterFragment = fragment;
+    }
 
     private void showBottomFragment(Fragment fragment) {
+        hideAllBottomFragment();
         showFragment(fragment);
         fragment.getView().setVisibility(View.VISIBLE);
         currentCenterFragment = fragment;
@@ -154,6 +219,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
     private void showFragment(Fragment fragment) {
         getFragmentManager().beginTransaction().show(fragment).commit();
     }
+
     @UiThread
     private void openAnotherBootomFragment() {
         hideAllBottomFragment();
@@ -183,17 +249,18 @@ public class XunjianDemoActivity extends AppCompatActivity {
         new CloseStickDrawerLayoutEvent(Gravity.START | Gravity.END).post();
     }
 
+
     @Subscribe
     public void onSubMenuClick(CircularFloatingMenuClickEvent event) {
         View which = event.getEventData();
         if (which != null) {
             int id = which.getId();
             switch (id) {
-            case R.id.imageView4:
-                Tip.shortTip("clicked me "+id);
-                break;
+                case R.id.imageView4:
+                    Tip.shortTip("clicked me " + id);
+                    break;
                 case R.id.imageView5:
-                    Tip.shortTip("clicked me "+id);
+                    Tip.shortTip("clicked me " + id);
                     break;
             }
         }
