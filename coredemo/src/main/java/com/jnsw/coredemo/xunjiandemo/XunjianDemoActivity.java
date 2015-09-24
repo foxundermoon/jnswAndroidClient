@@ -98,10 +98,13 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                currentRightFragment.getView().getLayoutParams().width++;
-                currentRightFragment.getView().requestLayout();
-                currentRightFragment.getView().invalidate();
-                currentRightFragment.getView().getLayoutParams().width--;
+                if (drawerView == rightContainer) {
+                    rightContainer.getLayoutParams().width++;
+                    rightContainer.requestLayout();
+                    rightContainer.invalidate();
+                    rightContainer.getLayoutParams().width--;
+                }
+
 
 //                if (drawerView == rightContainer) {
 //                    drawerView.requestLayout();
@@ -174,10 +177,10 @@ public class XunjianDemoActivity extends AppCompatActivity {
                 clickBtn3();
                 break;
             case R.id.left_fragment_btn_4:
-                openBottomFragment();
+                showBottomFragment(bottomFragment);
                 break;
             case R.id.left_fragment_btn_5:
-                openAnotherBootomFragment();
+                showBottomFragment(anotherBottomFragment);
                 break;
             case R.id.open_circular_menu:
                 new OpenCircularActionButtonEvent(circularMenuFragment.imageView_center_main).post();
@@ -196,12 +199,14 @@ public class XunjianDemoActivity extends AppCompatActivity {
         }
     }
 
+    @UiThread
     private void showRightFragment(Fragment fragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         for (Fragment right : rightFragments) {
             if (right == fragment) {
                 transaction.show(fragment);
                 right.getView().setVisibility(View.VISIBLE);
+                rightContainer.getLayoutParams().width = right.getView().getLayoutParams().width;
 
             } else {
                 transaction.hide(right);
@@ -214,6 +219,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
         currentCenterFragment = fragment;
     }
 
+    @UiThread
     private void showBottomFragment(Fragment fragment) {
         hideAllBottomFragment();
         showFragment(fragment);
@@ -225,23 +231,9 @@ public class XunjianDemoActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction().show(fragment).commit();
     }
 
-    @UiThread
-    private void openAnotherBootomFragment() {
-        hideAllBottomFragment();
-        showBottomFragment(anotherBottomFragment);
-    }
-
     private void otherBtnClick() {
         Tip.shortTip("you clicked me");
     }
-
-    @UiThread
-    private void openBottomFragment() {
-        hideAllBottomFragment();
-        showBottomFragment(bottomFragment);
-    }
-
-
     private void clickBtn3() {
         new OpenStickDrawerLayoutEvent(Gravity.END).post();
     }
