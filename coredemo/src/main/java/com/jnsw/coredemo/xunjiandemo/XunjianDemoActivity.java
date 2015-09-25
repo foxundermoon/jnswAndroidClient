@@ -69,6 +69,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
     private Fragment currentCenterFragment;
     private Fragment currentRightFragment;
     List<Fragment>  rightFragments;
+    List<Fragment>  bottomFragments;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -88,6 +89,9 @@ public class XunjianDemoActivity extends AppCompatActivity {
         rightFragments = new ArrayList<>();
         rightFragments.add(rightFragment);
         rightFragments.add(rightSecondFragment);
+        bottomFragments= new ArrayList<>();
+        bottomFragments.add(bottomFragment);
+        bottomFragments.add(anotherBottomFragment);
 
         showRightFragment(rightSecondFragment);
         stickDrawerLayout.setDrawerListener(new StickDrawerLayout.SimpleDrawerListener() {
@@ -136,6 +140,7 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
 
     private void hideAllBottomFragment() {
+
         getFragmentManager().beginTransaction().hide(bottomFragment).hide(anotherBottomFragment).commit();
         currentCenterFragment = null;
     }
@@ -221,9 +226,16 @@ public class XunjianDemoActivity extends AppCompatActivity {
 
     @UiThread
     private void showBottomFragment(Fragment fragment) {
-        hideAllBottomFragment();
-        showFragment(fragment);
-        fragment.getView().setVisibility(View.VISIBLE);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        for (Fragment bottom : bottomFragments) {
+            if (bottom == fragment) {
+                bottom.getView().setVisibility(View.VISIBLE);
+                transaction.show(bottom);
+            } else {
+                transaction.hide(bottom);
+            }
+        }
+        transaction.commit();
         currentCenterFragment = fragment;
     }
 
