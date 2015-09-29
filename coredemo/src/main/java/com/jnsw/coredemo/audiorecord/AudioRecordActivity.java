@@ -1,7 +1,10 @@
 package com.jnsw.coredemo.audiorecord;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -39,7 +42,7 @@ public class AudioRecordActivity extends AppCompatActivity {
 
     private int mMAXVolume;// 最大音量高度
     private int mMINVolume;// 最小音量高度
-    private static final String PATH = "/sdcard/Record/";// 录音存储路径
+    private static final String PATH = /*Environment.getExternalStorageDirectory().getPath() +*/ "mnt/sdcard/record/";// 录音存储路径
     private String mRecordPath;// 录音的存储名称
     VoiceRecorder voiceRecorder;
 
@@ -62,6 +65,7 @@ public class AudioRecordActivity extends AppCompatActivity {
                         // 开始录音
 //                        voiceRecorder.setSavePath(mRecordPath);
                         new StopPlayAudioEvent().post();
+                        new RecordDialog(this).show();
                         if (!voiceRecorder.start(mRecordPath)) {
                             Tip.shortTip(voiceRecorder.getErrorMessage());
                         }
@@ -167,5 +171,26 @@ public class AudioRecordActivity extends AppCompatActivity {
      */
     private void stopRecordLightAnimation() {
         mRecordLightHandler.sendEmptyMessage(3);
+    }
+
+
+    public  class RecordDialog extends Dialog{
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.dialog_voice_record);
+        }
+
+        public RecordDialog(Context context) {
+            this(context, 0);
+        }
+
+        public RecordDialog(Context context, int themeResId) {
+            super(context, themeResId);
+        }
+
+        protected RecordDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
+            super(context, cancelable, cancelListener);
+        }
     }
 }

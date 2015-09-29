@@ -5,6 +5,7 @@ import java.io.File;
 /**
  * Created by fox on 2015/9/21.
  */
+@Deprecated
 public abstract class FileUtil {
     public static boolean deleteFile(String path) {
         File file = new File(path);
