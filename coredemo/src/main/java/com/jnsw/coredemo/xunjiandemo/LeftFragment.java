@@ -28,6 +28,10 @@ public class LeftFragment extends Fragment {
         Tip.shortTip("自定义点击方法");
 
     }
+//    @Click void set_title() {
+//        XunjianDemoActivity activity = (XunjianDemoActivity) getActivity();
+//        activity.curr
+//    }
 
 
 }

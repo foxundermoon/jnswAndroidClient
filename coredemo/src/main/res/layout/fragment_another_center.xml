@@ -8,7 +8,7 @@
     app:title_textSize="14sp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/Dark_Translucence">
+    android:background="@color/Aquamarine_Dark">
 
 
     <RadioGroup
@@ -18,6 +18,7 @@
         android:layout_height="wrap_content">
 
         <RadioButton
+            android:layout_marginLeft="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="你妈"
@@ -44,5 +45,11 @@
             android:text="掉进去了只能选一个"
             android:id="@+id/your_self"
             android:checked="false" />
+        <net.qiujuer.genius.widget.GeniusButton
+            android:layout_gravity="right"
+            android:layout_marginRight="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自杀"/>
     </RadioGroup>
 </com.jnsw.android.ui.widget.CloseableMenuGroupLayout>

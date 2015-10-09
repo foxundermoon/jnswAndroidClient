@@ -1,6 +1,7 @@
 package com.jnsw.android.ui.widget;
 
 import android.annotation.TargetApi;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -33,6 +34,7 @@ public class CloseableMenuGroupLayout extends FrameLayout {
     private ViewGroup currentContainer;
     private TextView title;
     private int totalMargin = ScreenKit.dip2px(0);
+    private Runnable closedCallback;
 
     public CloseableMenuGroupLayout(Context context) {
         this(context, null);
@@ -40,6 +42,10 @@ public class CloseableMenuGroupLayout extends FrameLayout {
 
     public CloseableMenuGroupLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
+    }
+
+    public void setClosedCallback(Runnable runnable) {
+        closedCallback = runnable;
     }
 
     public CloseableMenuGroupLayout(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -168,7 +174,11 @@ public class CloseableMenuGroupLayout extends FrameLayout {
                     if (isVisibleUserAddedView(child)) {
                         if (child.getParent() == this) {
                             removeView(child);
-                            currentContainer.addView(child);
+                            FrameLayout.LayoutParams olp = (LayoutParams) child.getLayoutParams();
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(olp.width, olp.height);
+                            layoutParams.gravity = olp.gravity;
+                            layoutParams.setMargins(olp.leftMargin,olp.topMargin,olp.rightMargin,olp.bottomMargin);
+                            currentContainer.addView(child, layoutParams);
                         }
                     }
                 }
@@ -222,6 +232,9 @@ public class CloseableMenuGroupLayout extends FrameLayout {
             @Override
             public void onClick(View v) {
                 new CloseableMenuGroupLayoutCloseEvent(CloseableMenuGroupLayout.this).post();
+                if (closedCallback != null) {
+                    closedCallback.run();
+                }
             }
         });
     }
