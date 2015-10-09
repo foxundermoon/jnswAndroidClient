@@ -32,5 +32,6 @@
     <string name="title_activity_file_uploadctivity">FileUploadctivity</string>
     <string name="title_activity_audio_record">AudioRecordActivity</string>
     <string name="title_activity_application_data">ApplicationDataActivity</string>
+    <string name="title_activity_toast">ToastActivity</string>
 
 </resources>

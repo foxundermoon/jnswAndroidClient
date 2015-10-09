@@ -96,6 +96,11 @@
             android:name=".sharedata.ApplicationDataActivity"
             android:label="@string/title_activity_application_data" >
         </activity>
+        <activity
+            android:name=".toast.ToastActivity_"
+            android:theme="@style/AppCompatTheme"
+            android:label="@string/title_activity_toast" >
+        </activity>
     </application>
 
 </manifest>

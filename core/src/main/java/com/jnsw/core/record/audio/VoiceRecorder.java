@@ -6,6 +6,7 @@ import android.os.Environment;
 import com.jnsw.core.record.audio.event.CompletedVoiceRecordEvent;
 import com.jnsw.core.util.FileUtil;
 import com.jnsw.core.util.SDCardUtils;
+import com.jnsw.core.util.StickTip;
 
 import org.apache.commons.io.FileUtils;
 
@@ -20,7 +21,10 @@ import java.util.Date;
  */
 public class VoiceRecorder {
     private VoiceRecorder() {
+//        stickTip = new StickTip()
     }
+
+    private StickTip stickTip;
 
     private String errorMessage;
 
@@ -68,6 +72,7 @@ public class VoiceRecorder {
     public static synchronized VoiceRecorder getInstance() {
         if (instance == null) {
             instance = new VoiceRecorder();
+
         }
         return instance;
     }
