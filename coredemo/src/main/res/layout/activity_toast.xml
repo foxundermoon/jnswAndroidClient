@@ -9,39 +9,36 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.jnsw.coredemo.toast.ToastActivity">
 
-    <Button
-        android:id="@+id/custom_toast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp"
-        android:text="自定义toast" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/forever_toast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/custom_toast"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp"
-        android:text="永不关闭toast" />
+        <Button
+            android:id="@+id/custom_toast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自定义toast" />
 
-    <Button
-        android:id="@+id/close_toast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="140dp"
-        android:text="关闭" />
+        <Button
+            android:id="@+id/forever_toast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/custom_toast"
+            android:text="永不关闭toast" />
 
-    <Button
-        android:id="@+id/string_toast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:text="string toast" />
+        <Button
+            android:id="@+id/close_toast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关闭"
+            android:layout_below="@+id/forever_toast" />
+
+        <Button
+            android:id="@+id/string_toast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="string toast" />
+    </LinearLayout>
 
 </RelativeLayout>

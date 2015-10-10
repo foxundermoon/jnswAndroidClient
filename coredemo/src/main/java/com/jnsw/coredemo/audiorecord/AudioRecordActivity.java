@@ -65,13 +65,14 @@ public class AudioRecordActivity extends AppCompatActivity {
                         // 开始录音
 //                        voiceRecorder.setSavePath(mRecordPath);
                         new StopPlayAudioEvent().post();
-                        new RecordDialog(this).show();
+//                        new RecordDialog(this).show();
                         if (!voiceRecorder.start(mRecordPath)) {
                             Tip.shortTip(voiceRecorder.getErrorMessage());
                         }
 
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Tip.shortTipCenter(e.getMessage());
                     }
                 }
                 break;

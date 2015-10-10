@@ -75,7 +75,7 @@ dependencies {
 //            'com.j256.ormlite:ormlite-core:4.43',
             'commons-io:commons-io:2.4',
             'org.apache.commons:commons-lang3:3.4',
-            'com.github.lzyzsd:circleprogress:1.1.0@aar'
+//            'com.github.lzyzsd:circleprogress:1.1.0@aar'
     )
 }
 sourceSets {
