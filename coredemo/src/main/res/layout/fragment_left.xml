@@ -133,12 +133,13 @@
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton
+                android:id="@+id/set_title"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 jnswui:image="@drawable/btn_save"
                 jnswui:image_max_height="30dp"
                 jnswui:image_max_width="30dp"
-                jnswui:text="其他按钮"
+                jnswui:text="设置标题"
                 jnswui:text_color="@color/accent_material_light" />
 
             <com.jnsw.android.ui.widget.ImageTextButton

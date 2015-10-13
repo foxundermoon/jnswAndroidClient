@@ -5,8 +5,4 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <application android:name=".CustomApplication">
-
-    </application>
-
 </manifest>

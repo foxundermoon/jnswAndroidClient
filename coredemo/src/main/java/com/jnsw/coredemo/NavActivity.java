@@ -13,6 +13,8 @@ import com.jnsw.coredemo.customview.FloatActionInFragmentActivity;
 import com.jnsw.coredemo.customview.FloatActionInFragmentActivity_;
 import com.jnsw.coredemo.customview.FloatCenterFragmentActivity_;
 import com.jnsw.coredemo.customview.StickDrawerLayoutDemo_;
+import com.jnsw.coredemo.toast.ToastActivity;
+import com.jnsw.coredemo.toast.ToastActivity_;
 import com.jnsw.coredemo.xunjiandemo.XunjianDemoActivity_;
 
 import org.androidannotations.annotations.Click;
@@ -67,6 +69,9 @@ public class NavActivity extends AppCompatActivity {
     }
     @Click void record(){
         AudioRecordActivity_.intent(this).start();
+    }
+    @Click void stick_tip(){
+        ToastActivity_.intent(this).start();
     }
 
 }

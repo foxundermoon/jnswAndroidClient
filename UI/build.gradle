@@ -64,7 +64,7 @@ dependencies {
 //    compile 'com.android.support:percent:22.+'
     compile 'com.android.support:palette-v7:23.0.1'
     compile 'com.jnsw.android:CircularFloatingActionMenu:1.0.3'
-    compile "com.jnsw.android:core:$CORE_VERSION"
-//    compile project(':core')
+//    compile "com.jnsw.android:core:$CORE_VERSION"
+    compile project(':core')
     compile 'com.jnsw.android:CircularFloatingActionMenu:1.0.3'
 }

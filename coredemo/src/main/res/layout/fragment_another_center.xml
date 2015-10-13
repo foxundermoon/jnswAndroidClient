@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.jnsw.android.ui.widget.CloseableMenuGroupLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.jnsw.android.ui.widget.CloseableMenuGroupLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:title_text="居中标题  不需要可以忽略，默认不显示"
-    app:title_color="@color/LuciteGreen_Primary"
-    android:layout_gravity="center"
-    app:title_textSize="14sp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/Dark_Translucence">
+    android:layout_gravity="center"
+    android:background="@color/Aquamarine_Dark"
+    app:title_color="@color/LuciteGreen_Primary"
+    app:title_text="居中标题  不需要可以忽略，默认不显示"
+    app:title_textSize="14sp">
 
+    <net.qiujuer.genius.widget.GeniusButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="50dp"
+        android:text="自杀" />
 
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_width="wrap_content"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="你妈"
             android:id="@+id/your_mother"
-            android:checked="false" />
-
-        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="你爸"
+            android:layout_marginLeft="30dp"
+            android:checked="false"
+            android:text="你妈" />
+
+        <RadioButton
             android:id="@+id/your_father"
-            android:checked="false" />
-
-        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="你女朋友"
+            android:checked="false"
+            android:text="你爸" />
+
+        <RadioButton
+            android:layout_marginLeft="20dp"
             android:id="@+id/your_gf"
-            android:checked="false" />
-
-        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="掉进去了只能选一个"
+            android:checked="false"
+            android:text="你女朋友" />
+
+        <RadioButton
             android:id="@+id/your_self"
-            android:checked="false" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="掉进去了只能选一个" />
     </RadioGroup>
 </com.jnsw.android.ui.widget.CloseableMenuGroupLayout>

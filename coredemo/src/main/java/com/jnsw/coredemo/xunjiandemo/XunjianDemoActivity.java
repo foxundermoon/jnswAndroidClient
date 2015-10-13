@@ -16,6 +16,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 
 import com.google.common.eventbus.Subscribe;
+import com.jnsw.android.ui.widget.CloseableMenuGroupLayout;
 import com.jnsw.android.ui.widget.ImageTextButton;
 import com.jnsw.android.ui.widget.event.CircularFloatingMenuClickEvent;
 import com.jnsw.android.ui.widget.event.CloseCircularActionMenuEvent;
@@ -199,6 +200,15 @@ public class XunjianDemoActivity extends AppCompatActivity {
             case R.id.display_right_second_fragment:
                 showRightFragment(rightSecondFragment);
                 break;
+            case R.id.set_title:
+                final CloseableMenuGroupLayout layout = (CloseableMenuGroupLayout) currentCenterFragment.getView();
+                layout.setTitleText("自定义标题");
+                layout.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        layout.setTitleText(null);
+                    }
+                },5*1000);
             default:
                 otherBtnClick();
         }
