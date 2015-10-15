@@ -1,3 +1,4 @@
 include ':core', ':corejar', ':foxt' , ':coredemo' , ':ui'
 //include ':dbcompiler'
 //include ':coredb'
+include ':kotlin'
