@@ -19,9 +19,15 @@ import com.jnsw.coredemo.xunjiandemo.XunjianDemoActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 @EActivity(R.layout.activity_nav)
 public class NavActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

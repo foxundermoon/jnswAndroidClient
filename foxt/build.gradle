@@ -1,5 +1,38 @@
-apply plugin: 'java'
+plugins {
+    id 'maven'
+    id 'groovy'
+    id "nu.studer.plugindev" version '1.0.4'
+    id "nu.studer.credentials" version '1.0.1'
+}
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+group 'com.jnsw.gradle.plugin'
+version '0.0.6.DEV'
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'http://jarlib.vvfox.com/releases/') {
+                authentication(userName: 'admin', password: 'admin123')
+            }
+        }
+    }
+}
+
+plugindev {
+    pluginId 'com.jnsw.generateOrmlite'
+    pluginImplementationClass 'com.vvfox.gradle.plugin.CodeGeneratePlugin'
+    pluginDescription 'Gradle plugin that generate ormlite data class form database'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'ormGen'
+    authorId 'foxundermoon'
+    authorName 'fox under moon'
+    authorEmail 'fox@vvfox.com'
+    projectUrl 'https://github.com/foxundermoon/core4android'
+    projectInceptionYear '2015'
+    done()
+}
+bintray {
+    user = 'foxundermoon'
+    key = 'c927cd6356d17e06aafed9878d18e2586ba4faf7'
+    pkg.repo = 'gradle-plugins'
+    dryRun = true
 }
